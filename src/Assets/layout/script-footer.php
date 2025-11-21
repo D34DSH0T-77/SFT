@@ -1,0 +1,1 @@
+<script src="<?= RUTA_BASE ?>src/Assets/js/main/dash.js"></script>

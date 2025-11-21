@@ -1,292 +1,158 @@
 <?php require('src/Assets/layout/head.php') ?>
 
 <body>
-    <div class="container">
-        <aside>
-            <div class="top">
-                <div class="logo">
-                    <h2>C <span class="danger">BABAR</span></h2>
-                </div>
-                <div class="close" id="close_btn">
-                    <span class="material-symbols-sharp"> close </span>
-                </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-brand">SweetCakes</a>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link active">
+                    <span class="material-symbols-sharp">dashboard</span>
+                    <span class="link-text">Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-sharp">cake</span>
+                    <span class="link-text">Tortas</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-sharp">shopping_cart</span>
+                    <span class="link-text">Ventas</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-sharp">inventory_2</span>
+                    <span class="link-text">Inventario</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-sharp">group</span>
+                    <span class="link-text">Clientes</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-sharp">settings</span>
+                    <span class="link-text">Configuración</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <nav class="top-navbar">
+            <button class="toggle-btn">
+                <span class="material-symbols-sharp">menu</span>
+            </button>
+            <div class="user-profile d-flex align-items-center">
+                <span class="me-2">Admin User</span>
+                <div class="rounded-circle bg-secondary" style="width: 35px; height: 35px;"></div>
             </div>
-            <!-- end top -->
-            <div class="sidebar">
-                <a href="#">
-                    <span class="material-symbols-sharp">grid_view </span>
-                    <h3>Dashbord</h3>
-                </a>
-                <a href="#" class="active">
-                    <span class="material-symbols-sharp">person_outline </span>
-                    <h3>custumers</h3>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">insights </span>
-                    <h3>Analytics</h3>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">mail_outline </span>
-                    <h3>Messages</h3>
-                    <span class="msg_count">14</span>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">receipt_long </span>
-                    <h3>Products</h3>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">report_gmailerrorred </span>
-                    <h3>Reports</h3>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">settings </span>
-                    <h3>settings</h3>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">add </span>
-                    <h3>Add Product</h3>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-sharp">logout </span>
-                    <h3>logout</h3>
-                </a>
-            </div>
-        </aside>
-        <!-- --------------
-        end asid
-      -------------------- -->
+        </nav>
 
-        <!-- --------------
-        start main part
-      --------------- -->
-
-        <main>
-            <h1>Dashbord</h1>
-
-            <div class="date">
-                <input type="date" />
-            </div>
-
-            <div class="insights">
-                <!-- start seling -->
-                <div class="sales">
-                    <span class="material-symbols-sharp">trending_up</span>
-                    <div class="middle">
-                        <div class="left">
-                            <h3>Total Sales</h3>
-                            <h1>$25,024</h1>
+        <!-- Dashboard Widgets -->
+        <div class="container-fluid">
+            <h2 class="mb-4">Resumen General</h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>150</h3>
+                            <p>Ventas Hoy</p>
                         </div>
-                        <div class="progress">
-                            <svg>
-                                <circle r="30" cy="40" cx="40"></circle>
-                            </svg>
-                            <div class="number">
-                                <p>80%</p>
-                            </div>
+                        <div class="stats-icon bg-pastel-pink">
+                            <span class="material-symbols-sharp">shopping_bag</span>
                         </div>
-                    </div>
-                    <small>Last 24 Hours</small>
-                </div>
-                <!-- end seling -->
-                <!-- start expenses -->
-                <div class="expenses">
-                    <span class="material-symbols-sharp">local_mall</span>
-                    <div class="middle">
-                        <div class="left">
-                            <h3>Total Sales</h3>
-                            <h1>$25,024</h1>
-                        </div>
-                        <div class="progress">
-                            <svg>
-                                <circle r="30" cy="40" cx="40"></circle>
-                            </svg>
-                            <div class="number">
-                                <p>80%</p>
-                            </div>
-                        </div>
-                    </div>
-                    <small>Last 24 Hours</small>
-                </div>
-                <!-- end seling -->
-                <!-- start seling -->
-                <div class="income">
-                    <span class="material-symbols-sharp">stacked_line_chart</span>
-                    <div class="middle">
-                        <div class="left">
-                            <h3>Total Sales</h3>
-                            <h1>$25,024</h1>
-                        </div>
-                        <div class="progress">
-                            <svg>
-                                <circle r="30" cy="40" cx="40"></circle>
-                            </svg>
-                            <div class="number">
-                                <p>80%</p>
-                            </div>
-                        </div>
-                    </div>
-                    <small>Last 24 Hours</small>
-                </div>
-                <!-- end seling -->
-            </div>
-            <!-- end insights -->
-            <div class="recent_order">
-                <h2>Recent Orders</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Product Number</th>
-                            <th>Payments</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Mini USB</td>
-                            <td>4563</td>
-                            <td>Due</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-                        <tr>
-                            <td>Mini USB</td>
-                            <td>4563</td>
-                            <td>Due</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-                        <tr>
-                            <td>Mini USB</td>
-                            <td>4563</td>
-                            <td>Due</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-                        <tr>
-                            <td>Mini USB</td>
-                            <td>4563</td>
-                            <td>Due</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a href="#">Show All</a>
-            </div>
-        </main>
-        <!------------------
-         end main
-        ------------------->
-
-        <!----------------
-        start right main 
-      ---------------------->
-        <div class="right">
-            <div class="top">
-                <button id="menu_bar">
-                    <span class="material-symbols-sharp">menu</span>
-                </button>
-
-                <div class="theme-toggler">
-                    <span class="material-symbols-sharp active">light_mode</span>
-                    <span class="material-symbols-sharp">dark_mode</span>
-                </div>
-                <div class="profile">
-                    <div class="info">
-                        <p><b>Babar</b></p>
-                        <p>Admin</p>
-                        <small class="text-muted"></small>
-                    </div>
-                    <div class="profile-photo">
-                        <img src="./images/profile-1.jpg" alt="" />
                     </div>
                 </div>
-            </div>
-
-            <div class="recent_updates">
-                <h2>Recent Update</h2>
-                <div class="updates">
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="./images/profile-4.jpg" alt="" />
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>$1,250</h3>
+                            <p>Ingresos</p>
                         </div>
-                        <div class="message">
-                            <p><b>Babar</b> Recived his order of USB</p>
+                        <div class="stats-icon bg-pastel-mint">
+                            <span class="material-symbols-sharp">payments</span>
                         </div>
                     </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="./images/profile-3.jpg" alt="" />
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>45</h3>
+                            <p>Pedidos Activos</p>
                         </div>
-                        <div class="message">
-                            <p><b>Ali</b> Recived his order of USB</p>
+                        <div class="stats-icon bg-pastel-lavender">
+                            <span class="material-symbols-sharp">local_shipping</span>
                         </div>
                     </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="./images/profile-2.jpg" alt="" />
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>12</h3>
+                            <p>Alertas Stock</p>
                         </div>
-                        <div class="message">
-                            <p><b>Ramzan</b> Recived his order of USB</p>
+                        <div class="stats-icon bg-pastel-peach">
+                            <span class="material-symbols-sharp">warning</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="sales-analytics">
-                <h2>Sales Analytics</h2>
-
-                <div class="item onlion">
-                    <div class="icon">
-                        <span class="material-symbols-sharp">shopping_cart</span>
-                    </div>
-                    <div class="right_text">
-                        <div class="info">
-                            <h3>Onlion Orders</h3>
-                            <small class="text-muted">Last seen 2 Hours</small>
-                        </div>
-                        <h5 class="danger">-17%</h5>
-                        <h3>3849</h3>
-                    </div>
-                </div>
-                <div class="item onlion">
-                    <div class="icon">
-                        <span class="material-symbols-sharp">shopping_cart</span>
-                    </div>
-                    <div class="right_text">
-                        <div class="info">
-                            <h3>Onlion Orders</h3>
-                            <small class="text-muted">Last seen 2 Hours</small>
-                        </div>
-                        <h5 class="success">-17%</h5>
-                        <h3>3849</h3>
-                    </div>
-                </div>
-                <div class="item onlion">
-                    <div class="icon">
-                        <span class="material-symbols-sharp">shopping_cart</span>
-                    </div>
-                    <div class="right_text">
-                        <div class="info">
-                            <h3>Onlion Orders</h3>
-                            <small class="text-muted">Last seen 2 Hours</small>
-                        </div>
-                        <h5 class="danger">-17%</h5>
-                        <h3>3849</h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="item add_product">
-                <div>
-                    <span class="material-symbols-sharp">add</span>
+            <!-- Recent Orders Table -->
+            <div class="table-container">
+                <h4 class="mb-3">Pedidos Recientes</h4>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Producto</th>
+                                <th>Estado</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#10234</td>
+                                <td>Maria Garcia</td>
+                                <td>Torta de Chocolate</td>
+                                <td><span class="status-badge status-completed">Entregado</span></td>
+                                <td>$45.00</td>
+                            </tr>
+                            <tr>
+                                <td>#10235</td>
+                                <td>Juan Perez</td>
+                                <td>Cheesecake Fresa</td>
+                                <td><span class="status-badge status-pending">Pendiente</span></td>
+                                <td>$35.00</td>
+                            </tr>
+                            <tr>
+                                <td>#10236</td>
+                                <td>Ana Lopez</td>
+                                <td>Red Velvet</td>
+                                <td><span class="status-badge status-pending">En Proceso</span></td>
+                                <td>$50.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="<?= RUTA_BASE ?>src/Assets/js/main/dash.js"></script>
+    <?php require('src/Assets/layout/script-footer.php') ?>
 </body>
 
 </html>

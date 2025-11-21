@@ -1,21 +1,25 @@
-const  sideMenu = document.querySelector('aside');
-const menuBtn = document.querySelector('#menu_bar');
-const closeBtn = document.querySelector('#close_btn');
+document.addEventListener('DOMContentLoaded', function () {
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.querySelector('.toggle-btn');
 
+    if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('collapsed');
+        });
+    }
 
-const themeToggler = document.querySelector('.theme-toggler');
+    // Optional: Auto-collapse on small screens
+    const checkScreenSize = () => {
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('collapsed');
+        } else {
+            sidebar.classList.remove('collapsed');
+        }
+    };
 
+    // Initial check
+    checkScreenSize();
 
-
-menuBtn.addEventListener('click',()=>{
-       sideMenu.style.display = "block"
-})
-closeBtn.addEventListener('click',()=>{
-    sideMenu.style.display = "none"
-})
-
-themeToggler.addEventListener('click',()=>{
-     document.body.classList.toggle('dark-theme-variables')
-     themeToggler.querySelector('span:nth-child(1').classList.toggle('active')
-     themeToggler.querySelector('span:nth-child(2').classList.toggle('active')
-})
+    // Check on resize
+    window.addEventListener('resize', checkScreenSize);
+});

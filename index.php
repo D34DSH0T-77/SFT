@@ -5,8 +5,8 @@ session_start();
 define('RUTA_BASE', 'http://localhost/SFT/');
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/src/Core/helpers.php';
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/src/Core/funciones.php';
+require_once __DIR__ . '/Config/config.php';
 
 $url = $_GET['url'] ?? '';
 $url = trim($url, '/');

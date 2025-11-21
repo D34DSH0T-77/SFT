@@ -3,8 +3,8 @@
     <div class="col-md-3">
         <div class="stats-card">
             <div class="stats-info">
-                <h3>150</h3>
-                <p>Ventas Hoy</p>
+                <h3>15</h3>
+                <p>Stock (Tortas)</p>
             </div>
             <div class="stats-icon bg-pastel-pink">
                 <span class="material-symbols-sharp">shopping_bag</span>
@@ -14,22 +14,11 @@
     <div class="col-md-3">
         <div class="stats-card">
             <div class="stats-info">
-                <h3>$1,250</h3>
-                <p>Ingresos</p>
-            </div>
-            <div class="stats-icon bg-pastel-mint">
-                <span class="material-symbols-sharp">payments</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="stats-card">
-            <div class="stats-info">
-                <h3>45</h3>
-                <p>Pedidos Activos</p>
+                <h3>17</h3>
+                <p>Clientes</p>
             </div>
             <div class="stats-icon bg-pastel-lavender">
-                <span class="material-symbols-sharp">local_shipping</span>
+                <span class="material-symbols-sharp">group</span>
             </div>
         </div>
     </div>
@@ -37,10 +26,21 @@
         <div class="stats-card">
             <div class="stats-info">
                 <h3>12</h3>
-                <p>Alertas Stock</p>
+                <p>Pagos Pendientes</p>
             </div>
             <div class="stats-icon bg-pastel-peach">
                 <span class="material-symbols-sharp">warning</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <div class="stats-info">
+                <h3>$120</h3>
+                <p>Ganancias (BCV)</p>
+            </div>
+            <div class="stats-icon bg-pastel-mint">
+                <span class="material-symbols-sharp">payments</span>
             </div>
         </div>
     </div>

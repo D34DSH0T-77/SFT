@@ -8,5 +8,5 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="<?= RUTA_BASE ?>src/Assets/css/style.css">
-    <title>Document</title>
+    <title><?= $title ?></title>
 </head>

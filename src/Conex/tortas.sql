@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-11-2025 a las 18:03:23
+-- Tiempo de generación: 21-11-2025 a las 21:05:50
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -31,7 +31,7 @@ CREATE TABLE `clientes` (
   `id` int(11) NOT NULL,
   `nombre` text DEFAULT NULL,
   `apellido` text DEFAULT NULL,
-  `estado` enum('habilitado','deshabilitado') DEFAULT NULL
+  `estado` enum('Activo','Inactivo') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- --------------------------------------------------------
@@ -123,8 +123,16 @@ CREATE TABLE `tortas` (
   `nombre` text DEFAULT NULL,
   `precio` decimal(10,2) DEFAULT NULL,
   `img` varchar(50) DEFAULT NULL,
-  `estado` enum('habilitado','deshabilitados') DEFAULT NULL
+  `estado` enum('Activo','Inactivo') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `tortas`
+--
+
+INSERT INTO `tortas` (`id`, `nombre`, `precio`, `img`, `estado`) VALUES
+(1, 'pablo', 1.00, '', ''),
+(2, 'juan', 1.00, '', 'Activo');
 
 -- --------------------------------------------------------
 
@@ -139,7 +147,7 @@ CREATE TABLE `usuarios` (
   `usuario` text DEFAULT NULL,
   `contrasena` int(11) DEFAULT NULL,
   `rol` enum('admin','superAdmin') DEFAULT NULL,
-  `estado` enum('habilitado','deshabilitados') DEFAULT NULL
+  `estado` enum('Activo','Inactivo') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 --
@@ -263,7 +271,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `tortas`
 --
 ALTER TABLE `tortas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

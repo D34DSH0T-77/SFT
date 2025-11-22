@@ -34,7 +34,7 @@ class Tortas extends Conexion {
             $stmt->bindParam(":precio", $tortas->precio);
             $stmt->bindParam(":img", $tortas->img);
             $stmt->bindParam(":estado", $tortas->estado);
-           return $stmt->execute();
+            return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo en agregar torta " . $th->getMessage());
         }
@@ -48,7 +48,7 @@ class Tortas extends Conexion {
             $stmt->bindParam(":precio", $tortas->precio);
             $stmt->bindParam(":img", $tortas->img);
             $stmt->bindParam(":estado", $tortas->estado);
-           return$stmt->execute();
+            return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al editar" . $th->getMessage());
         }
@@ -59,7 +59,7 @@ class Tortas extends Conexion {
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
-           return $stmt->execute();
+            return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al eliminar" . $th->getMessage());
         }
@@ -71,10 +71,35 @@ class Tortas extends Conexion {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
-            $stmt-> setFetchMode(PDO::FETCH_CLASS, Tortas::class);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, Tortas::class);
             return $stmt->fetch();
         } catch (\Throwable $th) {
             error_log("fallo al buscar por el id" . $th->getMessage());
+        }
+    }
+
+    public function contar() {
+        $sql = "SELECT COUNT(*) FROM {$this->tabla}";
+        try {
+            $stmt = $this->conn->query($sql);
+            return $stmt->fetchColumn();
+        } catch (\Throwable $th) {
+            error_log("Error contando tortas: " . $th->getMessage());
+            return 0;
+        }
+    }
+
+    public function mostrarPaginado($limit, $offset) {
+        $sql = "SELECT * FROM {$this->tabla} LIMIT :limit OFFSET :offset";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+            $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Tortas::class);
+        } catch (\Throwable $th) {
+            error_log("Error en paginación: " . $th->getMessage());
+            return [];
         }
     }
 }

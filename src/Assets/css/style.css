@@ -266,3 +266,28 @@ body {
     border-color: var(--btn-primary-hover) !important;
     color: var(--btn-primary-color) !important;
 }
+
+/* Pagination Styles */
+.page-link {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+.page-link:hover {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+    color: var(--pastel-pink);
+}
+
+.page-item.active .page-link {
+    background-color: var(--pastel-pink);
+    border-color: var(--pastel-pink);
+    color: var(--bg-body);
+}
+
+.page-item.disabled .page-link {
+    background-color: var(--bg-body);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}

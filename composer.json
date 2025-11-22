@@ -11,5 +11,7 @@
             "email": "cjoyner1402@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "jasongrimes/paginator": "^1.0"
+    }
 }

@@ -1,26 +1,30 @@
 <h2 class="mb-4">Resumen General</h2>
 <div class="row g-4">
     <div class="col-md-3">
-        <div class="stats-card">
-            <div class="stats-info">
-                <h3>15</h3>
-                <p>Stock (Tortas)</p>
+        <a href="<?= RUTA_BASE . 'inventario' ?>">
+            <div class="stats-card">
+                <div class="stats-info">
+                    <h3>15</h3>
+                    <p>Stock (Tortas)</p>
+                </div>
+                <div class="stats-icon bg-pastel-pink">
+                    <span class="material-symbols-sharp">shopping_bag</span>
+                </div>
             </div>
-            <div class="stats-icon bg-pastel-pink">
-                <span class="material-symbols-sharp">shopping_bag</span>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="stats-card">
-            <div class="stats-info">
-                <h3>17</h3>
-                <p>Clientes</p>
+        <a href="<?= RUTA_BASE . 'clientes' ?>">
+            <div class="stats-card">
+                <div class="stats-info">
+                    <h3>17</h3>
+                    <p>Clientes</p>
+                </div>
+                <div class="stats-icon bg-pastel-lavender">
+                    <span class="material-symbols-sharp">group</span>
+                </div>
             </div>
-            <div class="stats-icon bg-pastel-lavender">
-                <span class="material-symbols-sharp">group</span>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
         <div class="stats-card">

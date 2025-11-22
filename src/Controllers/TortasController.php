@@ -51,10 +51,14 @@ class TortasController {
             exit();
         }
         $torta =$this->tortasModelo->buscarPorid($id);
-        $torta->nombre = trim($_POST['nombre'] ?? $torta->nombre);
-        $torta->precio = trim($_POST['precio'] ?? $torta->precio);
-        $torta->estado = trim($_POST['estado'] ?? $torta->estado);
-        $torta->img = trim($_POST['imagen'] ?? $torta->img);
+        if(!$torta){
+            header('Location: ' . RUTA_BASE .'tortas');
+            exit();
+        }
+        $torta->nombre = trim($_POST['editarnombre'] ?? $torta->nombre);
+        $torta->precio = trim($_POST['editarprecio'] ?? $torta->precio);
+        $torta->estado = trim($_POST['editarestado'] ?? $torta->estado);
+        $torta->img = trim($_POST['editarimagen'] ?? $torta->img);
         
         $errores =[];
         if(empty($errores)){
@@ -70,6 +74,11 @@ class TortasController {
             header('Location: ' . RUTA_BASE .'tortas');
             exit();
         }
+   
+        if($this->tortasModelo->eliminar($id)){
+            header('Location: '.RUTA_BASE.'tortas');
+            exit();
+        }   
         
     }
 }

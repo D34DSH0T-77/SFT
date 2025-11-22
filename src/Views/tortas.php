@@ -41,7 +41,7 @@
                                         <td class="text-center"><span class="badge <?= $torta->estado === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= $torta->estado ?></span></td>
                                         <td>
                                             <button class="btn btn-sm btn-warning text-white"  data-bs-toggle="modal" data-bs-target="#modalEditar" data-bs-id="<?= $torta->id ?>" data-bs-nombre="<?= $torta->nombre ?>" data-bs-precio="<?= $torta->precio ?>" data-bs-estado="<?= $torta->estado ?>" data-bs-img="<?= $torta->img ?>"><span class="material-symbols-sharp">edit</span></button>
-                                            <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
+                                            <button class="btn btn-sm btn-danger"  data-bs-toggle="modal" data-bs-target="#modalEliminar" data-bs-id="<?= $torta->id ?>"><span class="material-symbols-sharp" >delete</span></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -104,7 +104,7 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="formTortas" action="<?= RUTA_BASE ?>Tortas/editar" method="post">
+                        <form id="formTortaseditar"  method="post">
                             <div class="mb-3">
                                 <input type="hidden" name="id" id="id">
                                 <label for="editarnombre" class="form-label">Nombre</label>
@@ -138,10 +138,39 @@
                 </div>
             </div>
         </div>
+           <!--eliminar-->
+
+                         <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main);">
+                    <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                        <h5 class="modal-title">Eliminar Torta</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estas seguro de eliminar la torta?</p>
+                            </div>  
+                            <div>
+                            <form id="formTortaseliminar"  method="post">
+                              
+                                 <div class="modal-footer" style="border-top-color: var(--border-color);">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Eliminar</button>
+                               </div>
+                          </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function(){
       let editarModal = document.getElementById('modalEditar')  
+      let eliminarModal = document.getElementById('modalEliminar')
       editarModal.addEventListener('shown.bs.modal', function(event){
         let button = event.relatedTarget
         let id = button.getAttribute('data-bs-id')
@@ -159,7 +188,16 @@
         inputPrecio.value = precio
         inputEstado.value = estado
         inputImagen.value = img
-                         })          
+        let formEditar = document.getElementById('formTortaseditar')
+        formEditar.action =`/SFT/Tortas/editar/${id}`
+                         })   
+        eliminarModal.addEventListener('shown.bs.modal', function(event){
+            let button = event.relatedTarget
+            let id = button.getAttribute('data-bs-id')
+            eliminarModal.querySelector('.modal-body #id').value = id
+            let formEliminar = document.getElementById('formTortaseliminar')
+            formEliminar.action =`/SFT/Tortas/eliminar/${id}`
+        })       
      })                          
     </script>
     <?php require('src/Assets/layout/script-footer.php') ?>

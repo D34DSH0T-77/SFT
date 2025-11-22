@@ -34,20 +34,21 @@ class Tortas extends Conexion {
             $stmt->bindParam(":precio", $tortas->precio);
             $stmt->bindParam(":img", $tortas->img);
             $stmt->bindParam(":estado", $tortas->estado);
-            $stmt->execute();
+           return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo en agregar torta " . $th->getMessage());
         }
     }
     public function editar(Tortas $tortas) {
-        $sql = "UPDATE {$this->tabla} SET nombre=:nombre, precio=:precio, img=:img,estado=:estado WHERE id=:id";
+        $sql = "UPDATE {$this->tabla} SET nombre = :nombre, precio = :precio, img = :img, estado = :estado WHERE id = :id";
         try {
             $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":id", $tortas->id);
             $stmt->bindParam(":nombre", $tortas->nombre);
             $stmt->bindParam(":precio", $tortas->precio);
             $stmt->bindParam(":img", $tortas->img);
             $stmt->bindParam(":estado", $tortas->estado);
-            $stmt->execute();
+           return$stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al editar" . $th->getMessage());
         }
@@ -58,19 +59,20 @@ class Tortas extends Conexion {
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
-            $stmt->execute();
+           return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al eliminar" . $th->getMessage());
         }
     }
 
     public function buscarPorid($id) {
-        $sql = "SELECT FROM {$this->tabla} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->tabla} WHERE id = :id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_CLASS, Tortas::class);
+            $stmt-> setFetchMode(PDO::FETCH_CLASS, Tortas::class);
+            return $stmt->fetch();
         } catch (\Throwable $th) {
             error_log("fallo al buscar por el id" . $th->getMessage());
         }

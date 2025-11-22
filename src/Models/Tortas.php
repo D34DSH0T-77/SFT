@@ -38,7 +38,7 @@ class Tortas extends Conexion {
         }
     }
     public function editar(Tortas $tortas) {
-        $sql = "UPDATE SET tortas (nombre,precio,img,estado) VALUES(:nombre, :precio, :img,:estado)";
+        $sql = "UPDATE tortas SET nombre=:nombre, precio=:precio, img=:img,estado=:estado WHERE id=:id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":nombre", $tortas->nombre);

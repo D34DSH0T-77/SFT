@@ -70,6 +70,7 @@ class Tortas extends Conexion {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_CLASS, Tortas::class);
         } catch (\Throwable $th) {
             error_log("fallo al buscar por el id" . $th->getMessage());
         }

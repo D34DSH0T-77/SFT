@@ -40,7 +40,7 @@
                                         <td><?= $torta->precio ?></td>
                                         <td class="text-center"><span class="badge <?= $torta->estado === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= $torta->estado ?></span></td>
                                         <td>
-                                            <button class="btn btn-sm btn-warning text-white"><span class="material-symbols-sharp">edit</span></button>
+                                            <button class="btn btn-sm btn-warning text-white"  data-bs-toggle="modal" data-bs-target="#modalEditar" data-bs-id="<?= $torta->id ?>" data-bs-nombre="<?= $torta->nombre ?>" data-bs-precio="<?= $torta->precio ?>" data-bs-estado="<?= $torta->estado ?>" data-bs-img="<?= $torta->img ?>"><span class="material-symbols-sharp">edit</span></button>
                                             <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
                                         </td>
                                     </tr>
@@ -94,8 +94,74 @@
                 </div>
             </div>
         </div>
-    </div>
 
+           <!--editar-->
+        <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main);">
+                    <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                        <h5 class="modal-title">Editar Torta</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formTortas" action="<?= RUTA_BASE ?>Tortas/editar" method="post">
+                            <div class="mb-3">
+                                <input type="hidden" name="id" id="id">
+                                <label for="editarnombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="editarnombre" name="editarnombre" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);" placeholder="Ej: Torta de Chocolate..." required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="editarprecio" class="form-label">Precio</label>
+                                    <input type="number" step="0.01" class="form-control" id="editarprecio" name="editarprecio" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);" placeholder="Ej: 2.50" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="editarestado" class="form-label">Estado</label>
+                                    <select name="editarestado" id="editarestado" class="form-select" name="editarestado" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);" required>
+                                        <option value="Activo" selected>Activo</option>
+                                        <option value="Inactivo">Inactivo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editarimagen" class="form-label">Imagen</label>
+                                <input class="form-control form-control-sm" id="editarimagen" name="editarimagen" type="file" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                            </div>
+                            <div class="modal-footer" style="border-top-color: var(--border-color);">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      let editarModal = document.getElementById('modalEditar')  
+      editarModal.addEventListener('shown.bs.modal', function(event){
+        let button = event.relatedTarget
+        let id = button.getAttribute('data-bs-id')
+        let nombre = button.getAttribute('data-bs-nombre')
+        let precio = button.getAttribute('data-bs-precio')
+        let estado = button.getAttribute('data-bs-estado')
+        let img = button.getAttribute('data-bs-img')
+        let inputId = editarModal.querySelector('.modal-body #id')
+        let inputNombre = editarModal.querySelector('.modal-body #editarnombre')
+        let inputPrecio = editarModal.querySelector('.modal-body #editarprecio')
+        let inputEstado = editarModal.querySelector('.modal-body #editarestado')
+        let inputImagen = editarModal.querySelector('.modal-body #editarimagen')
+        inputId.value = id 
+        inputNombre.value = nombre
+        inputPrecio.value = precio
+        inputEstado.value = estado
+        inputImagen.value = img
+                         })          
+     })                          
+    </script>
     <?php require('src/Assets/layout/script-footer.php') ?>
 </body>
 

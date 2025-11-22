@@ -45,4 +45,31 @@ class TortasController {
             exit();
         }
     }
+    public function editar($id){
+        if($_SERVER['REQUEST_METHOD']!== 'POST'){
+            header('Location: ' . RUTA_BASE .'tortas');
+            exit();
+        }
+        $torta =$this->tortasModelo->buscarPorid($id);
+        $torta->nombre = trim($_POST['nombre'] ?? $torta->nombre);
+        $torta->precio = trim($_POST['precio'] ?? $torta->precio);
+        $torta->estado = trim($_POST['estado'] ?? $torta->estado);
+        $torta->img = trim($_POST['imagen'] ?? $torta->img);
+        
+        $errores =[];
+        if(empty($errores)){
+            if($this->tortasModelo->editar($torta)){
+                header('Location: '.RUTA_BASE.'tortas');
+                exit();
+            }
+
+        }
+    }
+    public function eliminar($id){
+        if($_SERVER['REQUEST_METHOD']!== 'POST'){
+            header('Location: ' . RUTA_BASE .'tortas');
+            exit();
+        }
+        
+    }
 }

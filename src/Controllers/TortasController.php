@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\Tortas;
-use Dom\RandomError;
 
 class TortasController {
 
@@ -14,9 +13,12 @@ class TortasController {
     }
     public function index() {
 
+        $tortas = $this->tortasModelo->mostrar();
+
         $data = [
             'title' => 'Tortas',
-            'moduloActivo' => 'tortas'
+            'moduloActivo' => 'tortas',
+            'tortas' => $tortas
         ];
         render_view('tortas', $data);
     }
@@ -43,5 +45,4 @@ class TortasController {
             exit();
         }
     }
-    
 }

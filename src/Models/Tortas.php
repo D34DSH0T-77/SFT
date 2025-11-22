@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Conex\Conexion;
+use PDO;
 
 class Tortas extends Conexion {
     public $id;
@@ -11,21 +12,22 @@ class Tortas extends Conexion {
     public $img;
     public $estado;
 
+    private $tabla = 'tortas';
 
     public function mostrar() {
 
-        $sql = "SELECT * FROM tortas";
+        $sql = "SELECT * FROM {$this->tabla}";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Tortas::class);
         } catch (\Throwable $th) {
             error_log("fallo total" . $th->getMessage());
         }
     }
 
     public function agregar(Tortas $tortas) {
-        $sql = "INSERT INTO tortas (nombre,precio,img,estado) VALUES (:nombre, :precio, :img,:estado)";
+        $sql = "INSERT INTO {$this->tabla} (nombre,precio,img,estado) VALUES (:nombre, :precio, :img,:estado)";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":nombre", $tortas->nombre);
@@ -38,7 +40,7 @@ class Tortas extends Conexion {
         }
     }
     public function editar(Tortas $tortas) {
-        $sql = "UPDATE tortas SET nombre=:nombre, precio=:precio, img=:img,estado=:estado WHERE id=:id";
+        $sql = "UPDATE {$this->tabla} SET nombre=:nombre, precio=:precio, img=:img,estado=:estado WHERE id=:id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":nombre", $tortas->nombre);
@@ -52,7 +54,7 @@ class Tortas extends Conexion {
     }
 
     public function eliminar($id) {
-        $sql = "DELETE FROM tortas WHERE id=:id";
+        $sql = "DELETE FROM {$this->tabla} WHERE id=:id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
@@ -63,7 +65,7 @@ class Tortas extends Conexion {
     }
 
     public function buscarPorid($id) {
-        $sql = "SELECT FROM tortas WHERE id=:id";
+        $sql = "SELECT FROM {$this->tabla} WHERE id = :id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);

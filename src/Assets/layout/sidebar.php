@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <div class="sidebar">
     <div class="sidebar-header">
-        <a href="#" class="sidebar-brand">SweetCakes</a>
+        <a class="sidebar-brand">SweetCakes</a>
     </div>
     <ul class="sidebar-menu">
         <li class="sidebar-item">

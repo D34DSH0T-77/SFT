@@ -18,41 +18,34 @@
 
             <div class="table-container">
                 <div class="table-responsive">
-                    <table class="custom-table">
+                    <table class="custom-table" id="myTable">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th width="10%">Img</th>
-                                <th>Nombre</th>
-                                <th>Precio Compra</th>
-                                <th width="10%" class="text-center">Estado</th>
-                                <th>Acciones</th>
+                                <th width="5%" class="text-center no-ordenar">#</th>
+                                <th width="10%" class="text-center no-ordenar">Img</th>
+                                <th class="no-ordenar">Nombre</th>
+                                <th class="no-ordenar">Precio Compra</th>
+                                <th width="10%" class="text-center no-ordenar">Estado</th>
+                                <th class="no-ordenar">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><img src="<?= RUTA_BASE ?>src/Assets/img/tortas/torta1.png" style="width: 50px; height: 50px;" alt="Torta de Chocolate" class="img-fluid"></td>
-                                <td>Torta de Chocolate</td>
-                                <td>$1.85</td>
-                                <td class="text-center"><span class="badge bg-success">Activo</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning text-white"><span class="material-symbols-sharp">edit</span></button>
-                                    <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td><img src="<?= RUTA_BASE ?>src/Assets/img/tortas/torta1.png" style="width: 50px; height: 50px;" alt="Torta de Chocolate" class="img-fluid"></td>
-                                <td>Torta de Arequipe</td>
-                                <td>$1.85</td>
-                                <td class="text-center"><span class="badge bg-success">Activo</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning text-white"><span class="material-symbols-sharp">edit</span></button>
-                                    <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
-                                </td>
-                            </tr>
-
+                            <?php if (isset($tortas) && !empty($tortas)): ?>
+                                <?php $contador = 1; ?>
+                                <?php foreach ($tortas as $torta): ?>
+                                    <tr>
+                                        <td class="text-center"><?= $contador++ ?></td>
+                                        <td class="text-center"><img src="<?= !empty($torta->img) ? RUTA_BASE . $torta->img : RUTA_BASE . 'src/Assets/img/placeholder.png' ?> " style="width: 50px; height: 50px;" alt="Torta de Chocolate" class="img-fluid align-middle"></td>
+                                        <td><?= $torta->nombre ?></td>
+                                        <td><?= $torta->precio ?></td>
+                                        <td class="text-center"><span class="badge <?= $torta->estado === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= $torta->estado ?></span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning text-white"><span class="material-symbols-sharp">edit</span></button>
+                                            <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

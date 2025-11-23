@@ -54,7 +54,8 @@ class Clientes extends Conexion {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_CLASS, Clientes::class);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, Clientes::class);
+            return $stmt->fetch();
         } catch (\Throwable $th) {
             error_log("fallo al buscar por id" . $th->getMessage());
         }

@@ -38,8 +38,8 @@
                                         <td><?= $cliente->nombre . ' ' . $cliente->apellido ?></td>
                                         <td class="text-center"><span class="badge <?= $cliente->estado === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= $cliente->estado ?></span></td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-warning text-white"><span class="material-symbols-sharp">edit</span></button>
-                                            <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
+                                            <button class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" data-bs-target="#modalClientesEditar" data-bs-id="<?= $cliente->id ?>" data-bs-nombre="<?= $cliente->nombre ?>" data-bs-apellido="<?= $cliente->apellido ?>" data-bs-estado="<?= $cliente->estado ?>"><span class="material-symbols-sharp">edit</span></button>
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalClientesEliminar" data-bs-id="<?= $cliente->id ?>"><span class="material-symbols-sharp">delete</span></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

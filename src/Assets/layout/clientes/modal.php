@@ -35,6 +35,7 @@
            </div>
        </div>
    </div>
+
    <div class="modal fade" id="modalClientesEditar" tabindex="-1" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered">
            <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main);">
@@ -43,7 +44,8 @@
                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
-                   <form id="formClientesEditar" action="<?= RUTA_BASE ?>Clientes/editar" method="post">
+                   <form id="formClientesEditar" method="post">
+                       <input type="hidden" name="id" id="id_edit">
                        <div class="row">
                            <div class="col-md-6 mb-3">
                                <label for="editarnombre" class="form-label">Nombre</label>
@@ -79,10 +81,10 @@
                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
-                   <form id="formClientesEliminar" action="<?= RUTA_BASE ?>Clientes/eliminar" method="post">
+                   <form id="formClientesEliminar" method="post">
                        <div class="mb-3">
-                           <label for="eliminarid" class="form-label">ID</label>
-                           <input type="text" class="form-control" id="eliminarid" name="eliminarid" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);" placeholder="Ej: id..." required>
+                           <input type="hidden" name="id" id="id_eliminar">
+                           <p>¿Estas seguro de eliminar el cliente?</p>
                        </div>
                        <div class="modal-footer" style="border-top-color: var(--border-color);">
                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

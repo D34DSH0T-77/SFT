@@ -16,12 +16,7 @@
                 </button>
             </div>
 
-            <?php if (!empty($mensaje)): ?>
-                <div class="alert alert-<?= htmlspecialchars($mensaje['tipo']) ?> alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($mensaje['texto'] ?? '') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
+            <?php require('src/Assets/layout/notificaciones.php') ?>
 
             <div class="table-container">
                 <div class="table-responsive">

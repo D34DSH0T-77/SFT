@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
             let apellido = button.getAttribute('data-bs-apellido')
             let estado = button.getAttribute('data-bs-estado')
 
-            let inputId = document.getElementById('cliente_id_edit')
-            let inputNombre = document.getElementById('cliente_nombre_edit')
-            let inputApellido = document.getElementById('cliente_apellido_edit')
-            let inputEstado = document.getElementById('cliente_estado_edit')
+            // IDs matching modal.php
+            let inputId = document.getElementById('id_edit')
+            let inputNombre = document.getElementById('editarnombre')
+            let inputApellido = document.getElementById('editarapellido')
+            let inputEstado = document.getElementById('editarestado')
             let formEditar = document.getElementById('formClientesEditar')
 
             if (inputId) inputId.value = id

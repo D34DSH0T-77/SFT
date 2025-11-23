@@ -18,9 +18,11 @@ class TortasController {
         $data = [
             'title' => 'Tortas',
             'moduloActivo' => 'tortas',
-            'tortas' => $tortas
+            'tortas' => $tortas,
+            'mensaje' => $_SESSION['mensaje'] ?? null
         ];
         render_view('tortas', $data);
+        unset($_SESSION['mensaje']);
     }
 
     public function agregar() {
@@ -39,44 +41,78 @@ class TortasController {
 
         if (empty($errores)) {
             if ($this->tortasModelo->agregar($torta)) {
-            }
-            header('Location: ' . RUTA_BASE . 'tortas');
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'success',
+                    'texto' => 'Torta agregada correctamente'
+                ];
+                header('Location: ' . RUTA_BASE . 'tortas');
 
-            exit();
+                exit();
+            } else {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'danger',
+                    'texto' => 'Error al agregar la torta'
+                ];
+                header('Location: ' . RUTA_BASE . 'tortas');
+
+                exit();
+            }
         }
     }
-    public function editar($id){
-        if($_SERVER['REQUEST_METHOD']!== 'POST'){
-            header('Location: ' . RUTA_BASE .'tortas');
+    public function editar($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . RUTA_BASE . 'tortas');
             exit();
         }
-        $torta =$this->tortasModelo->buscarPorid($id);
-        if(!$torta){
-            header('Location: ' . RUTA_BASE .'tortas');
+        $torta = $this->tortasModelo->buscarPorid($id);
+        if (!$torta) {
+            header('Location: ' . RUTA_BASE . 'tortas');
             exit();
         }
         $torta->nombre = trim($_POST['editarnombre'] ?? $torta->nombre);
         $torta->precio = trim($_POST['editarprecio'] ?? $torta->precio);
         $torta->estado = trim($_POST['editarestado'] ?? $torta->estado);
         $torta->img = trim($_POST['editarimagen'] ?? $torta->img);
-        
-        $errores =[];
-        if(empty($errores)){
-            if($this->tortasModelo->editar($torta)){
-                header('Location: '.RUTA_BASE.'tortas');
+
+        $errores = [];
+        if (empty($errores)) {
+            if ($this->tortasModelo->editar($torta)) {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'success',
+                    'texto' => 'Torta editada correctamente'
+                ];
+                header('Location: ' . RUTA_BASE . 'tortas');
+                exit();
+            } else {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'danger',
+                    'texto' => 'Error al editar la torta'
+                ];
+                header('Location: ' . RUTA_BASE . 'tortas');
                 exit();
             }
-
         }
     }
-    public function eliminar($id){
-        if($_SERVER['REQUEST_METHOD']!== 'POST'){
-            header('Location: ' . RUTA_BASE .'tortas');
+    public function eliminar($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . RUTA_BASE . 'tortas');
             exit();
         }
-   
-        $this->tortasModelo->eliminar($id);
-        header('Location: '.RUTA_BASE.'tortas');
-        exit();
+
+        if ($this->tortasModelo->eliminar($id)) {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'success',
+                'texto' => 'Torta eliminada correctamente'
+            ];
+            header('Location: ' . RUTA_BASE . 'tortas');
+            exit();
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error al eliminar la torta'
+            ];
+            header('Location: ' . RUTA_BASE . 'tortas');
+            exit();
+        }
     }
 }

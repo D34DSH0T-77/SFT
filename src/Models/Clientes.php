@@ -29,6 +29,7 @@ class Clientes extends Conexion {
         $sql = "UPDATE {$this->tabla} SET nombre=:nombre, apellido=:apellido, estado=:estado WHERE id=:id";
         try {
             $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":id", $clientes->id);
             $stmt->bindParam(":nombre", $clientes->nombre);
             $stmt->bindParam(":apellido", $clientes->apellido);
             $stmt->bindParam(":estado", $clientes->estado);

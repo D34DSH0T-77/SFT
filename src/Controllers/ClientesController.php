@@ -61,4 +61,65 @@ class ClientesController {
             exit;
         }
     }
+    public function editar($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
+        }
+        $clientes = $this->clientesModel->buscarPorid($id);
+        if (!$clientes) {
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
+        }
+        $clientes->nombre = $_POST['editarnombre'] ?? $clientes->nombre;
+        $clientes->apellido = $_POST['editarapellido'] ?? $clientes->apellido;
+        $clientes->estado = $_POST['editarestado'] ?? $clientes->estado;
+
+        $errores = [];
+        if (empty($errores)) {
+            if ($this->clientesModel->editar($clientes)) {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'success',
+                    'texto' => 'Cliente editado correctamente'
+                ];
+                header('Location: ' . RUTA_BASE . 'clientes');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'danger',
+                    'texto' => 'Error al editar el cliente'
+                ];
+                header('Location: ' . RUTA_BASE . 'clientes');
+                exit;
+            }
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error en el formulario'
+            ];
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
+        }
+    }
+    public function eliminar($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
+        }
+        if ($this->clientesModel->eliminar($id)) {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'success',
+                'texto' => 'Cliente eliminado correctamente'
+            ];
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error al eliminar el cliente'
+            ];
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
+        }
+    }
 }

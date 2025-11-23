@@ -3,7 +3,7 @@
         'name' => 'dead-shot/sft',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '22b059fca7b665f50e7ddd0a427ae88087d62c5e',
+        'reference' => '85177c43d14a299a01e871b8fc0c81641a1f3980',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'dead-shot/sft' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '22b059fca7b665f50e7ddd0a427ae88087d62c5e',
+            'reference' => '85177c43d14a299a01e871b8fc0c81641a1f3980',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

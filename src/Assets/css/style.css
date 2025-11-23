@@ -296,3 +296,7 @@ a {
     border-color: var(--border-color);
     color: var(--text-muted);
 }
+
+.material-symbols-sharp {
+    line-height: normal !important;
+}

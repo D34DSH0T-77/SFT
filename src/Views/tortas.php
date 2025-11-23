@@ -95,6 +95,8 @@
             </div>
         </div>
 
+    
+
            <!--editar-->
         <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -106,7 +108,7 @@
                     <div class="modal-body">
                         <form id="formTortaseditar"  method="post">
                             <div class="mb-3">
-                                <input type="hidden" name="id" id="id">
+                                <input type="hidden" name="id" id="id_edit">
                                 <label for="editarnombre" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="editarnombre" name="editarnombre" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);" placeholder="Ej: Torta de Chocolate..." required>
                             </div>
@@ -152,7 +154,7 @@
                             </div>  
                             <div>
                             <form id="formTortaseliminar"  method="post">
-                              
+                              <input type="hidden" name="id" id="id_eliminar">
                                  <div class="modal-footer" style="border-top-color: var(--border-color);">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <button type="submit" class="btn btn-primary">Eliminar</button>
@@ -163,6 +165,8 @@
                 </div>
             </div>
         </div>
+
+            
 
 
 
@@ -178,7 +182,7 @@
         let precio = button.getAttribute('data-bs-precio')
         let estado = button.getAttribute('data-bs-estado')
         let img = button.getAttribute('data-bs-img')
-        let inputId = editarModal.querySelector('.modal-body #id')
+        let inputId = editarModal.querySelector('.modal-body #id_edit')
         let inputNombre = editarModal.querySelector('.modal-body #editarnombre')
         let inputPrecio = editarModal.querySelector('.modal-body #editarprecio')
         let inputEstado = editarModal.querySelector('.modal-body #editarestado')
@@ -189,14 +193,15 @@
         inputEstado.value = estado
         inputImagen.value = img
         let formEditar = document.getElementById('formTortaseditar')
-        formEditar.action =`/SFT/Tortas/editar/${id}`
+        formEditar.action =`/SFT/tortas/editar/${id}`
                          })   
+                         let inputIdEliminar = eliminarModal.querySelector('.modal-body #id_eliminar')
         eliminarModal.addEventListener('shown.bs.modal', function(event){
             let button = event.relatedTarget
             let id = button.getAttribute('data-bs-id')
-            eliminarModal.querySelector('.modal-body #id').value = id
+            inputIdEliminar.value = id
             let formEliminar = document.getElementById('formTortaseliminar')
-            formEliminar.action =`/SFT/Tortas/eliminar/${id}`
+            formEliminar.action =`/SFT/tortas/eliminar/${id}`
         })       
      })                          
     </script>

@@ -75,10 +75,8 @@ class TortasController {
             exit();
         }
    
-        if($this->tortasModelo->eliminar($id)){
-            header('Location: '.RUTA_BASE.'tortas');
-            exit();
-        }   
-        
+        $this->tortasModelo->eliminar($id);
+        header('Location: '.RUTA_BASE.'tortas');
+        exit();
     }
 }

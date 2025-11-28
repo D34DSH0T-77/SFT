@@ -35,27 +35,46 @@ class TortasController {
         $torta->nombre = trim($_POST['nombre'] ?? '');
         $torta->precio = trim($_POST['precio'] ?? '');
         $torta->estado = trim($_POST['estado'] ?? '');
-        $torta->img = trim($_POST['imagen'] ?? '');
+        //$torta->img = trim($_POST['imagen'] ?? '');
 
-        $errores = [];
+        if (empty($_POST["btn btn-primary"])) {
+            $imagen = $_FILES["imagen"]["tmp_name"];
+            $nombreImagen = $_FILES["imagen"]["name"];
+            $tipoImagen = strtolower(pathinfo($nombreImagen, PATHINFO_EXTENSION));
+            $tamanoImagen = $_FILES["imagen"]["size"];
+            $directorio = "src/Assets/img/tortas";
 
-        if (empty($errores)) {
-            if ($this->tortasModelo->agregar($torta)) {
-                $_SESSION['mensaje'] = [
-                    'tipo' => 'success',
-                    'texto' => 'Torta agregada correctamente'
-                ];
-                header('Location: ' . RUTA_BASE . 'tortas');
+            if ($tipoImagen == "jpg" || $tipoImagen == "jpeg" || $tipoImagen == "png") {
+                $torta->img = $directorio . $nombreImagen . $tipoImagen;
 
-                exit();
-            } else {
-                $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
-                    'texto' => 'Error al agregar la torta'
-                ];
-                header('Location: ' . RUTA_BASE . 'tortas');
+                if (move_uploaded_file($imagen, $torta->img)) {
+                } else {
+                    $_SESSION['mensaje'] = [
+                        'tipo' => 'danger',
+                        'texto' => 'imagen no permitida'
+                    ];
+                }
+            }
+            $errores = [];
 
-                exit();
+            if (empty($errores)) {
+                if ($this->tortasModelo->agregar($torta)) {
+                    $_SESSION['mensaje'] = [
+                        'tipo' => 'success',
+                        'texto' => 'Torta agregada correctamente'
+                    ];
+                    header('Location: ' . RUTA_BASE . 'tortas');
+
+                    exit();
+                } else {
+                    $_SESSION['mensaje'] = [
+                        'tipo' => 'danger',
+                        'texto' => 'Error al agregar la torta'
+                    ];
+                    header('Location: ' . RUTA_BASE . 'tortas');
+
+                    exit();
+                }
             }
         }
     }

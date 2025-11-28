@@ -13,6 +13,7 @@ class InventarioController {
     }
 
     public function index() {
+        verificarLogin();
         $paginaActual = isset($_POST['page']) ? (int)$_POST['page'] : 1;
         $itemsPorPagina = 6;
         $offset = ($paginaActual - 1) * $itemsPorPagina;

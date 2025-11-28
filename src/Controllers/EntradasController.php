@@ -12,6 +12,7 @@ class EntradasController {
     }
 
     public function index() {
+        verificarLogin();
         $tortas = $this->tortasModel->mostrar();
 
         $data = [

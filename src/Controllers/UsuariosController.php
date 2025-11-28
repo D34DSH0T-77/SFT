@@ -12,6 +12,7 @@ class UsuariosController {
     }
 
     public function index() {
+        verificarLogin();
         $usuarios = $this->usuarioModel->mostrar();
 
         $data = [
@@ -25,6 +26,7 @@ class UsuariosController {
     }
 
     public function guardar() {
+        verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'usuarios');
             exit();
@@ -66,6 +68,7 @@ class UsuariosController {
     }
 
     public function editar() {
+        verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'usuarios');
             exit();
@@ -73,5 +76,10 @@ class UsuariosController {
     }
 
     public function eliminar() {
+        verificarLogin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . RUTA_BASE . 'usuarios');
+            exit();
+        }
     }
 }

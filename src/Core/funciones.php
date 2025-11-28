@@ -12,3 +12,10 @@ function render_view(string $viewName, array $data = []) {
         require_once __DIR__ . '/../Views/404.php';
     }
 }
+
+function verificarLogin() {
+    if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
+        header('Location: ' . RUTA_BASE . 'login');
+        exit;
+    }
+}

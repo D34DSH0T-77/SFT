@@ -69,6 +69,20 @@ class Usuarios extends Conexion {
             error_log("fallo al buscar por id" . $th->getMessage());
         }
     }
+
+    public function buscarPorUsuario($usuario) {
+        $sql = "SELECT * FROM {$this->tabla} WHERE usuario = :usuario LIMIT 1";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":usuario", $usuario);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        } catch (\Throwable $th) {
+            error_log("fallo al buscar por usuario" . $th->getMessage());
+            return null;
+        }
+    }
+
     public function mostrar() {
         $sql = "SELECT * FROM {$this->tabla}";
         try {

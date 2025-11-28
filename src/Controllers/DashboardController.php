@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 class DashboardController {
     public function index() {
+        verificarLogin();
+
         $data = [
             'title' => 'Dashboard',
             'moduloActivo' => 'dashboard'

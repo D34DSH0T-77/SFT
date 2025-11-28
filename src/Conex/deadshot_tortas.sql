@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 21-11-2025 a las 21:05:50
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: mysql-deadshot.alwaysdata.net
+-- Generation Time: Nov 28, 2025 at 08:19 PM
+-- Server version: 10.11.14-MariaDB
+-- PHP Version: 8.4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `tortas`
+-- Database: `deadshot_tortas`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clientes`
+-- Table structure for table `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -34,10 +34,23 @@ CREATE TABLE `clientes` (
   `estado` enum('Activo','Inactivo') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
+--
+-- Dumping data for table `clientes`
+--
+
+INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `estado`) VALUES
+(1, 's', 's', 'Activo'),
+(2, 'Lebrons', 'James', 'Activo'),
+(4, 'jon', 'wick', 'Activo'),
+(5, 'aa', 'aa', 'Activo'),
+(6, 'bs', 'bs', 'Activo'),
+(7, 'cc', 'cc', 'Activo'),
+(8, 'whis', 'sa', 'Activo');
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalles_entrada`
+-- Table structure for table `detalles_entrada`
 --
 
 CREATE TABLE `detalles_entrada` (
@@ -51,7 +64,7 @@ CREATE TABLE `detalles_entrada` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalles_factura`
+-- Table structure for table `detalles_factura`
 --
 
 CREATE TABLE `detalles_factura` (
@@ -64,19 +77,20 @@ CREATE TABLE `detalles_factura` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `entradas`
+-- Table structure for table `entradas`
 --
 
 CREATE TABLE `entradas` (
   `id` int(11) NOT NULL,
+  `codigo` varchar(50) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
-  `local` text DEFAULT NULL
+  `local` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura`
+-- Table structure for table `factura`
 --
 
 CREATE TABLE `factura` (
@@ -89,7 +103,7 @@ CREATE TABLE `factura` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `lotes`
+-- Table structure for table `lotes`
 --
 
 CREATE TABLE `lotes` (
@@ -101,7 +115,7 @@ CREATE TABLE `lotes` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pago`
+-- Table structure for table `pago`
 --
 
 CREATE TABLE `pago` (
@@ -115,29 +129,34 @@ CREATE TABLE `pago` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tortas`
+-- Table structure for table `tortas`
 --
 
 CREATE TABLE `tortas` (
   `id` int(11) NOT NULL,
-  `nombre` text DEFAULT NULL,
+  `nombre` varchar(50) DEFAULT NULL,
   `precio` decimal(10,2) DEFAULT NULL,
   `img` varchar(50) DEFAULT NULL,
   `estado` enum('Activo','Inactivo') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 --
--- Volcado de datos para la tabla `tortas`
+-- Dumping data for table `tortas`
 --
 
 INSERT INTO `tortas` (`id`, `nombre`, `precio`, `img`, `estado`) VALUES
-(1, 'pablo', 1.00, '', ''),
-(2, 'juan', 1.00, '', 'Activo');
+(1, 'pablo', 1.00, 'images.jpg', 'Activo'),
+(3, 'Hola', 10.00, '', 'Inactivo'),
+(5, 'Torta de Arequipe', 1.80, '', 'Inactivo'),
+(7, 'sssss', 2.00, '', 'Activo'),
+(8, 'sssw2', 3.00, '', 'Activo'),
+(11, 'torta', 12.00, NULL, 'Activo'),
+(12, '123', 21.00, 'src/Assets/img/tortasimages.jpgjpg', 'Activo');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Table structure for table `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -145,17 +164,26 @@ CREATE TABLE `usuarios` (
   `nombre` text DEFAULT NULL,
   `apellido` text DEFAULT NULL,
   `usuario` text DEFAULT NULL,
-  `contrasena` int(11) DEFAULT NULL,
-  `rol` enum('admin','superAdmin') DEFAULT NULL,
+  `cedula` varchar(50) DEFAULT NULL,
+  `rol` enum('Admin','Usuario') DEFAULT NULL,
   `estado` enum('Activo','Inactivo') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 --
--- Índices para tablas volcadas
+-- Dumping data for table `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `usuario`, `cedula`, `rol`, `estado`) VALUES
+(1, 'Pablo', ':v', 'Hola123', '1234567', 'Admin', 'Activo'),
+(2, 'si', 'no', 'mondongo', '234234234', 'Admin', 'Activo'),
+(4, 'jj', 'eee', 'asdasdas', 'V-23123556', 'Admin', 'Activo');
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `clientes`
+-- Indexes for table `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id`) USING BTREE,
@@ -163,7 +191,7 @@ ALTER TABLE `clientes`
   ADD UNIQUE KEY `apellido` (`apellido`) USING HASH;
 
 --
--- Indices de la tabla `detalles_entrada`
+-- Indexes for table `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
   ADD PRIMARY KEY (`id`),
@@ -171,7 +199,7 @@ ALTER TABLE `detalles_entrada`
   ADD KEY `FK_detalles_entrada_entradas` (`id_entrada`);
 
 --
--- Indices de la tabla `detalles_factura`
+-- Indexes for table `detalles_factura`
 --
 ALTER TABLE `detalles_factura`
   ADD PRIMARY KEY (`id`),
@@ -179,138 +207,137 @@ ALTER TABLE `detalles_factura`
   ADD KEY `FK_detalles_factura_factura` (`id_factura`);
 
 --
--- Indices de la tabla `entradas`
+-- Indexes for table `entradas`
 --
 ALTER TABLE `entradas`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `factura`
+-- Indexes for table `factura`
 --
 ALTER TABLE `factura`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_factura_clientes` (`id_cliente`);
 
 --
--- Indices de la tabla `lotes`
+-- Indexes for table `lotes`
 --
 ALTER TABLE `lotes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_lotes_tortas` (`id_torta`);
 
 --
--- Indices de la tabla `pago`
+-- Indexes for table `pago`
 --
 ALTER TABLE `pago`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_pago_factura` (`id_factura`);
 
 --
--- Indices de la tabla `tortas`
+-- Indexes for table `tortas`
 --
 ALTER TABLE `tortas`
   ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD UNIQUE KEY `nombre` (`nombre`) USING HASH;
+  ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD UNIQUE KEY `nombre` (`nombre`) USING HASH,
-  ADD UNIQUE KEY `apellido` (`apellido`) USING HASH,
+  ADD UNIQUE KEY `cedula` (`cedula`),
   ADD UNIQUE KEY `usuario` (`usuario`) USING HASH;
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `clientes`
+-- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT de la tabla `detalles_entrada`
+-- AUTO_INCREMENT for table `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `detalles_factura`
+-- AUTO_INCREMENT for table `detalles_factura`
 --
 ALTER TABLE `detalles_factura`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `entradas`
+-- AUTO_INCREMENT for table `entradas`
 --
 ALTER TABLE `entradas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `factura`
+-- AUTO_INCREMENT for table `factura`
 --
 ALTER TABLE `factura`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `lotes`
+-- AUTO_INCREMENT for table `lotes`
 --
 ALTER TABLE `lotes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `pago`
+-- AUTO_INCREMENT for table `pago`
 --
 ALTER TABLE `pago`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `tortas`
+-- AUTO_INCREMENT for table `tortas`
 --
 ALTER TABLE `tortas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `detalles_entrada`
+-- Constraints for table `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
   ADD CONSTRAINT `FK_detalles_entrada_entradas` FOREIGN KEY (`id_entrada`) REFERENCES `entradas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `FK_detalles_entrada_tortas` FOREIGN KEY (`id_torta`) REFERENCES `tortas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `detalles_factura`
+-- Constraints for table `detalles_factura`
 --
 ALTER TABLE `detalles_factura`
   ADD CONSTRAINT `FK_detalles_factura_factura` FOREIGN KEY (`id_factura`) REFERENCES `factura` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `FK_detalles_factura_tortas` FOREIGN KEY (`id_torta`) REFERENCES `tortas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `factura`
+-- Constraints for table `factura`
 --
 ALTER TABLE `factura`
   ADD CONSTRAINT `FK_factura_clientes` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `lotes`
+-- Constraints for table `lotes`
 --
 ALTER TABLE `lotes`
   ADD CONSTRAINT `FK_lotes_tortas` FOREIGN KEY (`id_torta`) REFERENCES `tortas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `pago`
+-- Constraints for table `pago`
 --
 ALTER TABLE `pago`
   ADD CONSTRAINT `FK_pago_factura` FOREIGN KEY (`id_factura`) REFERENCES `factura` (`id`) ON UPDATE CASCADE;

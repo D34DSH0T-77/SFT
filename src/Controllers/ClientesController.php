@@ -12,6 +12,7 @@ class ClientesController {
     }
 
     public function index() {
+        verificarLogin();
         $clientes = $this->clientesModel->mostrar();
         $data = [
             'title' => 'Clientes',
@@ -24,6 +25,7 @@ class ClientesController {
     }
 
     public function agregar() {
+        verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'clientes');
             exit;
@@ -62,6 +64,7 @@ class ClientesController {
         }
     }
     public function editar($id) {
+        verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'clientes');
             exit;
@@ -102,6 +105,7 @@ class ClientesController {
         }
     }
     public function eliminar($id) {
+        verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'clientes');
             exit;

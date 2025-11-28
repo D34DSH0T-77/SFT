@@ -35,50 +35,56 @@ class TortasController {
         $torta->nombre = trim($_POST['nombre'] ?? '');
         $torta->precio = trim($_POST['precio'] ?? '');
         $torta->estado = trim($_POST['estado'] ?? '');
-        //$torta->img = trim($_POST['imagen'] ?? '');
 
-        if (empty($_POST["btn btn-primary"])) {
-            $imagen = $_FILES["imagen"]["tmp_name"];
-            $nombreImagen = $_FILES["imagen"]["name"];
-            $tipoImagen = strtolower(pathinfo($nombreImagen, PATHINFO_EXTENSION));
-            $tamanoImagen = $_FILES["imagen"]["size"];
-            $directorio = "src/Assets/img/tortas";
+        // Inicializamos la imagen como vacía por defecto
+        $torta->img = '';
 
-            if ($tipoImagen == "jpg" || $tipoImagen == "jpeg" || $tipoImagen == "png") {
-                $torta->img = $directorio . $nombreImagen . $tipoImagen;
+        // --- LÓGICA DE IMAGEN ---
+        if (!empty($_FILES['imagen']['name'])) {
 
-                if (move_uploaded_file($imagen, $torta->img)) {
+            $directorio = "src/Assets/img/tortas/";
+            $nombreOriginal = $_FILES["imagen"]["name"];
+            $tmpName = $_FILES["imagen"]["tmp_name"];
+            $tipoImagen = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+            $permitidos = ['jpg', 'jpeg', 'png'];
+
+            if (in_array($tipoImagen, $permitidos)) {
+                // Generamos nombre ÚNICO (igual que en editar)
+                $nuevoNombre = "torta_" . time() . "." . $tipoImagen;
+                $rutaDestino = $directorio . $nuevoNombre;
+
+                if (move_uploaded_file($tmpName, $rutaDestino)) {
+                    // Solo si se mueve bien, asignamos la ruta al objeto
+                    $torta->img = $rutaDestino;
                 } else {
-                    $_SESSION['mensaje'] = [
-                        'tipo' => 'danger',
-                        'texto' => 'imagen no permitida'
-                    ];
-                }
-            }
-            $errores = [];
-
-            if (empty($errores)) {
-                if ($this->tortasModelo->agregar($torta)) {
-                    $_SESSION['mensaje'] = [
-                        'tipo' => 'success',
-                        'texto' => 'Torta agregada correctamente'
-                    ];
+                    $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al subir la imagen'];
                     header('Location: ' . RUTA_BASE . 'tortas');
-
-                    exit();
-                } else {
-                    $_SESSION['mensaje'] = [
-                        'tipo' => 'danger',
-                        'texto' => 'Error al agregar la torta'
-                    ];
-                    header('Location: ' . RUTA_BASE . 'tortas');
-
                     exit();
                 }
+            } else {
+                $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Formato no permitido (solo JPG/PNG)'];
+                header('Location: ' . RUTA_BASE . 'tortas');
+                exit();
             }
         }
+
+        // --- GUARDADO EN BD ---
+        // Validamos que los campos obligatorios no estén vacíos
+        if (!empty($torta->nombre) && !empty($torta->precio)) {
+            if ($this->tortasModelo->agregar($torta)) {
+                $_SESSION['mensaje'] = ['tipo' => 'success', 'texto' => 'Torta agregada correctamente'];
+            } else {
+                $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al guardar en BD'];
+            }
+        } else {
+            $_SESSION['mensaje'] = ['tipo' => 'warning', 'texto' => 'Nombre y Precio son obligatorios'];
+        }
+
+        header('Location: ' . RUTA_BASE . 'tortas');
+        exit();
     }
     public function editar($id) {
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'tortas');
             exit();
@@ -91,26 +97,57 @@ class TortasController {
         $torta->nombre = trim($_POST['editarnombre'] ?? $torta->nombre);
         $torta->precio = trim($_POST['editarprecio'] ?? $torta->precio);
         $torta->estado = trim($_POST['editarestado'] ?? $torta->estado);
-        $torta->img = trim($_POST['editarimagen'] ?? $torta->img);
 
-        $errores = [];
-        if (empty($errores)) {
-            if ($this->tortasModelo->editar($torta)) {
-                $_SESSION['mensaje'] = [
-                    'tipo' => 'success',
-                    'texto' => 'Torta editada correctamente'
-                ];
-                header('Location: ' . RUTA_BASE . 'tortas');
-                exit();
+        if (!empty($_FILES['imagen']['name'])) {
+
+            $directorio = "src/Assets/img/tortas/";
+
+            $nombreOriginal = $_FILES["imagen"]["name"];
+            $tmpName = $_FILES["imagen"]["tmp_name"];
+
+            $tipoImagen = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+            $permitidos = ['jpg', 'jpeg', 'png'];
+
+            if (in_array($tipoImagen, $permitidos)) {
+
+                if (!empty($torta->img) && file_exists($torta->img)) {
+                    unlink($torta->img);
+                }
+
+
+                $nuevoNombre = "torta_" . time() . "." . $tipoImagen;
+                $rutaDestino = $directorio . $nuevoNombre;
+
+
+                if (move_uploaded_file($tmpName, $rutaDestino)) {
+
+                    $torta->img = $rutaDestino;
+                } else {
+                    $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al mover la imagen a la carpeta'];
+                    header('Location: ' . RUTA_BASE . 'tortas');
+                    exit();
+                }
             } else {
-                $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
-                    'texto' => 'Error al editar la torta'
-                ];
+                $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Formato de imagen no permitido (solo JPG, PNG)'];
                 header('Location: ' . RUTA_BASE . 'tortas');
                 exit();
             }
         }
+
+        if ($this->tortasModelo->editar($torta)) {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'success',
+                'texto' => 'Torta editada correctamente'
+            ];
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error al guardar los cambios en la BD'
+            ];
+        }
+
+        header('Location: ' . RUTA_BASE . 'tortas');
+        exit();
     }
     public function eliminar($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

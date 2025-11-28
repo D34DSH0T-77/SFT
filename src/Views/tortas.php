@@ -35,7 +35,7 @@
                                 <?php foreach ($tortas as $torta): ?>
                                     <tr>
                                         <td class="text-center"><?= $contador++ ?></td>
-                                        <td class="text-center"><img src="<?= !empty($torta->img) ? RUTA_BASE . $torta->img : RUTA_BASE . 'src/Assets/img/placeholder.png' ?> " style="width: 50px; height: 50px;" alt="Torta de Chocolate" class="img-fluid align-middle"></td>
+                                        <td class="text-center"><img src="<?= !empty($torta->img) ? RUTA_BASE . $torta->img : RUTA_BASE . 'src/Assets/img/placeholder.png' ?> " style="width: 50px; height: 50px;" alt="<?= $torta->nombre ?>" class="img-fluid align-middle"></td>
                                         <td><?= $torta->nombre ?></td>
                                         <td><?= $torta->precio ?></td>
                                         <td class="text-center"><span class="badge <?= $torta->estado === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= $torta->estado ?></span></td>

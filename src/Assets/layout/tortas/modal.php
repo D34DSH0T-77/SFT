@@ -50,7 +50,7 @@
                   <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                  <form id="formTortaseditar" method="post">
+                  <form id="formTortaseditar" method="post" enctype="multipart/form-data">
                       <div class="mb-3">
                           <input type="hidden" name="id" id="id_edit">
                           <label for="editarnombre" class="form-label">Nombre</label>
@@ -72,7 +72,10 @@
                       </div>
                       <div class="mb-3">
                           <label for="editarimagen" class="form-label">Imagen</label>
-                          <input class="form-control form-control-sm" id="editarimagen" name="editarimagen" type="file" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                          <input class="form-control form-control-sm" id="editarimagen" name="imagen" type="file" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                          <div class="mt-2 text-center">
+                              <img id="imagen-preview" src="" alt="Vista previa" style="max-width: 100%; max-height: 200px; display: none; border-radius: 8px;">
+                          </div>
                       </div>
                       <div class="modal-footer" style="border-top-color: var(--border-color);">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

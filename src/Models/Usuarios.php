@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Conex\Conexion;
+use PDO;
 
 class Usuarios extends Conexion {
     public $id;
@@ -25,7 +26,7 @@ class Usuarios extends Conexion {
             $stmt->bindParam(":cedula", $usuarios->cedula);
             $stmt->bindParam(":rol", $usuarios->rol);
             $stmt->bindParam(":estado", $usuarios->estado);
-            $stmt->execute();
+            return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al agregar" . $th->getMessage());
         }
@@ -42,7 +43,7 @@ class Usuarios extends Conexion {
             $stmt->bindParam(":rol", $usuarios->rol);
             $stmt->bindParam(":estado", $usuarios->estado);
 
-            $stmt->execute();
+            return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al editar" . $th->getMessage());
         }
@@ -52,7 +53,7 @@ class Usuarios extends Conexion {
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
-            $stmt->execute();
+            return $stmt->execute();
         } catch (\Throwable $th) {
             error_log("fallo al eliminar" . $th->getMessage());
         }
@@ -63,7 +64,7 @@ class Usuarios extends Conexion {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
-            return $stmt->fetch();
+            return $stmt->fetch(PDO::FETCH_CLASS, Usuarios::class);
         } catch (\Throwable $th) {
             error_log("fallo al buscar por id" . $th->getMessage());
         }
@@ -73,7 +74,7 @@ class Usuarios extends Conexion {
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Usuarios::class);
         } catch (\Throwable $th) {
             error_log("fallo total" . $th->getMessage());
         }

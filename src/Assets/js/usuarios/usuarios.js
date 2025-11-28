@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
             let nombre = button.getAttribute('data-bs-nombre')
             let apellido = button.getAttribute('data-bs-apellido')
             let estado = button.getAttribute('data-bs-estado')
+            let usuario = button.getAttribute('data-bs-usuario')
+            let rol = button.getAttribute('data-bs-rol')
+            let cedula = button.getAttribute('data-bs-cedula')
 
             // IDs matching modal.php
             let inputId = document.getElementById('idEditar')

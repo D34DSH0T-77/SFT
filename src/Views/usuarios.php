@@ -42,8 +42,8 @@
                                         <td><?= $usuario->rol ?></td>
                                         <td class="text-center"><span class="badge <?= $usuario->estado === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= $usuario->estado ?></span></td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" data-bs-target="#modalUsuariosEditar" data-bs-id="<?= $usuario->id ?>" data-bs-nombre="<?= $usuario->nombre ?>" data-bs-apellido="<?= $usuario->apellido ?>" data-bs-usuario="<?= $usuario->usuario ?>" data-bs-rol="<?= $usuario->rol ?>" data-bs-cedula="<?= $usuario->cedula ?>" data-bs-estado="<?= $usuario->estado ?>"><span class="material-symbols-sharp">edit</span></button>
-                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalUsuariosEliminar" data-bs-id="<?= $usuario->id ?>"><span class="material-symbols-sharp">delete</span></button>
+                                            <button class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" data-bs-target="#modalEditar" data-bs-id="<?= $usuario->id ?>" data-bs-nombre="<?= $usuario->nombre ?>" data-bs-apellido="<?= $usuario->apellido ?>" data-bs-usuario="<?= $usuario->usuario ?>" data-bs-rol="<?= $usuario->rol ?>" data-bs-cedula="<?= $usuario->cedula ?>" data-bs-estado="<?= $usuario->estado ?>"><span class="material-symbols-sharp">edit</span></button>
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-bs-id="<?= $usuario->id ?>"><span class="material-symbols-sharp">delete</span></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -59,5 +59,6 @@
 
     <?php require('src/Assets/layout/script-footer.php') ?>
 </body>
+<script src="<?= RUTA_BASE ?>src/Assets/js/usuarios/usuarios.js"></script>
 
 </html>

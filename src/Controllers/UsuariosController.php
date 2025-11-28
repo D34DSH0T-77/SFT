@@ -67,19 +67,76 @@ class UsuariosController {
         }
     }
 
-    public function editar() {
+    public function editar($id) {
+        error_log("Editar ID: " . $id);
+        error_log("Method: " . $_SERVER['REQUEST_METHOD']);
+        error_log("POST: " . print_r($_POST, true));
         verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'usuarios');
             exit();
+        }
+        if (empty($_POST)) {
+            error_log("POST is empty!");
+            $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'No se recibieron datos del formulario'];
+            header('Location: ' . RUTA_BASE . 'usuarios');
+            exit();
+        }
+        $usuario = $this->usuarioModel->buscarPorid($id);
+        if (!$usuario) {
+            header('Location: ' . RUTA_BASE . 'usuarios');
+            exit();
+        }
+        $usuario->nombre = $_POST['nombre'];
+        $usuario->apellido = $_POST['apellido'];
+        $usuario->cedula = $_POST['cedula'];
+        $usuario->usuario = $_POST['usuario'];
+        $usuario->rol = $_POST['rol'];
+        $usuario->estado = $_POST['estado'];
+
+        $errores = [];
+        if (empty($errores)) {
+            if ($this->usuarioModel->editar($usuario)) {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'success',
+                    'texto' => 'Usuario editado correctamente'
+                ];
+                header('Location: ' . RUTA_BASE . 'usuarios');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = [
+                    'tipo' => 'danger',
+                    'texto' => 'Error al editar el usuario'
+                ];
+                header('Location: ' . RUTA_BASE . 'usuarios');
+                exit;
+            }
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error en el formulario'
+            ];
+            header('Location: ' . RUTA_BASE . 'usuarios');
+            exit;
         }
     }
 
-    public function eliminar() {
+    public function eliminar($id) {
         verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'usuarios');
             exit();
         }
+        $id = $_POST['id'];
+        if (!$this->usuarioModel->eliminar($id)) {
+            header('Location: ' . RUTA_BASE . 'usuarios');
+            exit();
+        }
+        $_SESSION['mensaje'] = [
+            'tipo' => 'success',
+            'texto' => 'Usuario eliminado correctamente'
+        ];
+        header('Location: ' . RUTA_BASE . 'usuarios');
+        exit;
     }
 }

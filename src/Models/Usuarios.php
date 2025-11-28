@@ -68,6 +68,7 @@ class Usuarios extends Conexion {
             return $stmt->fetch();
         } catch (\Throwable $th) {
             error_log("fallo al buscar por id" . $th->getMessage());
+            return null;
         }
     }
 

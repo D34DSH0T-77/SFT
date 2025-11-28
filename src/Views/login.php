@@ -14,11 +14,8 @@
 <body>
 
     <div class="login-card">
-        <h2 class="login-title">Nombre del sistem :v</h2>
+        <h2 class="login-title">BajoCeroPostres</h2>
         <p class="text-center text-muted mb-4">Inicia sesión para continuar</p>
-
-        <?php require('src/Assets/layout/notificaciones.php') ?>
-
         <form action="<?= RUTA_BASE ?>Login/loguear" method="POST">
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario</label>
@@ -26,8 +23,9 @@
             </div>
             <div class="mb-4">
                 <label for="cedula" class="form-label">Cedula</label>
-                <input type="text" class="form-control" id="cedula" name="cedula" required>
+                <input type="password" class="form-control" id="cedula" name="cedula" required>
             </div>
+            <?php require('src/Assets/layout/notificaciones.php') ?>
             <button type="submit" class="btn btn-login btn-lg rounded-pill">INGRESAR</button>
         </form>
     </div>

@@ -25,6 +25,7 @@ class Entradas extends Conexion {
             return $stmt->fetchAll(PDO::FETCH_CLASS, Entradas::class);
         } catch (\Exception $e) {
             error_log("Error al mostrar entradas: " . $e->getMessage());
+            return false;
         }
     }
 

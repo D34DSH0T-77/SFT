@@ -112,7 +112,8 @@ a {
 
 .sidebar-link:hover,
 .sidebar-link.active {
-    background-color: rgba(255, 183, 178, 0.1); /* Pastel Pink with opacity */
+    background-color: rgba(255, 183, 178, 0.1);
+    /* Pastel Pink with opacity */
     color: var(--pastel-pink);
 }
 
@@ -134,7 +135,7 @@ a {
     transition: all 0.3s ease;
 }
 
-.sidebar.collapsed ~ .main-content {
+.sidebar.collapsed~.main-content {
     margin-left: var(--sidebar-width-collapsed);
 }
 
@@ -189,14 +190,17 @@ a {
     background-color: rgba(255, 183, 178, 0.2);
     color: var(--pastel-pink);
 }
+
 .bg-pastel-mint {
     background-color: rgba(181, 234, 215, 0.2);
     color: var(--pastel-mint);
 }
+
 .bg-pastel-lavender {
     background-color: rgba(199, 206, 234, 0.2);
     color: var(--pastel-lavender);
 }
+
 .bg-pastel-peach {
     background-color: rgba(255, 218, 193, 0.2);
     color: var(--pastel-peach);
@@ -249,6 +253,7 @@ a {
     background-color: rgba(181, 234, 215, 0.2);
     color: var(--pastel-mint);
 }
+
 .status-pending {
     background-color: rgba(255, 218, 193, 0.2);
     color: var(--pastel-peach);
@@ -299,4 +304,72 @@ a {
 
 .material-symbols-sharp {
     line-height: normal !important;
+}
+
+/* ventas */
+.card-custom {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card-header-custom {
+    background-color: transparent;
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-body-custom {
+    padding: 20px;
+}
+
+.form-control-custom {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+}
+
+.btn-custom {
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-weight: 500;
+}
+
+.total-box {
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.action-btn {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    color: white;
+}
+
+.btn-register {
+    background-color: #198754;
+}
+
+.btn-pause {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.btn-note {
+    background-color: #0d6efd;
+}
+
+.product-table th {
+    font-weight: 600;
+    color: #555;
 }

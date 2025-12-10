@@ -125,18 +125,22 @@ class UsuariosController {
         verificarLogin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . RUTA_BASE . 'usuarios');
-            exit();
+            exit;
         }
-        $id = $_POST['id'];
-        if (!$this->usuarioModel->eliminar($id)) {
+        if ($this->usuarioModel->eliminar($id)) {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'success',
+                'texto' => 'Usuario eliminado correctamente'
+            ];
             header('Location: ' . RUTA_BASE . 'usuarios');
-            exit();
+            exit;
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error al eliminar el cliente'
+            ];
+            header('Location: ' . RUTA_BASE . 'clientes');
+            exit;
         }
-        $_SESSION['mensaje'] = [
-            'tipo' => 'success',
-            'texto' => 'Usuario eliminado correctamente'
-        ];
-        header('Location: ' . RUTA_BASE . 'usuarios');
-        exit;
     }
 }

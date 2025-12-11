@@ -29,15 +29,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td>asdasd</td>
-                                <td class="text-center">12/12/2022</td>
-                                <td class="text-center">Local 1</td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-info text-white"><span class="material-symbols-sharp">visibility</span></button>
-                                </td>
-                            </tr>
+
                             <?php if (isset($entradas) && !empty($entradas)): ?>
                                 <?php $contador = 1; ?>
                                 <?php foreach ($entradas as $entrada): ?>
@@ -47,8 +39,7 @@
                                         <td class="text-center"><?= $entrada->fecha ?></td>
                                         <td class="text-center"><?= $entrada->local ?></td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-warning text-white"><span class="material-symbols-sharp">edit</span></button>
-                                            <button class="btn btn-sm btn-danger"><span class="material-symbols-sharp">delete</span></button>
+                                            <a href="<?= RUTA_BASE ?>Entradas/ver/<?= $entrada->id ?>" class="btn btn-sm btn-info text-white"><span class="material-symbols-sharp">visibility</span></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

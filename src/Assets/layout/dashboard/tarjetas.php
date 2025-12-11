@@ -17,7 +17,7 @@
         <a href="<?= RUTA_BASE . 'clientes' ?>">
             <div class="stats-card">
                 <div class="stats-info">
-                    <h3>17</h3>
+                    <h3><?= number_format($totalClientes) ?? 0 ?></h3>
                     <p>Clientes</p>
                 </div>
                 <div class="stats-icon bg-pastel-lavender">

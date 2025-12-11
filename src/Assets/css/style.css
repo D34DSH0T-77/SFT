@@ -135,7 +135,7 @@ a {
     transition: all 0.3s ease;
 }
 
-.sidebar.collapsed~.main-content {
+.sidebar.collapsed ~ .main-content {
     margin-left: var(--sidebar-width-collapsed);
 }
 
@@ -307,15 +307,18 @@ a {
 }
 
 /* ventas */
+.bg-modal {
+    background: var(--bg-body) !important;
+}
 .card-custom {
     border: none;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
+    background: var(--bg-card);
 }
 
 .card-header-custom {
-    background-color: transparent;
     border-bottom: 1px solid #eee;
     padding: 15px 20px;
     font-weight: 600;

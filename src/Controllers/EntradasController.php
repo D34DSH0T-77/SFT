@@ -66,6 +66,9 @@ class EntradasController {
                 $detalles->cantidad = $cantidades[$i] ?? 0;
 
                 $detalles->AgregarDetalles($detalles);
+
+                // Update stock
+                $this->tortasModel->sumarStock($id_tortas[$i], $cantidades[$i]);
             }
 
             header('Location: ' . RUTA_BASE . 'entradas');

@@ -11,6 +11,7 @@ class Tortas extends Conexion {
     public $precio;
     public $img;
     public $estado;
+    public $stock;
 
     private $tabla = 'tortas';
 
@@ -100,6 +101,19 @@ class Tortas extends Conexion {
         } catch (\Throwable $th) {
             error_log("Error en paginación: " . $th->getMessage());
             return [];
+        }
+    }
+
+    public function sumarStock($id, $cantidad) {
+        $sql = "UPDATE {$this->tabla} SET stock = stock + :cantidad WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":id", $id);
+            $stmt->bindParam(":cantidad", $cantidad);
+            return $stmt->execute();
+        } catch (\Throwable $th) {
+            error_log("Error al sumar stock: " . $th->getMessage());
+            return false;
         }
     }
 }

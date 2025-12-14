@@ -15,7 +15,7 @@ use App\Models\Entradas;
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="codigoInput" class="form-label">Código</label>
-                            <input type="text" name="codigo" id="codigoInput" class="form-control" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                            <input type="text" name="codigo" id="codigoInput" class="form-control" required readonly style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
                         </div>
                         <div class="col-md-4">
                             <label for="fechaInput" class="form-label">Fecha</label>
@@ -23,7 +23,7 @@ use App\Models\Entradas;
                         </div>
                         <div class="col-md-4">
                             <label for="localInput" class="form-label">Local</label>
-                            <input type="text" name="local" id="localInput" class="form-control" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                            <input type="text" name="local" id="localInput" value="El Papa de las Tortas C.A" class="form-control" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
                         </div>
                     </div>
                     <hr>

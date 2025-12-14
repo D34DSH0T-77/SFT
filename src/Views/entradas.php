@@ -22,7 +22,7 @@
                         <thead>
                             <tr>
                                 <th width="5%" class="text-center no-ordenar">#</th>
-                                <th class="no-ordenar">Codigo</th>
+                                <th class="text-start no-ordenar">Codigo</th>
                                 <th width="10%" class="text-center no-ordenar">Fecha</th>
                                 <th width="15%" class="text-center no-ordenar">Local</th>
                                 <th width="15%" class="text-center no-ordenar">Acciones</th>
@@ -35,8 +35,8 @@
                                 <?php foreach ($entradas as $entrada): ?>
                                     <tr>
                                         <td class="text-center"><?= $contador++ ?></td>
-                                        <td><?= $entrada->codigo ?></td>
-                                        <td class="text-center"><?= $entrada->fecha ?></td>
+                                        <td class="text-start"><?= $entrada->codigo ?></td>
+                                        <td class="text-center"><?= date('d/m/Y', strtotime($entrada->fecha)) ?></td>
                                         <td class="text-center"><?= $entrada->local ?></td>
                                         <td class="text-center">
                                             <a href="<?= RUTA_BASE ?>Entradas/ver/<?= $entrada->id ?>" class="btn btn-sm btn-info text-white"><span class="material-symbols-sharp">visibility</span></a>

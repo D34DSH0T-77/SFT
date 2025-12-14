@@ -43,19 +43,17 @@ class EntradasController {
         $entradas->codigo = $_POST['codigo'] ?? '';
         $entradas->fecha = $_POST['fecha'] ?? '';
         $entradas->local = $_POST['local'] ?? '';
+        $entradas->precio_bs = $_POST['precio_bs'] ?? '';
+        $entradas->precio_usd = $_POST['precio_usd'] ?? '';
         $id_entrada = $this->entradasModel->guardarEntrada($entradas);
 
         if ($id_entrada) {
             $id_tortas = $_POST['id_torta'] ?? [];
             $cantidades = $_POST['cantidad'] ?? [];
-            $precios_bs = $_POST['precio_bs'] ?? [];
-            $precios_usd = $_POST['precio_usd'] ?? [];
 
             // Ensure we have arrays
             if (!is_array($id_tortas)) $id_tortas = [$id_tortas];
             if (!is_array($cantidades)) $cantidades = [$cantidades];
-            if (!is_array($precios_bs)) $precios_bs = [$precios_bs];
-            if (!is_array($precios_usd)) $precios_usd = [$precios_usd];
 
             $detalles = $this->detallesentradasModel;
             $lotes = $this->lotesModel;
@@ -65,8 +63,6 @@ class EntradasController {
 
                 $detalles->id_entrada = $id_entrada;
                 $detalles->id_torta = $id_tortas[$i];
-                $detalles->precio_bs = $precios_bs[$i] ?? 0;
-                $detalles->precio_usd = $precios_usd[$i] ?? 0;
                 $detalles->cantidad = $cantidades[$i] ?? 0;
 
                 $detalles->AgregarDetalles($detalles);

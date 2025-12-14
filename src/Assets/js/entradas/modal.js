@@ -19,15 +19,34 @@ document.addEventListener('DOMContentLoaded', function () {
         modalConfirmacion = new bootstrap.Modal(modalConfirmacionEl);
     }
 
+    // Set default date to today and generate code
+    const fechaInput = document.getElementById('fechaInput');
+    const codigoInput = document.getElementById('codigoInput');
+
+    if (fechaInput) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const yy = String(yyyy).slice(-2);
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+
+        fechaInput.value = `${yyyy}-${mm}-${dd}`;
+
+        if (codigoInput) {
+            const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+            codigoInput.value = `ENT-${dd}${mm}${yy}-${randomStr}`;
+        }
+    }
+
     let detalles = [];
 
     btnAgregar.addEventListener('click', function () {
         const idTorta = tortaSelect.value;
         const nombreTorta = tortaSelect.options[tortaSelect.selectedIndex]?.dataset.nombre;
         const cantidad = parseInt(cantidadInput.value);
-        
+
         // Prices are now 0 initially, will be calculated at the end
-        const bolivares = 0; 
+        const bolivares = 0;
         const dolar = 0;
 
         if (!idTorta || isNaN(cantidad) || cantidad <= 0) {
@@ -98,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('La lista está vacía. Agregue al menos una torta.');
                 return;
             }
-            
+
             // Validate main fields
             if (!form.codigo.value || !form.fecha.value || !form.local.value) {
                 alert('Por favor complete todos los datos de la entrada (Código, Fecha, Local)');
@@ -106,19 +125,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Show confirmation modal
-             if (modalConfirmacion) {
+            if (modalConfirmacion) {
                 modalConfirmacion.show();
             } else {
                 // Fallback if bootstrap modal fails
-                if(confirm("Confirmar envío? (No se puede ingresar precio total sin el modal)")) {
-                     submitForm(0, 0);
+                if (confirm('Confirmar envío? (No se puede ingresar precio total sin el modal)')) {
+                    submitForm(0, 0);
                 }
             }
         });
     }
 
     if (btnConfirmarEnvio) {
-        btnConfirmarEnvio.addEventListener('click', function() {
+        btnConfirmarEnvio.addEventListener('click', function () {
             const totalBs = parseFloat(totalBsInput.value);
             const totalUsd = parseFloat(totalUsdInput.value);
 
@@ -135,16 +154,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Distribute prices
         // Strategy: Calculate average unit price based on TOTAL QUANTITY of items
         let totalItemsQty = detalles.reduce((sum, item) => sum + item.cantidad, 0);
-        
+
         if (totalItemsQty > 0) {
             const unitBs = totalBs / totalItemsQty;
             const unitUsd = totalUsd / totalItemsQty;
 
             // Update details with calculated unit prices
-            detalles = detalles.map(item => {
+            detalles = detalles.map((item) => {
                 return {
                     ...item,
-                    bolivares: unitBs, // This is unit price. 
+                    bolivares: unitBs, // This is unit price.
                     dolar: unitUsd
                 };
             });
@@ -157,9 +176,13 @@ document.addEventListener('DOMContentLoaded', function () {
             // The controller expects UNIT PRICE? Or Total Line Price?
             // "precio_bs" usually is unit price in 'Detalles'.
             // Let's assume Unit Price because we multiplied by quantity in average.
-            addHiddenInput('precio_bs[]', item.bolivares); 
+            addHiddenInput('precio_bs[]', item.bolivares);
             addHiddenInput('precio_usd[]', item.dolar);
         });
+
+        // Add total prices to the form
+        addHiddenInput('precio_bs', totalBs);
+        addHiddenInput('precio_usd', totalUsd);
 
         form.submit();
     }

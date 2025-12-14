@@ -10,6 +10,8 @@ class Entradas extends Conexion {
     public $codigo;
     public $fecha;
     public $local;
+    public $precio_bs;
+    public $precio_usd;
 
     private $table = "entradas";
 
@@ -30,12 +32,14 @@ class Entradas extends Conexion {
     }
 
     public function guardarEntrada(Entradas $entradas) {
-        $sql = "INSERT INTO {$this->table} (codigo, fecha, local) VALUES (:codigo, :fecha, :local)";
+        $sql = "INSERT INTO {$this->table} (codigo, fecha, local, precio_bs, precio_usd) VALUES (:codigo, :fecha, :local, :precio_bs, :precio_usd)";
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':codigo', $this->codigo);
-            $stmt->bindParam(':fecha', $this->fecha);
-            $stmt->bindParam(':local', $this->local);
+            $stmt->bindParam(':codigo', $entradas->codigo);
+            $stmt->bindParam(':fecha', $entradas->fecha);
+            $stmt->bindParam(':local', $entradas->local);
+            $stmt->bindParam(':precio_bs', $entradas->precio_bs);
+            $stmt->bindParam(':precio_usd', $entradas->precio_usd);
             if ($stmt->execute()) {
                 return $this->conn->lastInsertId();
             }

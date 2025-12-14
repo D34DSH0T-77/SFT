@@ -27,6 +27,17 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">Total (Bs)</label>
+                                    <p class="form-control-plaintext text-white fs-4 fw-bold"><?= number_format($entrada->precio_bs, 2) ?> Bs</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">Total ($)</label>
+                                    <p class="form-control-plaintext text-white fs-4 fw-bold">$ <?= number_format($entrada->precio_usd, 2) ?></p>
+                                </div>
+                            </div>
+
                             <hr>
                             <h4 class="text-light mb-3">Detalles de Tortas</h4>
 
@@ -35,9 +46,7 @@
                                     <thead>
                                         <tr>
                                             <th>Torta</th>
-                                            <th class="text-center">Cantidad</th>
-                                            <th class="text-end">Total Bs</th>
-                                            <th class="text-end">Total $</th>
+                                            <th class="text-center" style="width: 15%;">Cantidad</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -46,13 +55,11 @@
                                                 <tr>
                                                     <td><?= $detalle->nombre_torta ?></td>
                                                     <td class="text-center"><?= $detalle->cantidad ?></td>
-                                                    <td class="text-end"><?= number_format($detalle->cantidad * $detalle->precio_bs, 2) ?> Bs</td>
-                                                    <td class="text-end"><?= number_format($detalle->cantidad * $detalle->precio_usd, 2) ?> $</td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted">No hay detalles registrados.</td>
+                                                <td colspan="2" class="text-center text-muted">No hay detalles registrados.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>

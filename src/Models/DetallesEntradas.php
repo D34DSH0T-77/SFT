@@ -9,8 +9,6 @@ class DetallesEntradas extends Conexion {
     public $id;
     public $id_entrada;
     public $id_torta;
-    public $precio_bs;
-    public $precio_usd;
     public $cantidad;
 
     private $table = "detalles_entrada";
@@ -31,13 +29,11 @@ class DetallesEntradas extends Conexion {
         }
     }
     public function AgregarDetalles(DetallesEntradas $detalles) {
-        $sql = "INSERT INTO {$this->table} (id_entrada, id_torta,precio_bs,precio_usd, cantidad) VALUES(:id_entrada, :id_torta,:precio_bs,:precio_usd,:cantidad)";
+        $sql = "INSERT INTO {$this->table} (id_entrada, id_torta, cantidad) VALUES(:id_entrada, :id_torta, :cantidad)";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id_entrada', $detalles->id_entrada);
             $stmt->bindParam(':id_torta', $detalles->id_torta);
-            $stmt->bindParam(':precio_bs', $detalles->precio_bs);
-            $stmt->bindParam(':precio_usd', $detalles->precio_usd);
             $stmt->bindParam(':cantidad', $detalles->cantidad);
             $stmt->execute();
         } catch (\Exception $e) {
@@ -55,7 +51,7 @@ class DetallesEntradas extends Conexion {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id_entrada', $id_entrada);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_CLASS);
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (\Exception $e) {
             error_log("Error al obtener detalles de entrada: " . $e->getMessage());
             return [];

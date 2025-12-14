@@ -20,7 +20,7 @@ class Entradas extends Conexion {
     }
 
     public function mostrarEntradas() {
-        $sql = "SELECT * FROM {$this->table}";
+        $sql = "SELECT * FROM {$this->table} ORDER BY id DESC";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();

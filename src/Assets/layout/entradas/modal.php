@@ -89,6 +89,11 @@ use App\Models\Entradas;
             </div>
             <div class="modal-body">
                 <div class="mb-3">
+                    <label for="tasaInput" class="form-label text-info">Tasa BCV</label>
+                    <input type="number" id="tasaInput" class="form-control border-info" step="0.01" min="0" placeholder="Cargando..." style="background-color: var(--bg-body); color: var(--text-main);">
+                    <small class="text-muted" style="font-size: 0.7rem;">Ingrese la tasa o espere carga automática</small>
+                </div>
+                <div class="mb-3">
                     <label for="totalBsInput" class="form-label">Total Bolívares</label>
                     <input type="number" id="totalBsInput" class="form-control" step="0.01" min="0" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
                 </div>

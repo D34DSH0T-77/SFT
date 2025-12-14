@@ -40,4 +40,26 @@ class lotes extends Conexion {
             return [];
         }
     }
+    public function ajustar(lotes $lotes) {
+        $sql = "UPDATE {$this->tabla} SET cantidad= :cantidad WHERE id = :id ";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":cantidad", $lotes->cantidad);
+            $stmt->bindParam(":id", $lotes->id);
+            return $stmt->execute();
+        } catch (\Throwable $e) {
+            error_log("error al ajustar la entrada" . $e->getMessage());
+        }
+    }
+    public function buscarlote($id) {
+        $sql = "SELECT * FROM {$this->tabla} WHERE id_torta=:id_torta AND cantidad > 0";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":id_torta", $id);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            error_log("error al buscar el lote" . $e->getMessage());
+        }
+    }
 }

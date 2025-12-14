@@ -24,6 +24,7 @@
                                     <p class="card-text">
                                         <strong>Stock: <?= $torta->stock ?></strong>
                                     </p>
+                                    <button type="button" class="btn btn-sm btn-primary btn-ajustar" data-bs-toggle="modal" data-bs-target="#modalAjustar" data-bs-id="<?= $torta->id ?>">Ajustar</button>
                                 </div>
                             </div>
                         </div>
@@ -47,6 +48,11 @@
     </script>
 
     <?php require('src/Assets/layout/script-footer.php') ?>
+    <?php require('src/Assets/layout/inventario/ajustar.php') ?>
+    <script>
+        const BASE_URL = '<?= RUTA_BASE ?>';
+    </script>
+    <script src="<?= RUTA_BASE ?>src/Assets/js/inventario/inventario.js"></script>
 </body>
 
 </html>

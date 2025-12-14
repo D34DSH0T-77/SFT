@@ -42,4 +42,34 @@ class InventarioController {
         ];
         render_view('inventario', $data);
     }
+    public function getLotes($id) {
+        $lotes = $this->lotesModel->buscarlote($id);
+        header('Content-Type: application/json');
+        echo json_encode($lotes);
+        exit;
+    }
+
+    public function updateLote() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            if (!$data) {
+                http_response_code(400);
+                echo json_encode(['status' => 'error', 'message' => 'No data provided']);
+                exit;
+            }
+
+            $lote = new Lotes();
+            // Lotes model properties are public, matching the logic in ajustar()
+            $lote->id = $data['id'];
+            $lote->cantidad = $data['cantidad'];
+
+            if ($this->lotesModel->ajustar($lote)) {
+                echo json_encode(['status' => 'success']);
+            } else {
+                echo json_encode(['status' => 'error']);
+            }
+            exit;
+        }
+    }
 }

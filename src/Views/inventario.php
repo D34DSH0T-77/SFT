@@ -22,7 +22,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><?= $torta->nombre ?></h5>
                                     <p class="card-text">
-                                        <strong>Stock:</strong> <?= $torta->stock ?>
+                                        <strong>Stock: <?= $torta->stock ?></strong>
                                     </p>
                                 </div>
                             </div>

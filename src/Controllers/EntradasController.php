@@ -5,16 +5,19 @@ namespace App\Controllers;
 use App\Models\DetallesEntradas;
 use App\Models\Entradas;
 use App\Models\Tortas;
+use App\Models\lotes;
 
 class EntradasController {
     private Entradas $entradasModel;
     private $tortasModel;
     private $detallesentradasModel;
 
+    private $lotesModel;
     public function __construct() {
         $this->tortasModel = new Tortas();
         $this->entradasModel = new Entradas();
         $this->detallesentradasModel = new DetallesEntradas();
+        $this->lotesModel = new Lotes();
     }
 
     public function index() {
@@ -55,6 +58,7 @@ class EntradasController {
             if (!is_array($precios_usd)) $precios_usd = [$precios_usd];
 
             $detalles = $this->detallesentradasModel;
+            $lotes = $this->lotesModel;
 
             for ($i = 0; $i < count($id_tortas); $i++) {
                 if (empty($id_tortas[$i])) continue;
@@ -68,7 +72,9 @@ class EntradasController {
                 $detalles->AgregarDetalles($detalles);
 
                 // Update stock
-                $this->tortasModel->sumarStock($id_tortas[$i], $cantidades[$i]);
+                $lotes->id_torta = $id_tortas[$i];
+                $lotes->cantidad = $cantidades[$i];
+                $lotes->guardarLote($lotes);
             }
 
             header('Location: ' . RUTA_BASE . 'entradas');

@@ -4,7 +4,7 @@
         <a href="<?= RUTA_BASE . 'inventario' ?>">
             <div class="stats-card">
                 <div class="stats-info">
-                    <h3>15</h3>
+                    <h3><?= number_format($totalTortas) ?? 0 ?></h3>
                     <p>Stock (Tortas)</p>
                 </div>
                 <div class="stats-icon bg-pastel-pink">

@@ -68,7 +68,7 @@
                                         <td>$<?= number_format($venta->total_usd, 2) ?></td>
                                         <td>Bs <?= number_format($venta->total_bs, 2) ?></td>
                                         <td class="text-center">
-                                            <span class="badge bg-<?= $venta->estado == 'Pagado' ? 'success' : 'warning' ?>"><?= $venta->estado ?></span>
+                                            <span class="badge bg-<?= $venta->estado == 'Completado' ? 'success' : 'warning' ?>"><?= $venta->estado ?></span>
                                         </td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-success text-white" onclick="prepararPago(<?= $venta->id ?>)" title="Registrar Pago">
@@ -90,6 +90,7 @@
 
     <?php require('src/Assets/layout/ventas/modal.php') ?>
     <script>
+        const RUTA_BASE = '<?= RUTA_BASE ?>';
         const tortasDisponibles = <?= json_encode(array_map(function ($torta) {
                                         return [
                                             'id' => $torta->id,

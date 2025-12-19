@@ -180,6 +180,25 @@ class VentasController {
         if ($id_factura && $metodo) {
             $pagosModel = new \App\Models\Pagos();
             if ($pagosModel->guardarPago($id_factura, $metodo, $monto)) {
+
+                // Verificar si la factura está pagada por completo
+                $facturaModel = new \App\Models\Factura();
+                $factura = $facturaModel->buscarPorId($id_factura);
+
+                $todosPagos = $pagosModel->obtenerPorFacturaId($id_factura);
+                $totalPagado = 0;
+                foreach ($todosPagos as $p) {
+                    $totalPagado += floatval($p['monto']);
+                }
+
+                // Asumimos que el pago es en USD para simplificar comparación con total_usd
+                // Ojo: Si el sistema maneja multivisa real, esta lógica debería ser más robusta.
+                // Aquí comparamos contra total_usd asumiendo que monto es en USD.
+
+                if ($totalPagado >= $factura->total_usd) {
+                    $facturaModel->actualizarEstado($id_factura, 'Completado');
+                }
+
                 echo json_encode(['status' => true, 'message' => 'Pago registrado']);
             } else {
                 echo json_encode(['status' => false, 'message' => 'Error al guardar pago']);
@@ -212,5 +231,32 @@ class VentasController {
             'pagos' => $pagos
         ];
         render_view('ventas_ver', $data);
+    }
+
+    public function getSaldo($id) {
+        $factura = $this->facturaModel->buscarPorId($id);
+        if (!$factura) {
+            echo json_encode(['error' => 'Factura no encontrada']);
+            return;
+        }
+
+        $pagosModel = new \App\Models\Pagos();
+        $pagos = $pagosModel->obtenerPorFacturaId($id);
+
+        $totalPagado = 0;
+        foreach ($pagos as $p) {
+            $totalPagado += floatval($p['monto']);
+        }
+
+        $restanteUsd = $factura->total_usd - $totalPagado;
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => true,
+            'total_usd' => $factura->total_usd,
+            'pagado_usd' => $totalPagado,
+            'restante_usd' => max(0, $restanteUsd)
+        ]);
+        exit;
     }
 }

@@ -250,6 +250,10 @@ function actualizarTotales() {
     // Actualizar Totales Finales
     setObjetoTexto('totalVentaUsd', totalUsd.toFixed(2));
     setObjetoTexto('totalVentaBs', totalBs.toFixed(2));
+
+    // Si estamos en modo nueva venta, el restante es el total
+    setObjetoTexto('restanteUsdDisplay', totalUsd.toFixed(2));
+    setObjetoTexto('restanteBsDisplay', totalBs.toFixed(2));
 }
 
 function setObjetoTexto(id, valor) {
@@ -355,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-window.prepararPago = function (idFactura) {
+window.prepararPago = async function (idFactura) {
     modoPago = 'existente';
     idFacturaPago = idFactura;
 
@@ -366,7 +370,33 @@ window.prepararPago = function (idFactura) {
     // Limpiar campos
     document.getElementById('pagoMonto').value = '';
 
+    // Resetear displays
+    setObjetoTexto('restanteUsdDisplay', 'Cargando...');
+    setObjetoTexto('restanteBsDisplay', '...');
+
     modal.show();
+
+    // Fetch saldo real
+    try {
+        const response = await fetch(RUTA_BASE + 'Ventas/getSaldo/' + idFactura);
+        const data = await response.json();
+
+        if (data && data.status) {
+            const restanteUsd = parseFloat(data.restante_usd);
+            const restanteBs = restanteUsd * TASA_CAMBIO;
+
+            setObjetoTexto('restanteUsdDisplay', restanteUsd.toFixed(2));
+            setObjetoTexto('restanteBsDisplay', restanteBs.toFixed(2));
+
+            // Si está pagado, deshabilitar botón o mostrar mensaje?
+            // Por ahora solo mostramos 0.00
+        } else {
+            alert('Error obteniendo saldo');
+        }
+    } catch (e) {
+        console.error(e);
+        setObjetoTexto('restanteUsdDisplay', 'Error');
+    }
 }
 
 async function procesarPagoExistente() {
@@ -385,7 +415,7 @@ async function procesarPagoExistente() {
     }
 
     try {
-        const response = await fetch(`/SFT/Ventas/agregarPago`, {
+        const response = await fetch(RUTA_BASE + 'Ventas/agregarPago', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -457,9 +487,20 @@ async function registrarVenta() {
     inputTasa.value = TASA_CAMBIO;
     hiddenContainer.appendChild(inputTasa);
 
-    // 3. Validar Monto (Opcional: Si el usuario quiere permitir vacio, no validamos > 0 estricto)
-    // El backend ya maneja vacios como 0.
-
     // 4. Submit Form
     form.submit();
+}
+
+window.copiarMontoPago = function (textoMonto, moneda) {
+    // Si el texto es "Error" o "...", ignorar
+    if (!textoMonto || isNaN(parseFloat(textoMonto))) return;
+
+    const monto = parseFloat(textoMonto);
+    document.getElementById('pagoMonto').value = monto.toFixed(2);
+
+    // Opcional: Cambiar placeholder o indicador de moneda si existiera
+    // El input tiene un span "BS" al lado hardcodeado en el HTML?
+    // <span class="input-group-text">BS</span> 
+    // Deberíamos cambiar ese span según la moneda seleccionada, pero el input es numérico.
+    // El usuario debe seleccionar el metodo de pago correcto (Divisa vs Bs).
 }

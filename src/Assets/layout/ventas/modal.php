@@ -163,12 +163,12 @@
 
                             <div class="row mb-3 border-top pt-3">
                                 <div class="col-6">
-                                    <small class="text-muted d-block">Pagado USD</small>
-                                    <span class="fw-bold text-success">0.00</span>
+                                    <small class="text-muted d-block">Restante USD</small>
+                                    <span class="fw-bold text-danger cursor-pointer" id="restanteUsdDisplay" onclick="copiarMontoPago(this.textContent, 'USD')" title="Click para usar este monto">0.00</span>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <small class="text-muted d-block">Pagado BS</small>
-                                    <span class="fw-bold text-success">0.00</span>
+                                    <small class="text-muted d-block">Restante BS</small>
+                                    <span class="fw-bold text-danger cursor-pointer" id="restanteBsDisplay" onclick="copiarMontoPago(this.textContent, 'BS')" title="Click para usar este monto">0.00</span>
                                 </div>
                             </div>
 

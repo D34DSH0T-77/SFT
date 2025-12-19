@@ -61,4 +61,17 @@ class Factura extends Conexion {
             return false;
         }
     }
+
+    public function actualizarEstado($id, $estado) {
+        $sql = "UPDATE {$this->tabla} SET estado = :estado WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':estado', $estado);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log("Error al actualizar estado factura: " . $e->getMessage());
+            return false;
+        }
+    }
 }

@@ -23,9 +23,8 @@
                                     <p class="form-control-plaintext text-white fs-5"><?= date('d/m/Y H:i', strtotime($factura->fecha)) ?></p>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label text-muted">Estado</label>
                                     <p class="form-control-plaintext text-white fs-5">
-                                        <span class="badge bg-<?= $factura->estado == 'Pagado' ? 'success' : 'warning' ?>"><?= $factura->estado ?></span>
+                                        <span class="badge bg-<?= $factura->estado == 'Completado' ? 'success' : 'warning' ?>"><?= $factura->estado ?></span>
                                     </p>
                                 </div>
                             </div>

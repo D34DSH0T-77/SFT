@@ -82,7 +82,19 @@
     </div>
 
     <?php require('src/Assets/layout/ventas/modal.php') ?>
+    <script>
+        const tortasDisponibles = <?= json_encode(array_map(function ($torta) {
+                                        return [
+                                            'id' => $torta->id,
+                                            'nombre' => $torta->nombre,
+                                            'precio' => $torta->precio,
+                                            'stock' => $torta->stock,
+                                            'imagen' => $torta->img,
+                                        ];
+                                    }, $tortas)); ?>;
 
+        console.log(tortasDisponibles);
+    </script>
     <?php require('src/Assets/layout/script-footer.php') ?>
 </body>
 <!-- <script src="<?= RUTA_BASE ?>src/Assets/js/ventas/ventas.js"></script> -->

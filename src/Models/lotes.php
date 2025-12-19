@@ -40,6 +40,18 @@ class lotes extends Conexion {
             return [];
         }
     }
+
+    public function contar() {
+        $sql = "SELECT SUM(cantidad) FROM {$this->tabla}";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        } catch (\Throwable $e) {
+            error_log("Error al contar los lotes: " . $e->getMessage());
+            return 0;
+        }
+    }
     public function ajustar(lotes $lotes) {
         $sql = "UPDATE {$this->tabla} SET cantidad= :cantidad WHERE id = :id ";
         try {
@@ -52,7 +64,7 @@ class lotes extends Conexion {
         }
     }
     public function buscarlote($id) {
-        $sql = "SELECT * FROM {$this->tabla} WHERE id_torta=:id_torta AND cantidad > 0";
+        $sql = "SELECT * FROM {$this->tabla} WHERE id_torta = :id_torta AND cantidad > 0";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":id_torta", $id);

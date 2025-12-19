@@ -85,6 +85,6 @@
 
     <?php require('src/Assets/layout/script-footer.php') ?>
 </body>
-<script src="<?= RUTA_BASE ?>src/Assets/js/ventas/ventas.js"></script>
+<!-- <script src="<?= RUTA_BASE ?>src/Assets/js/ventas/ventas.js"></script> -->
 
 </html>

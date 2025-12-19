@@ -62,17 +62,4 @@ class lotes extends Conexion {
             error_log("error al buscar el lote" . $e->getMessage());
         }
     }
-
-    public function restarlote(lotes $lotes) {
-        $sql = "UPDATE {$this->tabla} SET cantidad = cantidad - :cantidad WHERE id = :id";
-        try {
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":cantidad", $lotes->cantidad);
-            $stmt->bindParam(":id", $lotes->id);
-            return $stmt->execute();
-        } catch (\Throwable $e) {
-            error_log("Error al restar del lote: " . $e->getMessage());
-            return false;
-        }
-    }
 }

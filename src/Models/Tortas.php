@@ -104,33 +104,4 @@ class Tortas extends Conexion {
             return [];
         }
     }
-
-    public function buscar($termino) {
-        // Safer query using subquery to avoid ONLY_FULL_GROUP_BY issues
-        // Optimized search (Model does JOIN/Subquery + Stock)
-        $sql = "SELECT t.*, 
-                IFNULL((SELECT SUM(cantidad) FROM lotes WHERE id_torta = t.id), 0) as stock
-                FROM {$this->tabla} t
-                WHERE t.nombre LIKE :termino
-                LIMIT 10";
-        try {
-            $stmt = $this->conn->prepare($sql);
-            $termino = "%" . $termino . "%";
-            $stmt->bindParam(":termino", $termino);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_CLASS, Tortas::class);
-        } catch (\Throwable $th) {
-            // Log error and return it as a fake product for debugging frontend
-            error_log("Error buscando tortas: " . $th->getMessage());
-            return [
-                (object)[
-                    'id' => 0,
-                    'nombre' => 'SQL ERROR: ' . $th->getMessage(),
-                    'precio' => 0,
-                    'stock' => 0,
-                    'img' => ''
-                ]
-            ];
-        }
-    }
 }

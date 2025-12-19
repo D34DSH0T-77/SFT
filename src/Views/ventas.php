@@ -64,12 +64,19 @@
                                     <tr>
                                         <td class="text-center"><?= $contador++ ?></td>
                                         <td><?= $venta->cliente ?></td>
-                                        <td><?= $venta->fecha ?></td>
-                                        <td><?= $venta->total_usd ?></td>
-                                        <td><?= $venta->total_bs ?></td>
-                                        <td class="text-center"><span class="badge bg-success">Completado</span></td>
+                                        <td><?= date('d/m/Y', strtotime($venta->fecha)) ?></td>
+                                        <td>$<?= number_format($venta->total_usd, 2) ?></td>
+                                        <td>Bs <?= number_format($venta->total_bs, 2) ?></td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-info text-white"><span class="material-symbols-sharp">visibility</span></button>
+                                            <span class="badge bg-<?= $venta->estado == 'Pagado' ? 'success' : 'warning' ?>"><?= $venta->estado ?></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-success text-white" onclick="prepararPago(<?= $venta->id ?>)" title="Registrar Pago">
+                                                <span class="material-symbols-sharp">credit_card</span>
+                                            </button>
+                                            <a href="<?= RUTA_BASE ?>ventas/ver/<?= $venta->id ?>" class="btn btn-sm btn-info text-white" title="Ver Detalle">
+                                                <span class="material-symbols-sharp">visibility</span>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -92,11 +99,17 @@
                                             'imagen' => $torta->img,
                                         ];
                                     }, $tortas)); ?>;
-
-        console.log(tortasDisponibles);
+        const clientesDisponibles = <?= json_encode(array_map(function ($cliente) {
+                                        return [
+                                            'id' => $cliente->id,
+                                            'nombre' => $cliente->nombre,
+                                            'apellido' => $cliente->apellido,
+                                            'estado' => $cliente->estado,
+                                        ];
+                                    }, $clientes)); ?>;
     </script>
     <?php require('src/Assets/layout/script-footer.php') ?>
 </body>
-<!-- <script src="<?= RUTA_BASE ?>src/Assets/js/ventas/ventas.js"></script> -->
+<script src="<?= RUTA_BASE ?>src/Assets/js/ventas/ventas.js"></script>
 
 </html>

@@ -8,17 +8,20 @@ use PDO;
 class Factura extends Conexion {
     public $id;
     public $id_cliente;
-    public $total;
+    public $total_bs;
+    public $total_usd;
     public $fecha;
     public $estado;
+    public $cliente;
 
-    private $tabla = 'facturas';
+
+    private $tabla = 'factura';
     public function __construct() {
         parent::__construct();
     }
 
     public function mostrar() {
-        $sql = "SELECT * FROM {$this->tabla}";
+        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f JOIN clientes c ON f.id_cliente = c.id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
@@ -29,21 +32,25 @@ class Factura extends Conexion {
         }
     }
     public function guardarFactura(Factura $factura) {
-        $sql = "INSERT INTO {$this->tabla} (id_cliente,total,fecha,estado) VALUES (:id_cliente,:total,:fecha,:estado)";
+        $sql = "INSERT INTO {$this->tabla} (id_cliente,total_bs,total_usd,fecha,estado) VALUES (:id_cliente,:total_bs,:total_usd,:fecha,:estado)";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id_cliente', $factura->id_cliente);
-            $stmt->bindParam(':total', $factura->total);
+            $stmt->bindParam(':total_bs', $factura->total_bs);
+            $stmt->bindParam(':total_usd', $factura->total_usd);
             $stmt->bindParam(':fecha', $factura->fecha);
             $stmt->bindParam(':estado', $factura->estado);
-            return $stmt->execute();
+            if ($stmt->execute()) {
+                return $this->conn->lastInsertId();
+            }
+            return false;
         } catch (\Exception $e) {
-            error_log("Error al guardar factura: " . $e->getMessage());
+            error_log("Error al guardar factura env: " . $e->getMessage());
             return false;
         }
     }
     public function buscarPorId($id) {
-        $sql = "SELECT * FROM {$this->tabla} WHERE id=:id";
+        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f JOIN clientes c ON f.id_cliente = c.id WHERE f.id=:id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id', $id);

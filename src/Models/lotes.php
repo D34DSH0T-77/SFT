@@ -74,4 +74,21 @@ class lotes extends Conexion {
             error_log("error al buscar el lote" . $e->getMessage());
         }
     }
+
+    public function obtenerInventarioDetallado() {
+        $sql = "SELECT t.id, t.nombre, t.precio, 
+                COALESCE(SUM(l.cantidad), 0) as total_stock
+                FROM tortas t
+                LEFT JOIN lotes l ON t.id = l.id_torta
+                GROUP BY t.id
+                ORDER BY total_stock DESC";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (\Throwable $e) {
+            error_log("Error al obtener inventario detallado: " . $e->getMessage());
+            return [];
+        }
+    }
 }

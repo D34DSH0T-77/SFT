@@ -134,6 +134,7 @@
                     <div id="hiddenInputsContainer"></div>
                     <input type="hidden" name="id_cliente" id="inputClienteId">
                     <input type="hidden" name="id_factura" id="inputFacturaId">
+                    <input type="hidden" name="codigo" id="inputCodigoFactura">
 
                     <div class="card card-custom">
                         <div class="card-header-custom d-flex justify-content-between align-items-center">
@@ -145,7 +146,6 @@
                                     <select class="form-select form-control-custom" id="pagoMetodo" name="pago_metodo[]">
                                         <option value="Efectivo">Efectivo</option>
                                         <option value="Pago Movil">Pago Movil</option>
-                                        <option value="Punto">Punto de Venta</option>
                                         <option value="Divisa">Divisa</option>
                                     </select>
                                 </div>
@@ -153,13 +153,11 @@
                                     <div class="input-group">
                                         <!-- Use name="pago_monto[]" array format -->
                                         <input type="number" class="form-control form-control-custom" placeholder="Monto" id="pagoMonto" name="pago_monto[]" step="0.01">
-                                        <span class="input-group-text">BS</span>
+                                        <span class="input-group-text" id="pagoMonedaLabel">BS</span>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-outline-secondary w-100 btn-custom mb-3">
-                                <i class="material-symbols-sharp align-middle" style="font-size: 18px;">add_circle</i> Agregar método de pago
-                            </button>
+
 
                             <div class="row mb-3 border-top pt-3">
                                 <div class="col-6">

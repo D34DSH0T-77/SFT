@@ -23,7 +23,7 @@
                     <div class="stats-card">
                         <div class="stats-info">
                             <h3>$<?= number_format($totalGananciasUsd ?? 0, 2) ?></h3>
-                            <p>Ganancias USD</p>
+                            <p>Ingresos USD</p>
                         </div>
                         <div class="stats-icon bg-pastel-mint">
                             <span class="material-symbols-sharp">attach_money</span>
@@ -34,7 +34,7 @@
                     <div class="stats-card">
                         <div class="stats-info">
                             <h3>Bs <?= number_format($totalGananciasBs ?? 0, 2) ?></h3>
-                            <p>Ganancias BS</p>
+                            <p>Ingresos BS</p>
                         </div>
                         <div class="stats-icon bg-pastel-lavender">
                             <span class="material-symbols-sharp">currency_exchange</span>
@@ -49,6 +49,7 @@
                         <thead>
                             <tr>
                                 <th width="5%" class="text-center no-ordenar">#</th>
+                                <th class="no-ordenar">Codigo</th>
                                 <th class="no-ordenar">Cliente</th>
                                 <th class="no-ordenar">Fecha</th>
                                 <th class="no-ordenar">Total USD</th>
@@ -63,6 +64,7 @@
                                 <?php foreach ($ventas as $venta): ?>
                                     <tr>
                                         <td class="text-center"><?= $contador++ ?></td>
+                                        <td><?= $venta->codigo ?></td>
                                         <td><?= $venta->cliente ?></td>
                                         <td><?= date('d/m/Y', strtotime($venta->fecha)) ?></td>
                                         <td>$<?= number_format($venta->total_usd, 2) ?></td>

@@ -91,4 +91,22 @@ class Clientes extends Conexion {
             return 0;
         }
     }
+
+    public function obtenerClientesConVentas() {
+        $sql = "SELECT c.id, c.nombre, c.apellido, c.estado, 
+                COUNT(f.id) as total_compras, 
+                COALESCE(SUM(f.total_usd), 0) as total_gastado_usd, 
+                COALESCE(SUM(f.total_bs), 0) as total_gastado_bs
+                FROM {$this->tabla} c
+                LEFT JOIN factura f ON c.id = f.id_cliente
+                GROUP BY c.id ORDER BY total_gastado_usd DESC";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS);
+        } catch (\Throwable $th) {
+            error_log("Error al obtener clientes con ventas: " . $th->getMessage());
+            return [];
+        }
+    }
 }

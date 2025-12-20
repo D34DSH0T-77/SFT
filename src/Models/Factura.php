@@ -13,6 +13,7 @@ class Factura extends Conexion {
     public $fecha;
     public $estado;
     public $cliente;
+    public $codigo;
 
 
     private $tabla = 'factura';
@@ -32,7 +33,7 @@ class Factura extends Conexion {
         }
     }
     public function guardarFactura(Factura $factura) {
-        $sql = "INSERT INTO {$this->tabla} (id_cliente,total_bs,total_usd,fecha,estado) VALUES (:id_cliente,:total_bs,:total_usd,:fecha,:estado)";
+        $sql = "INSERT INTO {$this->tabla} (id_cliente,total_bs,total_usd,fecha,estado,codigo) VALUES (:id_cliente,:total_bs,:total_usd,:fecha,:estado,:codigo)";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id_cliente', $factura->id_cliente);
@@ -40,6 +41,7 @@ class Factura extends Conexion {
             $stmt->bindParam(':total_usd', $factura->total_usd);
             $stmt->bindParam(':fecha', $factura->fecha);
             $stmt->bindParam(':estado', $factura->estado);
+            $stmt->bindParam(':codigo', $factura->codigo);
             if ($stmt->execute()) {
                 return $this->conn->lastInsertId();
             }

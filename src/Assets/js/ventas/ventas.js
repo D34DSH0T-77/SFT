@@ -359,9 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+let restanteUsdGlobal = 0; // Para validación
+
 window.prepararPago = async function (idFactura) {
     modoPago = 'existente';
     idFacturaPago = idFactura;
+    restanteUsdGlobal = 0; // Resetear
 
     // Abrir modal de pagos directamnente
     const modalPagosEl = document.getElementById('modalPagos');
@@ -383,6 +386,7 @@ window.prepararPago = async function (idFactura) {
 
         if (data && data.status) {
             const restanteUsd = parseFloat(data.restante_usd);
+            restanteUsdGlobal = restanteUsd; // Guardar referencia global
             const restanteBs = restanteUsd * TASA_CAMBIO;
 
             setObjetoTexto('restanteUsdDisplay', restanteUsd.toFixed(2));
@@ -390,12 +394,89 @@ window.prepararPago = async function (idFactura) {
 
             // Si está pagado, deshabilitar botón o mostrar mensaje?
             // Por ahora solo mostramos 0.00
+
+            // Trigger validación visual inicial (limpia colores previos)
+            validarMontoVisualmente();
         } else {
             alert('Error obteniendo saldo');
         }
     } catch (e) {
         console.error(e);
         setObjetoTexto('restanteUsdDisplay', 'Error');
+    }
+
+    // Listeners para validación visual en tiempo real
+    const inputMonto = document.getElementById('pagoMonto');
+    const inputMetodo = document.getElementById('pagoMetodo');
+
+    if (inputMonto) {
+        // Remover listeners previos para evitar duplicados si se llama varias veces
+        // Aunque prepararPago asigna valores, los listeners se acumulan si no se tiene cuidado.
+        // Mejor usar oninput directo o asegurar que solo se agregan una vez.
+        inputMonto.oninput = validarMontoVisualmente;
+    }
+    if (inputMetodo) {
+        inputMetodo.onchange = validarMontoVisualmente;
+    }
+}
+
+function validarMontoVisualmente() {
+    const inputMonto = document.getElementById('pagoMonto');
+    const inputMetodo = document.getElementById('pagoMetodo');
+    const displayUsd = document.getElementById('restanteUsdDisplay');
+    const displayBs = document.getElementById('restanteBsDisplay');
+    const labelMoneda = document.getElementById('pagoMonedaLabel');
+
+    if (!inputMonto || !displayUsd) return;
+
+    const monto = parseFloat(inputMonto.value) || 0;
+    const metodo = inputMetodo ? inputMetodo.value : 'Divisa';
+
+    // Conversión a USD para validar
+    let pagoReal = monto;
+    let monedaActual = 'BS';
+
+    if (metodo !== 'Divisa' && metodo !== 'Efectivo USD') {
+        pagoReal = monto / TASA_CAMBIO;
+        monedaActual = 'BS';
+    } else {
+        // Es Divisa
+        monedaActual = '$';
+    }
+
+    // Actualizar Label de Moneda
+    if (labelMoneda) {
+        labelMoneda.textContent = monedaActual;
+    }
+
+    // Lógica de colores check
+    // REQUERIMIENTO USUARIO:
+    // - Exacto match -> VERDE
+    // - Diferente (Mayor o Menor) -> ROJO
+
+    const diff = pagoReal - restanteUsdGlobal;
+
+    // Reset basics
+    displayUsd.classList.remove('text-success', 'text-danger');
+    displayBs.classList.remove('text-success', 'text-danger');
+
+    if (monto > 0) {
+        // Usamos Math.abs para ver si es igual (con margen de error)
+        if (Math.abs(diff) <= 0.01) {
+            // Exacto -> VERDE
+            displayUsd.classList.add('text-success');
+            displayBs.classList.add('text-success');
+        } else {
+            // Diferente (Mayor o Menor) -> ROJO
+            displayUsd.classList.add('text-danger');
+            displayBs.classList.add('text-danger');
+
+            // Si es mayor, podríamos mostrar alerta extra, pero ya el bloque de procesar lo hace al enviar
+        }
+    } else {
+        // Nada escrito -> ROJO
+        displayUsd.classList.add('text-danger');
+        displayBs.classList.add('text-danger');
     }
 }
 
@@ -412,6 +493,13 @@ async function procesarPagoExistente() {
     let pagoReal = monto;
     if (metodo !== 'Divisa' && metodo !== 'Efectivo USD') {
         pagoReal = monto / TASA_CAMBIO;
+    }
+
+    // VALIDACION: No pagar más de lo que se debe
+    // Usamos un pequeño margen de error para comparaciones de punto flotante
+    if ((pagoReal - restanteUsdGlobal) > 0.01) {
+        alert(`El monto ingresado excede la deuda pendiente.\nDeuda actual: $${restanteUsdGlobal.toFixed(2)}\nIntenta pagar: $${pagoReal.toFixed(2)}`);
+        return;
     }
 
     try {
@@ -487,7 +575,18 @@ async function registrarVenta() {
     inputTasa.value = TASA_CAMBIO;
     hiddenContainer.appendChild(inputTasa);
 
-    // 4. Submit Form
+    // 4. Generar y Agregar Código Factura
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const yy = String(yyyy).slice(-2);
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+    const codigoFactura = `VEN-${dd}${mm}${yy}-${randomStr}`;
+
+    document.getElementById('inputCodigoFactura').value = codigoFactura;
+
+    // 5. Submit Form
     form.submit();
 }
 

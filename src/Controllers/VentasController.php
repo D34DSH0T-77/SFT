@@ -58,6 +58,7 @@ class VentasController {
         $cantidades = $_POST['cantidad'] ?? [];
         $precios = $_POST['precio'] ?? [];
         $tasa = floatval($_POST['tasa'] ?? 0);
+        $codigo = $_POST['codigo'] ?? '';
 
         // Pagos (opcionales)
         $metodos_pago = $_POST['pago_metodo'] ?? [];
@@ -88,6 +89,7 @@ class VentasController {
         $factura->total_bs = $totalBs;
         $factura->fecha = date('Y-m-d H:i:s');
         $factura->estado = 'En proceso';
+        $factura->codigo = $codigo;
 
         $id_factura = $this->facturaModel->guardarFactura($factura);
 
@@ -175,27 +177,44 @@ class VentasController {
 
         $id_factura = $data['id_factura'] ?? null;
         $metodo = $data['metodo'] ?? '';
-        $monto = $data['monto'] ?? 0;
+        $monto = floatval($data['monto'] ?? 0);
 
-        if ($id_factura && $metodo) {
+        if ($id_factura && $metodo && $monto > 0) {
+            $facturaModel = new \App\Models\Factura();
             $pagosModel = new \App\Models\Pagos();
+
+            // 1. Obtener Factura Actual
+            $factura = $facturaModel->buscarPorId($id_factura);
+            if (!$factura) {
+                echo json_encode(['status' => false, 'message' => 'Factura no encontrada']);
+                exit;
+            }
+
+            // 2. Calcular Deuda Pendiente
+            $todosPagos = $pagosModel->obtenerPorFacturaId($id_factura);
+            $totalPagado = 0;
+            foreach ($todosPagos as $p) {
+                $totalPagado += floatval($p['monto']);
+            }
+            $restante = $factura->total_usd - $totalPagado;
+
+            // 3. Validar Monto (con pequeño margen para float)
+            if ($monto > ($restante + 0.01)) {
+                echo json_encode([
+                    'status' => false,
+                    'message' => 'El monto excede la deuda pendiente ($' . number_format($restante, 2) . ')'
+                ]);
+                exit;
+            }
+
+            // 4. Guardar Pago
             if ($pagosModel->guardarPago($id_factura, $metodo, $monto)) {
 
                 // Verificar si la factura está pagada por completo
-                $facturaModel = new \App\Models\Factura();
-                $factura = $facturaModel->buscarPorId($id_factura);
+                // Recalculamos con el nuevo pago
+                $totalPagado += $monto;
 
-                $todosPagos = $pagosModel->obtenerPorFacturaId($id_factura);
-                $totalPagado = 0;
-                foreach ($todosPagos as $p) {
-                    $totalPagado += floatval($p['monto']);
-                }
-
-                // Asumimos que el pago es en USD para simplificar comparación con total_usd
-                // Ojo: Si el sistema maneja multivisa real, esta lógica debería ser más robusta.
-                // Aquí comparamos contra total_usd asumiendo que monto es en USD.
-
-                if ($totalPagado >= $factura->total_usd) {
+                if ($totalPagado >= ($factura->total_usd - 0.01)) {
                     $facturaModel->actualizarEstado($id_factura, 'Completado');
                 }
 

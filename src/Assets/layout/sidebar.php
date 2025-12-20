@@ -79,6 +79,12 @@
                         <span class="link-text" style="font-size: 0.95rem;">Clientes</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= RUTA_BASE ?>reportes/capital" class="sidebar-link <?= ($moduloActivo ?? '') === 'reportes/capital' ? 'active' : '' ?>">
+                        <span class="material-symbols-sharp" style="font-size: 1.2rem;">account_balance</span>
+                        <span class="link-text" style="font-size: 0.95rem;">Capital</span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

@@ -7,6 +7,7 @@ use App\Models\DetallesFacturas;
 use App\Models\Tortas;
 use App\Models\Lotes;
 use App\Models\Clientes;
+use App\Models\Pagos;
 
 class VentasController {
     private factura $facturaModel;
@@ -239,7 +240,7 @@ class VentasController {
 
         $detalles = $this->detallesfacturasModel->obtenerPorFacturaId($id);
 
-        $pagosModel = new \App\Models\Pagos();
+        $pagosModel = new Pagos();
         $pagos = $pagosModel->obtenerPorFacturaId($id);
 
         $data = [

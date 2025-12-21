@@ -35,6 +35,12 @@
             </a>
         </li>
         <li class="sidebar-item">
+            <a href="<?= RUTA_BASE ?>capital" class="sidebar-link <?= $moduloActivo === 'capital' ? 'active' : '' ?>">
+                <span class="material-symbols-sharp">account_balance</span>
+                <span class="link-text">Capital</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
             <a href="<?= RUTA_BASE ?>clientes" class="sidebar-link <?= $moduloActivo === 'clientes' ? 'active' : '' ?>">
                 <span class="material-symbols-sharp">group</span>
                 <span class="link-text">Clientes</span>

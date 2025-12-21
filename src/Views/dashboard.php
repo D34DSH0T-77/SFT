@@ -79,10 +79,10 @@
                     </div>
 
                     <!-- Flujo del Capital -->
-                    <div class="card card-custom mb-4">
+                    <div class="card card-custom mb-4 mt-4">
                         <div class="card-header-custom d-flex justify-content-between align-items-center">
                             <span id="chartTitle">Fluctuación de Capital (USD)</span>
-                            <div class="btn-group" role="group" aria-label="Moneda">
+                            <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-sm btn-primary active" id="btnUsd" onclick="toggleCurrency('USD')">USD</button>
                                 <button type="button" class="btn btn-sm btn-outline-primary" id="btnBs" onclick="toggleCurrency('BS')">BS</button>
                             </div>
@@ -94,7 +94,7 @@
                 </div>
 
                 <!-- Right Column: Producto sin stock -->
-                <div class="col-md-3">
+                <div class="col-md-3 mt-4 mb-4">
                     <div class="card h-100" style="border-radius: 15px;">
                         <div class="card-body">
                             <h5 class="card-title text-center mb-4">Producto sin stock</h5>
@@ -197,8 +197,14 @@
     <?php require('src/Assets/layout/script-footer.php') ?>
 
     <script>
+        // --- Capital Chart Global Variables ---
+        var chart; // Global chart instance
+        var chartDataUsd = <?= $chartData ?>;
+        var chartDataBs = <?= $chartDataBs ?>;
+        var currentCurrency = 'USD';
+
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Tortas más vendidas (Pie Chart)
+            // --- 1. Tortas más vendidas (Pie Chart) ---
             var tortasOptions = {
                 series: [44, 55, 13, 43, 22],
                 chart: {
@@ -220,38 +226,107 @@
             var tortasChart = new ApexCharts(document.querySelector("#tortasChart"), tortasOptions);
             tortasChart.render();
 
-            // 2. Flujo del Capital (Line Chart)
-            var capitalOptions = {
+
+            // --- 2. Capital Chart Initialization ---
+            initChart(chartDataUsd, 'USD');
+
+        });
+
+        // --- Capital Chart Functions ---
+
+        function toggleCurrency(currency) {
+            if (currentCurrency === currency) return;
+            currentCurrency = currency;
+
+            if (currency === 'USD') {
+                document.getElementById('btnUsd').classList.add('active', 'btn-primary');
+                document.getElementById('btnUsd').classList.remove('btn-outline-primary');
+                document.getElementById('btnBs').classList.remove('active', 'btn-primary');
+                document.getElementById('btnBs').classList.add('btn-outline-primary');
+                document.getElementById('chartTitle').innerText = 'Fluctuación de Capital (USD)';
+                updateChart(chartDataUsd, 'USD');
+            } else {
+                document.getElementById('btnBs').classList.add('active', 'btn-primary');
+                document.getElementById('btnBs').classList.remove('btn-outline-primary');
+                document.getElementById('btnUsd').classList.remove('active', 'btn-primary');
+                document.getElementById('btnUsd').classList.add('btn-outline-primary');
+                document.getElementById('chartTitle').innerText = 'Fluctuación de Capital (BS)';
+                updateChart(chartDataBs, 'BS');
+            }
+        }
+
+        function initChart(data, currency) {
+            var options = getChartOptions(data, currency);
+            chart = new ApexCharts(document.querySelector("#capitalChart"), options);
+            chart.render();
+        }
+
+        function updateChart(data, currency) {
+            chart.updateOptions({
+                title: {
+                    text: 'Fluctuación de Capital (' + currency + ')'
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            return (currency === 'USD' ? "$ " : "Bs ") + value.toFixed(2);
+                        }
+                    }
+                }
+            });
+            chart.updateSeries([{
+                data: data
+            }]);
+        }
+
+        function getChartOptions(data, currency) {
+            return {
                 series: [{
-                    name: "Capital",
-                    data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+                    name: 'Capital',
+                    data: data
                 }],
                 chart: {
-                    height: 250,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    },
+                    type: 'candlestick',
+                    height: 400,
                     background: 'transparent',
                     toolbar: {
-                        show: false
-                    }
+                        show: true
+                    },
+                    locales: [{
+                        "name": "es",
+                        "options": {
+                            "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                            "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                            "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+                            "shortDays": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                            "toolbar": {
+                                "exportToSVG": "Descargar SVG",
+                                "exportToPNG": "Descargar PNG",
+                                "exportToCSV": "Descargar CSV",
+                                "menu": "Menú",
+                                "selection": "Selección",
+                                "selectionZoom": "Zoom de Selección",
+                                "zoomIn": "Acercar",
+                                "zoomOut": "Alejar",
+                                "pan": "Desplazamiento",
+                                "reset": "Reiniciar Zoom"
+                            }
+                        }
+                    }],
+                    defaultLocale: 'es'
                 },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'straight'
+                theme: {
+                    mode: 'dark'
                 },
                 title: {
-                    text: '',
-                    align: 'left'
-                },
-                grid: {
-                    borderColor: '#444'
+                    text: 'Fluctuación de Capital (' + currency + ')',
+                    align: 'left',
+                    style: {
+                        color: '#fff'
+                    }
                 },
                 xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    type: 'datetime',
                     labels: {
                         style: {
                             colors: '#8c98a5'
@@ -259,155 +334,57 @@
                     }
                 },
                 yaxis: {
+                    tooltip: {
+                        enabled: true
+                    },
                     labels: {
+                        formatter: function(value) {
+                            return (currency === 'USD' ? "$ " : "Bs ") + value.toFixed(2);
+                        },
                         style: {
                             colors: '#8c98a5'
                         }
                     }
                 },
-                theme: {
-                    mode: 'dark'
+                plotOptions: {
+                    candlestick: {
+                        colors: {
+                            upward: '#00cc66',
+                            downward: '#ff3333'
+                        },
+                        wick: {
+                            useFillColor: true
+                        }
+                    }
+                },
+                tooltip: {
+                    theme: 'dark',
+                    custom: function({
+                        seriesIndex,
+                        dataPointIndex,
+                        w
+                    }) {
+                        var o = w.globals.seriesCandleO[seriesIndex][dataPointIndex];
+                        var h = w.globals.seriesCandleH[seriesIndex][dataPointIndex];
+                        var l = w.globals.seriesCandleL[seriesIndex][dataPointIndex];
+                        var c = w.globals.seriesCandleC[seriesIndex][dataPointIndex];
+                        var currSym = currentCurrency === 'USD' ? "$ " : "Bs ";
+
+                        function f(val) {
+                            return currSym + val.toFixed(2);
+                        }
+
+                        return (
+                            '<div class="arrow_box" style="padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 5px;">' +
+                            '<div><strong>Apertura: </strong>' + f(o) + '</div>' +
+                            '<div><strong>Máximo: </strong>' + f(h) + '</div>' +
+                            '<div><strong>Mínimo: </strong>' + f(l) + '</div>' +
+                            '<div><strong>Cierre: </strong>' + f(c) + '</div>' +
+                            '</div>'
+                        );
+                    }
                 }
             };
-
-            var chart; // Global chart instance
-            // Real Data from Controller
-            var chartDataUsd = <?= isset($chartData) ? $chartData : '[]' ?>;
-            var chartDataBs = <?= isset($chartDataBs) ? $chartDataBs : '[]' ?>;
-            var currentCurrency = 'USD';
-
-            document.addEventListener('DOMContentLoaded', function() {
-                initChart(chartDataUsd, 'USD');
-            });
-
-            function toggleCurrency(currency) {
-                if (currentCurrency === currency) return;
-                currentCurrency = currency;
-
-                if (currency === 'USD') {
-                    document.getElementById('btnUsd').classList.add('active', 'btn-primary');
-                    document.getElementById('btnUsd').classList.remove('btn-outline-primary');
-                    document.getElementById('btnBs').classList.remove('active', 'btn-primary');
-                    document.getElementById('btnBs').classList.add('btn-outline-primary');
-                    document.getElementById('chartTitle').innerText = 'Fluctuación de Capital (USD)';
-                    updateChart(chartDataUsd, 'USD');
-                } else {
-                    document.getElementById('btnBs').classList.add('active', 'btn-primary');
-                    document.getElementById('btnBs').classList.remove('btn-outline-primary');
-                    document.getElementById('btnUsd').classList.remove('active', 'btn-primary');
-                    document.getElementById('btnUsd').classList.add('btn-outline-primary');
-                    document.getElementById('chartTitle').innerText = 'Fluctuación de Capital (BS)';
-                    updateChart(chartDataBs, 'BS');
-                }
-            }
-
-            function initChart(data, currency) {
-                var options = getChartOptions(data, currency);
-                chart = new ApexCharts(document.querySelector("#capitalChart"), options);
-                chart.render();
-            }
-
-            function updateChart(data, currency) {
-                chart.updateOptions({
-                    title: {
-                        text: 'Fluctuación de Capital (' + currency + ')'
-                    },
-                    yaxis: {
-                        labels: {
-                            formatter: function(value) {
-                                return (currency === 'USD' ? "$ " : "Bs ") + value.toFixed(2);
-                            }
-                        }
-                    }
-                });
-                chart.updateSeries([{
-                    data: data
-                }]);
-            }
-
-            function getChartOptions(data, currency) {
-                return {
-                    series: [{
-                        name: 'Capital',
-                        data: data
-                    }],
-                    chart: {
-                        type: 'candlestick',
-                        height: 400,
-                        background: 'transparent',
-                        toolbar: {
-                            show: true
-                        },
-                        locales: [{
-                            "name": "es",
-                            "options": {
-                                "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                                "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                                "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-                                "shortDays": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
-                                "toolbar": {
-                                    "exportToSVG": "Descargar SVG",
-                                    "exportToPNG": "Descargar PNG",
-                                    "exportToCSV": "Descargar CSV",
-                                    "menu": "Menú",
-                                    "selection": "Selección",
-                                    "selectionZoom": "Zoom de Selección",
-                                    "zoomIn": "Acercar",
-                                    "zoomOut": "Alejar",
-                                    "pan": "Desplazamiento",
-                                    "reset": "Reiniciar Zoom"
-                                }
-                            }
-                        }],
-                        defaultLocale: 'es'
-                    },
-                    theme: {
-                        mode: 'dark'
-                    },
-                    title: {
-                        text: 'Fluctuación de Capital (' + currency + ')',
-                        align: 'left',
-                        style: {
-                            color: '#fff'
-                        }
-                    },
-                    xaxis: {
-                        type: 'datetime',
-                        labels: {
-                            style: {
-                                colors: '#8c98a5'
-                            }
-                        }
-                    },
-                    yaxis: {
-                        tooltip: {
-                            enabled: true
-                        },
-                        labels: {
-                            formatter: function(value) {
-                                return (currency === 'USD' ? "$ " : "Bs ") + value.toFixed(2);
-                            },
-                            style: {
-                                colors: '#8c98a5'
-                            }
-                        }
-                    },
-                    plotOptions: {
-                        candlestick: {
-                            colors: {
-                                upward: '#00cc66',
-                                downward: '#ff3333'
-                            },
-                            wick: {
-                                useFillColor: true
-                            }
-                        }
-                    }
-                };
-            }
-
-        });
+        }
     </script>
 </body>
-
-</html>

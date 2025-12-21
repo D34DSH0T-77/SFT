@@ -3,33 +3,34 @@
 namespace App\Controllers;
 
 use App\Models\Clientes;
-use App\Models\Entradas;
-use App\Models\Factura;
 use App\Models\Lotes;
+use App\Models\Factura;
+use App\Models\Entradas;
 
 class DashboardController {
     private $clientes;
     private $lotes;
-    private $entradasModel;
     private $facturaModel;
+    private $entradasModel;
 
     public function __construct() {
         $this->clientes = new Clientes();
         $this->lotes = new Lotes();
-        $this->entradasModel = new Entradas();
         $this->facturaModel = new Factura();
+        $this->entradasModel = new Entradas();
     }
 
     public function index() {
-        // Dashboard Index
         verificarLogin();
 
         $totalClientes = $this->clientes->contar();
         $totalTortas = $this->lotes->contar();
 
-        // Capital Chart Logic
+
+        // Lógica de Capital (Copiada de CapitalController)
         $facturas = $this->facturaModel->mostrar();
         $entradas = $this->entradasModel->mostrarEntradas();
+
         $transactions = [];
 
         if ($facturas) {
@@ -60,8 +61,9 @@ class DashboardController {
 
         $chartData = [];
         $chartDataBs = [];
+
         $runningCapital = 0;
-        $runningCapitalBs = 0;
+        $runningCapitalBs = 0; // BS
 
         foreach ($transactions as $date => $dayData) {
             // USD
@@ -69,9 +71,7 @@ class DashboardController {
             $close = $open + $dayData['income_usd'] - $dayData['expense_usd'];
             $high = max($open, $close, $open + $dayData['income_usd']);
             $low = min($open, $close, $open - $dayData['expense_usd']);
-            // Use timestamp for ApexCharts
-            $timestamp = strtotime($date) * 1000;
-            $chartData[] = ['x' => $timestamp, 'y' => [$open, $high, $low, $close]];
+            $chartData[] = ['x' => $date, 'y' => [$open, $high, $low, $close]];
             $runningCapital = $close;
 
             // BS
@@ -79,9 +79,10 @@ class DashboardController {
             $closeBs = $openBs + $dayData['income_bs'] - $dayData['expense_bs'];
             $highBs = max($openBs, $closeBs, $openBs + $dayData['income_bs']);
             $lowBs = min($openBs, $closeBs, $openBs - $dayData['expense_bs']);
-            $chartDataBs[] = ['x' => $timestamp, 'y' => [$openBs, $highBs, $lowBs, $closeBs]];
+            $chartDataBs[] = ['x' => $date, 'y' => [$openBs, $highBs, $lowBs, $closeBs]];
             $runningCapitalBs = $closeBs;
         }
+
 
         $data = [
             'title' => 'Dashboard',

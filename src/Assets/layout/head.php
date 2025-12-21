@@ -9,5 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.css" />
     <link rel="stylesheet" href="<?= RUTA_BASE ?>src/Assets/css/style.css">
     <link rel="shortcut icon" href="<?= RUTA_BASE ?>src/Assets/img/icono.ico" type="image/x-icon">
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <title><?= $title ?></title>
 </head>

@@ -1,6 +1,7 @@
 <!-- Recent Orders Table -->
+
 <div class="table-container">
-    <h4 class="mb-3">Pedidos Recientes</h4>
+    <h4 class="mb-3">Facturas Completadas</h4>
     <div class="table-responsive">
         <table class="custom-table">
             <thead>

@@ -7,3 +7,4 @@
 
 <script src="<?= RUTA_BASE ?>src/Assets/js/main/datatable.js"></script>
 <script src="<?= RUTA_BASE ?>src/Assets/js/main/dash.js"></script>
+<script src="<?= RUTA_BASE ?>src/Assets/js/main/tasa.js"></script>

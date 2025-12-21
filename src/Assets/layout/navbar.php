@@ -6,6 +6,11 @@
 
     <div class="user-profile d-flex align-items-center dropdown">
 
+        <div class="d-flex align-items-center gap-2 me-5">
+            <span>Tasa del dia:</span>
+            <span id="tasaDia"></span>
+        </div>
+
         <span class="me-2"><?= $_SESSION['usuario'] ?></span>
 
         <button class="btn btn-link p-0 border-0 text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -22,9 +22,9 @@
                 <div class="col-md-4">
                     <div class="stats-card">
                         <div class="stats-info">
-                            <h3 class="text-success">$<?= number_format($totalIngresosUsd, 2) ?></h3>
+                            <h3 class="text-success" id="ingresosUsd" data-amount="<?= $totalIngresosUsd ?>">$<?= number_format($totalIngresosUsd, 2) ?></h3>
                             <p class="text-muted mb-0">Total Ingresos (Ventas)</p>
-                            <small class="text-muted">Bs <?= number_format($totalIngresosBs, 2) ?></small>
+                            <small class="text-muted" id="ingresosBs">Bs <?= number_format($totalIngresosBs, 2) ?></small>
                         </div>
                         <div class="stats-icon bg-pastel-mint">
                             <span class="material-symbols-sharp">trending_up</span>
@@ -36,9 +36,9 @@
                 <div class="col-md-4">
                     <div class="stats-card">
                         <div class="stats-info">
-                            <h3 class="text-danger">$<?= number_format($totalEgresosUsd, 2) ?></h3>
+                            <h3 class="text-danger" id="egresosUsd" data-amount="<?= $totalEgresosUsd ?>">$<?= number_format($totalEgresosUsd, 2) ?></h3>
                             <p class="text-muted mb-0">Total Egresos (Entradas)</p>
-                            <small class="text-muted">Bs <?= number_format($totalEgresosBs, 2) ?></small>
+                            <small class="text-muted" id="egresosBs">Bs <?= number_format($totalEgresosBs, 2) ?></small>
                         </div>
                         <div class="stats-icon bg-pastel-orange">
                             <span class="material-symbols-sharp">trending_down</span>
@@ -50,9 +50,9 @@
                 <div class="col-md-4">
                     <div class="stats-card" style="border: 2px solid <?= $capitalNetoUsd >= 0 ? 'var(--pastel-mint)' : 'var(--pastel-red)' ?>;">
                         <div class="stats-info">
-                            <h3 class="<?= $capitalNetoUsd >= 0 ? 'text-success' : 'text-danger' ?>">$<?= number_format($capitalNetoUsd, 2) ?></h3>
+                            <h3 class="<?= $capitalNetoUsd >= 0 ? 'text-success' : 'text-danger' ?>" id="capitalNetoUsd" data-amount="<?= $capitalNetoUsd ?>">$<?= number_format($capitalNetoUsd, 2) ?></h3>
                             <p class="text-muted mb-0">Capital Neto (Ganancia)</p>
-                            <small class="<?= $capitalNetoUsd >= 0 ? 'text-success' : 'text-danger' ?>">Bs <?= number_format($capitalNetoBs, 2) ?></small>
+                            <small class="<?= $capitalNetoUsd >= 0 ? 'text-success' : 'text-danger' ?>" id="capitalNetoBs">Bs <?= number_format($capitalNetoBs, 2) ?></small>
                         </div>
                         <div class="stats-icon bg-pastel-lavender">
                             <span class="material-symbols-sharp">account_balance_wallet</span>
@@ -79,6 +79,7 @@
     </div>
 
     <?php require('src/Assets/layout/script-footer.php') ?>
+    <script src="<?= RUTA_BASE ?>src/Assets/js/capital/capital.js"></script>
 
     <script>
         var chart; // Global chart instance

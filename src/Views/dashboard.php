@@ -205,14 +205,22 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // --- 1. Tortas más vendidas (Pie Chart) ---
+            var productosPro = <?= $productosMasVendidos ?>;
+            var labels = productosPro.map(function(e) {
+                return e.nombre;
+            });
+            var series = productosPro.map(function(e) {
+                return parseInt(e.total_vendido); // Ensure numbers
+            });
+
             var tortasOptions = {
-                series: [44, 55, 13, 43, 22],
+                series: series,
                 chart: {
                     type: 'pie',
                     height: 250,
                     background: 'transparent'
                 },
-                labels: ['Chocolate', 'Fresa', 'Vainilla', 'Red Velvet', 'Limón'],
+                labels: labels,
                 theme: {
                     mode: 'dark'
                 },

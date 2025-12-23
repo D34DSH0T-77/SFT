@@ -6,6 +6,8 @@ use App\Models\Clientes;
 use App\Models\Entradas;
 use App\Models\Factura;
 use App\Models\Lotes;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class ReportesController {
     private $clientesModel;
@@ -90,6 +92,50 @@ class ReportesController {
         render_view('reportesClientes', $data);
     }
 
+    public function tiposdereporte() {
+        $reportes = trim($_POST['reportes']);
+        if ($reportes == 'detallado') {
+            header('location: ' . RUTA_BASE . 'reportes/generarreporte');
+            exit();
+        } else {
+            header('location: ' . RUTA_BASE . 'reportes/generarMultiple');
+            exit();
+        }
+    }
+    public function generarreporte() {
+        verificarLogin();
+        $clientes = $this->clientesModel->mostrar();
+        ob_start();
+        require 'src/Views/reportegenerarcliente.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        // 8. Renderizar el HTML como PDF
+        $dompdf->render();
+
+        // 9. Enviarlo al navegador (Stream)
+        $dompdf->stream("mi_reporte.pdf", array("Attachment" => false));
+    }
+    public function generarMultiple() {
+        verificarLogin();
+        $clientes = $this->clientesModel->obtenerClientesConVentas();
+        ob_start();
+        require 'src/Views/reporteclienteventa.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        // 8. Renderizar el HTML como PDF
+        $dompdf->render();
+
+        // 9. Enviarlo al navegador (Stream)
+        $dompdf->stream("mi_reporte.pdf", array("Attachment" => false));
+    }
     public function capital() {
         verificarLogin();
         $facturas = $this->facturaModel->mostrar();

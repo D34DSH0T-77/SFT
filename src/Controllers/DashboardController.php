@@ -6,18 +6,21 @@ use App\Models\Clientes;
 use App\Models\Lotes;
 use App\Models\Factura;
 use App\Models\Entradas;
+use App\Models\DetallesFacturas;
 
 class DashboardController {
     private $clientes;
     private $lotes;
     private $facturaModel;
     private $entradasModel;
+    private $detallesFacturaModel;
 
     public function __construct() {
         $this->clientes = new Clientes();
         $this->lotes = new Lotes();
         $this->facturaModel = new Factura();
         $this->entradasModel = new Entradas();
+        $this->detallesFacturaModel = new DetallesFacturas();
     }
 
     public function index() {
@@ -90,7 +93,8 @@ class DashboardController {
             'totalClientes' => $totalClientes,
             'totalTortas' => $totalTortas,
             'chartData' => json_encode($chartData),
-            'chartDataBs' => json_encode($chartDataBs)
+            'chartDataBs' => json_encode($chartDataBs),
+            'productosMasVendidos' => json_encode($this->detallesFacturaModel->getProductosMasVendidos())
         ];
         render_view('dashboard', $data);
     }

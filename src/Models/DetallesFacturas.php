@@ -50,4 +50,22 @@ class DetallesFacturas extends Conexion {
             return [];
         }
     }
+
+    public function getProductosMasVendidos($limit = 5) {
+        $sql = "SELECT t.nombre, SUM(d.cantidad) as total_vendido
+                FROM {$this->tabla} d
+                JOIN tortas t ON d.id_torta = t.id
+                GROUP BY d.id_torta
+                ORDER BY total_vendido DESC
+                LIMIT :limit";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Error al obtener productos más vendidos: " . $e->getMessage());
+            return [];
+        }
+    }
 }

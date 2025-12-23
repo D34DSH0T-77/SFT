@@ -12,6 +12,7 @@
         }
     ],
     "require": {
-        "jasongrimes/paginator": "^1.0"
+        "jasongrimes/paginator": "^1.0",
+        "dompdf/dompdf": "^3.1"
     }
 }

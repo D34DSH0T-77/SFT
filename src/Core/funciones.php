@@ -19,3 +19,16 @@ function verificarLogin() {
         exit;
     }
 }
+
+function rolPermitido($rol) {
+    if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== $rol) {
+        $error = 'No tienes permiso para acceder a esta página';
+        $data = [
+            'title' => 'Error',
+            'moduloActivo' => 'error',
+            'error' => $error
+        ];
+        render_view('404', $data);
+        exit;
+    }
+}

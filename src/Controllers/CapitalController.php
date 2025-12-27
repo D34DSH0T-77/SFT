@@ -16,6 +16,8 @@ class CapitalController {
 
     public function index() {
         verificarLogin();
+        rolPermitido('Admin');
+
         $facturas = $this->facturaModel->mostrar();
         $entradas = $this->entradasModel->mostrarEntradas();
 

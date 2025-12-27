@@ -70,12 +70,14 @@
                                         <td>$<?= number_format($venta->total_usd, 2) ?></td>
                                         <td>Bs <?= number_format($venta->total_bs, 2) ?></td>
                                         <td class="text-center">
-                                            <span class="badge bg-<?= $venta->estado == 'Completado' ? 'success' : 'warning' ?>"><?= $venta->estado ?></span>
+                                            <span class="badge bg-<?= $venta->estado == 'Completado' ? 'success text-white' : 'warning text-black' ?>"><?= $venta->estado ?></span>
                                         </td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-success text-white" onclick="prepararPago(<?= $venta->id ?>)" title="Registrar Pago">
-                                                <span class="material-symbols-sharp">credit_card</span>
-                                            </button>
+                                            <?php if ($venta->estado == 'En proceso') : ?>
+                                                <button class="btn btn-sm btn-success text-white" onclick="prepararPago(<?= $venta->id ?>)" title="Registrar Pago">
+                                                    <span class="material-symbols-sharp">credit_card</span>
+                                                </button>
+                                            <?php endif; ?>
                                             <a href="<?= RUTA_BASE ?>ventas/ver/<?= $venta->id ?>" class="btn btn-sm btn-info text-white" title="Ver Detalle">
                                                 <span class="material-symbols-sharp">visibility</span>
                                             </a>

@@ -49,20 +49,22 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <?php if (isset($tortas) && !empty($tortas)): ?>
                     <?php foreach ($tortas as $torta): ?>
-                        <div class="col">
-                            <div class="card h-100" style="background-color: var(--bg-card); color: var(--text-main); border-color: var(--border-color);">
-                                <img src="<?= !empty($torta->img) ? RUTA_BASE . $torta->img : RUTA_BASE . 'src/Assets/img/placeholder.png' ?>" class="card-img-top" alt="<?= $torta->nombre ?>" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= $torta->nombre ?></h5>
-                                    <p class="card-text">
-                                        <strong>Stock: <?= $torta->stock ?></strong>
-                                    </p>
-                                    <button type="button" class="btn-minimal btn-ajustar" data-bs-toggle="modal" data-bs-target="#modalAjustar" data-bs-id="<?= $torta->id ?>">
-                                        <i class="fas fa-sliders-h"></i> Ajustar
-                                    </button>
+                        <?php if ($torta->stock > 0) : ?>
+                            <div class="col">
+                                <div class="card h-100" style="background-color: var(--bg-card); color: var(--text-main); border-color: var(--border-color);">
+                                    <img src="<?= !empty($torta->img) ? RUTA_BASE . $torta->img : RUTA_BASE . 'src/Assets/img/placeholder.png' ?>" class="card-img-top" alt="<?= $torta->nombre ?>" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?= $torta->nombre ?></h5>
+                                        <p class="card-text">
+                                            <strong>Stock: <?= $torta->stock ?></strong>
+                                        </p>
+                                        <button type="button" class="btn-minimal btn-ajustar" data-bs-toggle="modal" data-bs-target="#modalAjustar" data-bs-id="<?= $torta->id ?>">
+                                            <i class="fas fa-sliders-h"></i> Ajustar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="col-12">

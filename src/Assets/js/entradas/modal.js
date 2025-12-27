@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: 'Error!',
                 text: 'Por favor seleccione una torta y una cantidad válida.',
                 icon: 'error',
-                background: '#000000ff',
+                background: '#252525',
                 color: '#fff'
             });
             return;
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: 'Error!',
                     text: 'La lista está vacía. Agregue al menos una torta.',
                     icon: 'error',
-                    background: '#000000ff',
+                    background: '#252525',
                     color: '#fff'
                 });
                 return;
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: 'Error!',
                     text: 'Por favor complete todos los datos de la entrada (Código, Fecha, Local)',
                     icon: 'error',
-                    background: '#000000ff',
+                    background: '#252525',
                     color: '#fff'
                 });
                 return;
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: 'Error!',
                     text: 'Por favor ingrese montos válidos para el total.',
                     icon: 'error',
-                    background: '#000000ff',
+                    background: '#252525',
                     color: '#fff'
                 });
                 return;

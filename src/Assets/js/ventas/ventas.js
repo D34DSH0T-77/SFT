@@ -492,8 +492,8 @@ async function procesarPagoExistente() {
 
     if (monto <= 0) {
         Swal.fire({
-            title: 'Error!',
-            text: 'Ingrese un monto de pago válido',
+            title: 'Pago Invalidp!',
+            text: 'Por faor ingrese un monto de pago válido',
             icon: 'error',
             background: '#252525',
             color: '#fff'
@@ -511,7 +511,7 @@ async function procesarPagoExistente() {
     // Usamos un pequeño margen de error para comparaciones de punto flotante
     if (pagoReal - restanteUsdGlobal > 0.01) {
         Swal.fire({
-            title: 'Error!',
+            title: 'Monto excedido!',
             text: `El monto ingresado excede la deuda pendiente.\nDeuda actual: $${restanteUsdGlobal.toFixed(2)}\nIntenta pagar: $${pagoReal.toFixed(2)}`,
             icon: 'error',
             background: '#252525',
@@ -553,8 +553,8 @@ async function procesarPagoExistente() {
     } catch (error) {
         console.error(error);
         Swal.fire({
-            title: 'Error!',
-            text: 'Error al registrar pago',
+            title: 'Pago invalido!',
+            text: 'Error al registrar el pago',
             icon: 'error',
             background: '#252525',
             color: '#fff'
@@ -565,8 +565,8 @@ async function procesarPagoExistente() {
 async function registrarVenta() {
     if (carrito.length === 0) {
         Swal.fire({
-            title: 'Error!',
-            text: 'El carrito está vacío',
+            title: 'Carrito vacío!',
+            text: 'El carrito está vacío, agregue tortas al carrito',
             icon: 'error',
             background: '#252525',
             color: '#fff'
@@ -576,7 +576,7 @@ async function registrarVenta() {
 
     if (!clienteSeleccionadoId) {
         Swal.fire({
-            title: 'Error!',
+            title: 'Cliente no seleccionado!',
             text: 'Debe seleccionar un cliente',
             icon: 'error',
             background: '#252525',

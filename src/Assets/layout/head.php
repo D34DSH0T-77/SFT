@@ -12,4 +12,9 @@
     <!-- ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <title><?= $title ?></title>
+    <script>
+        if (localStorage.getItem('sidebarState') === 'collapsed') {
+            document.documentElement.classList.add('sidebar-is-collapsed');
+        }
+    </script>
 </head>

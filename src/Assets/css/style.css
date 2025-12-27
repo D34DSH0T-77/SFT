@@ -396,3 +396,20 @@ a {
     font-weight: 600;
     color: #555;
 }
+
+.no-transition {
+    transition: none !important;
+}
+
+html.sidebar-is-collapsed .sidebar {
+    width: var(--sidebar-width-collapsed);
+}
+
+html.sidebar-is-collapsed .sidebar .sidebar-brand,
+html.sidebar-is-collapsed .sidebar .link-text {
+    display: none;
+}
+
+html.sidebar-is-collapsed .main-content {
+    margin-left: var(--sidebar-width-collapsed);
+}

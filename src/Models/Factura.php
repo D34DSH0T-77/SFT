@@ -15,6 +15,7 @@ class Factura extends Conexion {
     public $cliente;
     public $codigo;
 
+    public $productos;
 
     private $tabla = 'factura';
     public function __construct() {
@@ -32,6 +33,29 @@ class Factura extends Conexion {
             return false;
         }
     }
+
+    public function obtenerRecientes($limit = 5) {
+        $sql = "SELECT f.*, c.nombre as cliente, 
+                GROUP_CONCAT(t.nombre SEPARATOR ', ') as productos
+                FROM {$this->tabla} f 
+                JOIN clientes c ON f.id_cliente = c.id
+                LEFT JOIN detalles_factura df ON f.id = df.id_factura
+                LEFT JOIN tortas t ON df.id_torta = t.id
+                WHERE f.estado IN ('Completado', 'Entregado')
+                GROUP BY f.id
+                ORDER BY f.fecha DESC, f.id DESC
+                LIMIT :limit";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Factura::class);
+        } catch (\Exception $e) {
+            error_log("Error al obtener facturas recientes: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function guardarFactura(Factura $factura) {
         $sql = "INSERT INTO {$this->tabla} (id_cliente,total_bs,total_usd,fecha,estado,codigo) VALUES (:id_cliente,:total_bs,:total_usd,:fecha,:estado,:codigo)";
         try {

@@ -62,4 +62,20 @@ class Entradas extends Conexion {
             return false;
         }
     }
+
+    public function obtenerEntradasConCantidad() {
+        $sql = "SELECT e.*, SUM(d.cantidad) as total_items 
+                FROM {$this->table} e 
+                LEFT JOIN detalles_entrada d ON e.id = d.id_entrada 
+                GROUP BY e.id 
+                ORDER BY e.id DESC";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Entradas::class);
+        } catch (\Exception $e) {
+            error_log("Error al obtener entradas con cantidad: " . $e->getMessage());
+            return false;
+        }
+    }
 }

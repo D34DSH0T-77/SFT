@@ -94,7 +94,9 @@ class DashboardController {
             'totalTortas' => $totalTortas,
             'chartData' => json_encode($chartData),
             'chartDataBs' => json_encode($chartDataBs),
-            'productosMasVendidos' => json_encode($this->detallesFacturaModel->getProductosMasVendidos())
+            'productosMasVendidos' => json_encode($this->detallesFacturaModel->getProductosMasVendidos()),
+            'ultimasFacturas' => $this->facturaModel->obtenerRecientes(5),
+            'productosBajoStock' => $this->lotes->obtenerBajoStock(4)
         ];
         render_view('dashboard', $data);
     }

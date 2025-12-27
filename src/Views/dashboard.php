@@ -114,73 +114,58 @@
                                 }
                             </style>
                             <div class="d-flex flex-column gap-3">
-                                <!-- Item 1: Stock 3 (Yellow Warning) -->
-                                <div class="stock-card d-flex align-items-center bg-dark-subtle p-2 rounded-4 shadow-sm">
-                                    <div class="bg-white rounded-3 d-flex align-items-center justify-content-center shadow-inner" style="width: 45px; height: 45px;">
-                                        <img src="<?= RUTA_BASE ?>src/Assets/img/icono.ico" alt="Torta" style="width: 35px; height: 35px; object-fit: contain;">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-semibold text-light" style="font-size: 0.95rem; letter-spacing: 0.5px;">Cheesecake Fresa</h6>
+                                <?php if (isset($productosBajoStock) && !empty($productosBajoStock)): ?>
+                                    <?php foreach ($productosBajoStock as $prod): ?>
+                                        <?php
+                                        // Determine style based on stock level
+                                        // Critical (0-1): Red
+                                        // Warning (2-3): Yellow
+                                        // Stable (>3): Green/Success
 
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3 me-2">
-                                        <div class="d-flex align-items-center justify-content-center text-warning" style="width: 22px; height: 22px; border: 2px solid #ffc107; border-radius: 50%; background: rgba(255, 193, 7, 0.1);">
-                                            <span class="fw-bold" style="font-size: 0.7rem;">3</span>
+                                        $stock = $prod->total_stock;
+
+                                        if ($stock <= 1) {
+                                            $colorClass = 'text-danger';
+                                            $bgClass = 'rgba(220, 53, 69, 0.1)';
+                                            $borderClass = '#dc3545';
+                                            $shadowColor = 'rgba(220, 53, 69, 0.3)';
+                                            $iconName = 'warning'; // or 'report'
+                                        } elseif ($stock <= 3) {
+                                            $colorClass = 'text-warning';
+                                            $bgClass = 'rgba(255, 193, 7, 0.1)';
+                                            $borderClass = '#ffc107';
+                                            $shadowColor = 'rgba(255, 193, 7, 0.3)';
+                                            $iconName = 'warning';
+                                        } else {
+                                            // Stable / OK
+                                            $colorClass = 'text-success';
+                                            $bgClass = 'rgba(25, 135, 84, 0.1)';
+                                            $borderClass = '#198754';
+                                            $shadowColor = 'rgba(25, 135, 84, 0.3)';
+                                            $iconName = 'check_circle';
+                                        }
+                                        ?>
+                                        <div class="stock-card d-flex align-items-center bg-dark-subtle p-2 rounded-4 shadow-sm">
+                                            <div class="bg-white rounded-3 d-flex align-items-center justify-content-center shadow-inner" style="width: 45px; height: 45px;">
+                                                <img src="<?= RUTA_BASE ?>src/Assets/img/icono.ico" alt="Torta" style="width: 35px; height: 35px; object-fit: contain;">
+                                            </div>
+                                            <div class="ms-3 flex-grow-1">
+                                                <h6 class="mb-0 fw-semibold text-light" style="font-size: 0.95rem; letter-spacing: 0.5px;"><?= $prod->nombre ?></h6>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3 me-2">
+                                                <div class="d-flex align-items-center justify-content-center <?= $colorClass ?>" style="width: 22px; height: 22px; border: 2px solid <?= $borderClass ?>; border-radius: 50%; background: <?= $bgClass ?>;">
+                                                    <span class="fw-bold" style="font-size: 0.7rem;"><?= $stock ?></span>
+                                                </div>
+                                                <span class="material-symbols-sharp <?= $colorClass ?>" style="font-size: 1.6rem; text-shadow: 0 0 10px <?= $shadowColor ?>;"><?= $iconName ?></span>
+                                            </div>
                                         </div>
-                                        <span class="material-symbols-sharp text-warning" style="font-size: 1.6rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.3);">warning</span>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="text-center text-muted py-4">
+                                        <span class="material-symbols-sharp mb-2" style="font-size: 2rem;">check_circle</span>
+                                        <p class="mb-0 small">Todo el inventario está estable.</p>
                                     </div>
-                                </div>
-
-                                <!-- Item 2: Stock 2 (Yellow Warning) -->
-                                <div class="stock-card d-flex align-items-center bg-dark-subtle p-2 rounded-4 shadow-sm">
-                                    <div class="bg-white rounded-3 d-flex align-items-center justify-content-center shadow-inner" style="width: 45px; height: 45px;">
-                                        <img src="<?= RUTA_BASE ?>src/Assets/img/icono.ico" alt="Torta" style="width: 35px; height: 35px; object-fit: contain;">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-semibold text-light" style="font-size: 0.95rem; letter-spacing: 0.5px;">Torta Chocolate</h6>
-
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3 me-2">
-                                        <div class="d-flex align-items-center justify-content-center text-warning" style="width: 22px; height: 22px; border: 2px solid #ffc107; border-radius: 50%; background: rgba(255, 193, 7, 0.1);">
-                                            <span class="fw-bold" style="font-size: 0.7rem;">2</span>
-                                        </div>
-                                        <span class="material-symbols-sharp text-warning" style="font-size: 1.6rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.3);">warning</span>
-                                    </div>
-                                </div>
-
-                                <!-- Item 3: Stock 1 (Red Critical) -->
-                                <div class="stock-card d-flex align-items-center bg-dark-subtle p-2 rounded-4 shadow-sm">
-                                    <div class="bg-white rounded-3 d-flex align-items-center justify-content-center shadow-inner" style="width: 45px; height: 45px;">
-                                        <img src="<?= RUTA_BASE ?>src/Assets/img/icono.ico" alt="Torta" style="width: 35px; height: 35px; object-fit: contain;">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-semibold text-light" style="font-size: 0.95rem; letter-spacing: 0.5px;">Red Velvet</h6>
-                                        <small class="text-muted" style="font-size: 0.75rem;">Postre</small>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3 me-2">
-                                        <div class="d-flex align-items-center justify-content-center text-danger" style="width: 22px; height: 22px; border: 2px solid #dc3545; border-radius: 50%; background: rgba(220, 53, 69, 0.1);">
-                                            <span class="fw-bold" style="font-size: 0.9rem;">1</span>
-                                        </div>
-                                        <span class="material-symbols-sharp text-danger" style="font-size: 1.6rem; text-shadow: 0 0 10px rgba(220, 53, 69, 0.3);">warning</span>
-                                    </div>
-                                </div>
-
-                                <!-- Item 4: Stock 1 (Red Critical) -->
-                                <div class="stock-card d-flex align-items-center bg-dark-subtle p-2 rounded-4 shadow-sm">
-                                    <div class="bg-white rounded-3 d-flex align-items-center justify-content-center shadow-inner" style="width: 45px; height: 45px;">
-                                        <img src="<?= RUTA_BASE ?>src/Assets/img/icono.ico" alt="Torta" style="width: 35px; height: 35px; object-fit: contain;">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-semibold text-light" style="font-size: 0.95rem; letter-spacing: 0.5px;">Tres Leches</h6>
-                                        <small class="text-muted" style="font-size: 0.75rem;">Postre</small>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-3 me-2">
-                                        <div class="d-flex align-items-center justify-content-center text-danger" style="width: 22px; height: 22px; border: 2px solid #dc3545; border-radius: 50%; background: rgba(220, 53, 69, 0.1);">
-                                            <span class="fw-bold" style="font-size: 0.9rem;">1</span>
-                                        </div>
-                                        <span class="material-symbols-sharp text-danger" style="font-size: 1.6rem; text-shadow: 0 0 10px rgba(220, 53, 69, 0.3);">warning</span>
-                                    </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

@@ -14,27 +14,35 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>#10234</td>
-                    <td>Maria Garcia</td>
-                    <td>Torta de Chocolate</td>
-                    <td><span class="status-badge status-completed">Entregado</span></td>
-                    <td>$45.00</td>
-                </tr>
-                <tr>
-                    <td>#10235</td>
-                    <td>Juan Perez</td>
-                    <td>Cheesecake Fresa</td>
-                    <td><span class="status-badge status-pending">Pendiente</span></td>
-                    <td>$35.00</td>
-                </tr>
-                <tr>
-                    <td>#10236</td>
-                    <td>Ana Lopez</td>
-                    <td>Red Velvet</td>
-                    <td><span class="status-badge status-pending">En Proceso</span></td>
-                    <td>$50.00</td>
-                </tr>
+                <?php if (isset($ultimasFacturas) && !empty($ultimasFacturas)): ?>
+                    <?php foreach ($ultimasFacturas as $factura): ?>
+                        <tr>
+                            <td>#<?= $factura->id ?></td> <!-- Or $factura->codigo if preferred -->
+                            <td><?= $factura->cliente ?></td>
+                            <td><?= !empty($factura->productos) ? $factura->productos : 'Sin productos' ?></td>
+                            <td>
+                                <?php
+                                $badgeClass = 'bg-secondary';
+                                if ($factura->estado == 'Entregado' || $factura->estado == 'Completado') {
+                                    $badgeClass = 'status-completed';
+                                } elseif ($factura->estado == 'Pendiente') {
+                                    $badgeClass = 'status-pending';
+                                } elseif ($factura->estado == 'Anulado') {
+                                    $badgeClass = 'status-cancelled bg-danger';
+                                } elseif ($factura->estado == 'En proceso' || $factura->estado == 'En Proceso') {
+                                    $badgeClass = 'status-pending bg-info'; // Reuse pending style or custom
+                                }
+                                ?>
+                                <span class="status-badge <?= $badgeClass ?>"><?= $factura->estado ?></span>
+                            </td>
+                            <td>$<?= number_format($factura->total_usd, 2) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="text-center">No hay facturas recientes.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>

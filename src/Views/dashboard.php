@@ -40,10 +40,30 @@
                                             <h5 class="card-title text-center mb-3" style="text-decoration: underline; font-size: 1rem;">Top compradores</h5>
                                             <ul class="list-unstyled mb-0">
                                                 <?php foreach ($topCompradores as $index => $comprador): ?>
+                                                    <?php
+                                                    $rank = $index + 1;
+                                                    $crownColor = '';
+                                                    $showCrown = false;
+
+                                                    if ($rank === 1) {
+                                                        $crownColor = '#FFD700'; // Gold
+                                                        $showCrown = true;
+                                                    } elseif ($rank === 2) {
+                                                        $crownColor = '#C0C0C0'; // Silver
+                                                        $showCrown = true;
+                                                    } elseif ($rank === 3) {
+                                                        $crownColor = '#CD7F32'; // Bronze
+                                                        $showCrown = true;
+                                                    }
+                                                    ?>
                                                     <li class="d-flex justify-content-between align-items-center mb-2">
                                                         <div class="d-flex align-items-center gap-2">
-                                                            <span class="material-symbols-sharp" style="color: #FFD700; font-size: 1.2rem;">crown</span>
-                                                            <small class="text-muted"><?= $index + 1 ?></small>
+                                                            <?php if ($showCrown): ?>
+                                                                <span class="material-symbols-sharp" style="color: <?= $crownColor ?>; font-size: 1.2rem;">crown</span>
+                                                            <?php else: ?>
+                                                                <span style="width: 1.2rem; display: inline-block;"></span>
+                                                            <?php endif; ?>
+                                                            <small class="text-muted"><?= $rank ?></small>
                                                         </div>
                                                         <span class="small fw-bold"><?= $comprador->nombre ?></span>
                                                     </li>
@@ -58,7 +78,9 @@
                                                 <span class="material-symbols-sharp text-warning" style="font-size: 3rem; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));">emoji_events</span>
                                             </div>
                                             <div class="badge bg-gradient-primary text-white mb-1 px-3" style="font-size: 0.8rem;">VIP</div>
-                                            <small class="text-white fw-bold">Juan P.</small>
+                                            <small class="text-white fw-bold">
+                                                <?= !empty($topCompradores) ? $topCompradores[0]->nombre : '—' ?>
+                                            </small>
                                         </div>
                                     </div>
                                 </div>

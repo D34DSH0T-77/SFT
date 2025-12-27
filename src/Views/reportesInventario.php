@@ -71,6 +71,7 @@
                         <select name="reportes" id="tipos_inv" class="form-select" required>
                             <option value="inventario_general" selected>Reporte General</option>
                             <option value="por_producto">Reporte por Producto</option>
+                            <option value="inventario_bajo_stock">Reporte Stock Mínimo</option>
                         </select>
                     </div>
 
@@ -103,8 +104,9 @@
                     const divFechaInicio = document.getElementById('div_fecha_inicio_inv');
                     const divFechaFinal = document.getElementById('div_fecha_final_inv');
 
+
                     function toggleInputsInv() {
-                        if (tipoSelect.value === 'inventario_general') {
+                        if (tipoSelect.value === 'inventario_general' || tipoSelect.value === 'inventario_bajo_stock') {
                             divProducto.style.display = 'none';
                             divFechaInicio.style.display = 'none';
                             divFechaFinal.style.display = 'none';

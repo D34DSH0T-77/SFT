@@ -177,12 +177,21 @@ class ReportesController {
             $_SESSION['reporte_producto'] = $_POST['producto'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteInventarioProducto');
             exit();
+        } else if ($reportes == 'inventario_bajo_stock') {
+            header('location: ' . RUTA_BASE . 'reportes/generarReporteInventarioBajoStock');
+            exit();
         } else if ($reportes == 'ventas_general') {
             header('location: ' . RUTA_BASE . 'reportes/generarReporteVenta');
             exit();
         } else if ($reportes == 'ventas_estado') {
             $_SESSION['reporte_estado'] = $_POST['estado'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteVentaEstado');
+            exit();
+        } else if ($reportes == 'mas_vendidas' || $reportes == 'menos_vendidas') {
+            $_SESSION['reporte_ranking_tipo'] = $reportes;
+            $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+            $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
+            header('location: ' . RUTA_BASE . 'reportes/generarReporteRankingVentas');
             exit();
         }
     }
@@ -404,6 +413,61 @@ class ReportesController {
 
         $dompdf->render();
         $dompdf->stream("reporte_inventario_producto.pdf", array("Attachment" => false));
+    }
+
+    public function generarReporteInventarioBajoStock() {
+        verificarLogin();
+        $inventario = $this->lotesModel->obtenerInventarioDetallado();
+        $umbralBajo = 5;
+
+        // Filter by low stock
+        $inventario = array_filter($inventario, function ($item) use ($umbralBajo) {
+            return $item->total_stock <= $umbralBajo;
+        });
+
+        foreach ($inventario as $item) {
+            $item->total_valor_usd = $item->total_stock * $item->precio;
+        }
+
+        ob_start();
+        require 'src/Views/reportegenerarinventariobajostock.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_inventario_bajo_stock.pdf", array("Attachment" => false));
+    }
+
+    public function generarReporteRankingVentas() {
+        verificarLogin();
+
+        $tipo = isset($_SESSION['reporte_ranking_tipo']) ? $_SESSION['reporte_ranking_tipo'] : 'mas_vendidas';
+        $fechaInicio = isset($_SESSION['reporte_fecha_inicio']) ? $_SESSION['reporte_fecha_inicio'] : date('Y-m-01');
+        $fechaFinal = isset($_SESSION['reporte_fecha_final']) ? $_SESSION['reporte_fecha_final'] : date('Y-m-t');
+
+        $orden = ($tipo == 'mas_vendidas') ? 'DESC' : 'ASC';
+        $titulo = ($tipo == 'mas_vendidas') ? 'Tortas Más Vendidas' : 'Tortas Menos Vendidas';
+
+        // Use a generic details model or load it if not property
+        // Assuming $this->facturaModel connects to invoices, but we need Detail model for products
+        // We can create an instance on the fly or add it to constructor. 
+        // Best practice: add to constructor, but for quick fix:
+        $detallesModel = new \App\Models\DetallesFacturas();
+        $datos = $detallesModel->obtenerVentasPorProducto($fechaInicio, $fechaFinal, $orden);
+
+        ob_start();
+        require 'src/Views/reportegenerarrankingventas.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_sales_ranking.pdf", array("Attachment" => false));
     }
 
     public function capital() {

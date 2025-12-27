@@ -68,4 +68,26 @@ class DetallesFacturas extends Conexion {
             return [];
         }
     }
+
+    public function obtenerVentasPorProducto($fechaInicio, $fechaFinal, $orden = 'DESC') {
+        $orden = strtoupper($orden) === 'ASC' ? 'ASC' : 'DESC';
+        $sql = "SELECT t.nombre, SUM(d.cantidad) as total_vendido, SUM(d.cantidad * d.precio_usd) as total_ingreso_usd
+                FROM {$this->tabla} d
+                JOIN facturas f ON d.id_factura = f.id
+                JOIN tortas t ON d.id_torta = t.id
+                WHERE f.estado != 'Anulado'
+                AND DATE(f.fecha) BETWEEN :fechaInicio AND :fechaFinal
+                GROUP BY d.id_torta
+                ORDER BY total_vendido $orden";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':fechaInicio', $fechaInicio);
+            $stmt->bindParam(':fechaFinal', $fechaFinal);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (\Exception $e) {
+            error_log("Error al obtener ventas por producto: " . $e->getMessage());
+            return [];
+        }
+    }
 }

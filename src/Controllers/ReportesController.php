@@ -57,7 +57,31 @@ class ReportesController {
     }
 
     public function ventas() {
-        $data = [];
+        verificarLogin();
+        $ventas = $this->facturaModel->mostrar();
+
+        $totalVentas = 0;
+        $totalUsd = 0;
+        $totalBs = 0;
+
+        if (!empty($ventas)) {
+            foreach ($ventas as $venta) {
+                if ($venta->estado != 'Anulado') {
+                    $totalVentas++;
+                    $totalUsd += $venta->total_usd;
+                    $totalBs += $venta->total_bs;
+                }
+            }
+        }
+
+        $data = [
+            'title' => 'Reporte de Ventas',
+            'moduloActivo' => 'reportesVentas', // Assuming a route or sidebar ID
+            'ventas' => $ventas,
+            'totalVentas' => $totalVentas,
+            'totalUsd' => $totalUsd,
+            'totalBs' => $totalBs
+        ];
         render_view('reportesVentas', $data);
     }
 
@@ -150,7 +174,67 @@ class ReportesController {
             $_SESSION['reporte_producto'] = $_POST['producto'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteInventarioProducto');
             exit();
+        } else if ($reportes == 'ventas_general') {
+            header('location: ' . RUTA_BASE . 'reportes/generarReporteVenta');
+            exit();
+        } else if ($reportes == 'ventas_estado') {
+            $_SESSION['reporte_estado'] = $_POST['estado'];
+            header('location: ' . RUTA_BASE . 'reportes/generarReporteVentaEstado');
+            exit();
         }
+    }
+
+    public function generarReporteVenta() {
+        verificarLogin();
+        $ventas = $this->facturaModel->mostrar();
+
+        ob_start();
+        require 'src/Views/reportegenerarventa.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_ventas_general.pdf", array("Attachment" => false));
+    }
+
+    public function generarReporteVentaEstado() {
+        verificarLogin();
+        $estado = isset($_SESSION['reporte_estado']) ? trim($_SESSION['reporte_estado']) : '';
+        $ventas = $this->facturaModel->mostrar();
+
+        // Filter by state (Case insensitive and trimmed)
+        if (!empty($estado)) {
+            $ventas = array_filter($ventas, function ($v) use ($estado) {
+                return strcasecmp(trim($v->estado), $estado) === 0;
+            });
+        }
+
+        // Pass the specific title
+        $tituloReporte = "Reporte de Ventas (" . ucfirst(strtolower($estado)) . ")";
+
+        ob_start();
+
+        // Select specific template based on status
+        if (strcasecmp($estado, 'Pendiente') === 0 || strcasecmp($estado, 'En proceso') === 0) {
+            require 'src/Views/reportegenerarventapendiente.php';
+        } else if (strcasecmp($estado, 'Completado') === 0) {
+            require 'src/Views/reportegenerarventacompletado.php';
+        } else {
+            // Default or generic
+            require 'src/Views/reportegenerarventa.php';
+        }
+
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_ventas_" . strtolower($estado) . ".pdf", array("Attachment" => false));
     }
 
     public function generarreporte() {

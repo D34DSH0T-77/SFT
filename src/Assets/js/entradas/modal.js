@@ -100,7 +100,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const dolar = 0;
 
         if (!idTorta || isNaN(cantidad) || cantidad <= 0) {
-            alert('Por favor seleccione una torta y una cantidad válida.');
+            Swal.fire({
+                title: 'Error!',
+                text: 'Por favor seleccione una torta y una cantidad válida.',
+                icon: 'error',
+                background: '#000000ff',
+                color: '#fff'
+            });
             return;
         }
 
@@ -163,12 +169,24 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             if (detalles.length === 0) {
-                alert('La lista está vacía. Agregue al menos una torta.');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'La lista está vacía. Agregue al menos una torta.',
+                    icon: 'error',
+                    background: '#000000ff',
+                    color: '#fff'
+                });
                 return;
             }
 
             if (!form.codigo.value || !form.fecha.value || !form.local.value) {
-                alert('Por favor complete todos los datos de la entrada (Código, Fecha, Local)');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Por favor complete todos los datos de la entrada (Código, Fecha, Local)',
+                    icon: 'error',
+                    background: '#000000ff',
+                    color: '#fff'
+                });
                 return;
             }
 
@@ -190,7 +208,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const totalUsd = parseFloat(totalUsdInput.value);
 
             if (isNaN(totalBs) || totalBs < 0 || isNaN(totalUsd) || totalUsd < 0) {
-                alert('Por favor ingrese montos válidos para el total.');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Por favor ingrese montos válidos para el total.',
+                    icon: 'error',
+                    background: '#000000ff',
+                    color: '#fff'
+                });
                 return;
             }
 

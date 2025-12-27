@@ -39,27 +39,15 @@
                                         <div class="col-7 p-3 border-end border-secondary">
                                             <h5 class="card-title text-center mb-3" style="text-decoration: underline; font-size: 1rem;">Top compradores</h5>
                                             <ul class="list-unstyled mb-0">
-                                                <li class="d-flex justify-content-between align-items-center mb-2">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <span class="material-symbols-sharp" style="color: #FFD700; font-size: 1.2rem;">crown</span>
-                                                        <small class="text-muted">1</small>
-                                                    </div>
-                                                    <span class="small fw-bold">Juan Pérez</span>
-                                                </li>
-                                                <li class="d-flex justify-content-between align-items-center mb-2">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <span class="material-symbols-sharp" style="color: #C0C0C0; font-size: 1.2rem;">crown</span>
-                                                        <small class="text-muted">2</small>
-                                                    </div>
-                                                    <span class="small">Maria G.</span>
-                                                </li>
-                                                <li class="d-flex justify-content-between align-items-center mb-0">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <span class="material-symbols-sharp" style="color: #CD7F32; font-size: 1.2rem;">crown</span>
-                                                        <small class="text-muted">3</small>
-                                                    </div>
-                                                    <span class="small">Carlos R.</span>
-                                                </li>
+                                                <?php foreach ($topCompradores as $index => $comprador): ?>
+                                                    <li class="d-flex justify-content-between align-items-center mb-2">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="material-symbols-sharp" style="color: #FFD700; font-size: 1.2rem;">crown</span>
+                                                            <small class="text-muted"><?= $index + 1 ?></small>
+                                                        </div>
+                                                        <span class="small fw-bold"><?= $comprador->nombre ?></span>
+                                                    </li>
+                                                <?php endforeach; ?>
                                             </ul>
                                         </div>
 

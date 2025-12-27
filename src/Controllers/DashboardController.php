@@ -28,6 +28,7 @@ class DashboardController {
 
         $totalClientes = $this->clientes->contar();
         $totalTortas = $this->lotes->contar();
+        $topCompradores = $this->clientes->obtenerTopCompradores(8);
 
 
         // Lógica de Capital (Copiada de CapitalController)
@@ -96,7 +97,8 @@ class DashboardController {
             'chartDataBs' => json_encode($chartDataBs),
             'productosMasVendidos' => json_encode($this->detallesFacturaModel->getProductosMasVendidos()),
             'ultimasFacturas' => $this->facturaModel->obtenerRecientes(5),
-            'productosBajoStock' => $this->lotes->obtenerBajoStock(4)
+            'productosBajoStock' => $this->lotes->obtenerBajoStock(4),
+            'topCompradores' => $topCompradores
         ];
         render_view('dashboard', $data);
     }

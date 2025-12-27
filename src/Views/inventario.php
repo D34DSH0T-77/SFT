@@ -8,6 +8,39 @@
         <?php require('src/Assets/layout/navbar.php') ?>
 
         <!-- Dashboard Widgets -->
+        <style>
+            .btn-minimal {
+                background: transparent;
+                border: 1px solid var(--border-color);
+                color: var(--text-main);
+                border-radius: 30px;
+                padding: 6px 20px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                letter-spacing: 0.5px;
+            }
+
+            .btn-minimal:hover {
+                background: rgba(255, 255, 255, 0.05);
+                border-color: rgba(255, 255, 255, 0.5);
+                color: #fff;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn-minimal i {
+                font-size: 0.9em;
+                transition: transform 0.3s ease;
+            }
+
+            .btn-minimal:hover i {
+                transform: rotate(180deg);
+            }
+        </style>
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="text-light">Inventario de Tortas</h2>
@@ -24,7 +57,9 @@
                                     <p class="card-text">
                                         <strong>Stock: <?= $torta->stock ?></strong>
                                     </p>
-                                    <button type="button" class="btn btn-sm btn-primary btn-ajustar" data-bs-toggle="modal" data-bs-target="#modalAjustar" data-bs-id="<?= $torta->id ?>">Ajustar</button>
+                                    <button type="button" class="btn-minimal btn-ajustar" data-bs-toggle="modal" data-bs-target="#modalAjustar" data-bs-id="<?= $torta->id ?>">
+                                        <i class="fas fa-sliders-h"></i> Ajustar
+                                    </button>
                                 </div>
                             </div>
                         </div>

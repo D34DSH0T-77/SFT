@@ -109,4 +109,25 @@ class Clientes extends Conexion {
             return [];
         }
     }
+
+    public function obtenerTopCompradores($limit = 8) {
+        $sql = "SELECT c.id, c.nombre, c.apellido, 
+                COUNT(f.id) as total_compras, 
+                COALESCE(SUM(f.total_usd), 0) as total_gastado_usd
+                FROM {$this->tabla} c
+                JOIN factura f ON c.id = f.id_cliente
+                WHERE f.estado != 'Anulado'
+                GROUP BY c.id 
+                ORDER BY total_gastado_usd DESC 
+                LIMIT :limit";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS);
+        } catch (\Throwable $th) {
+            error_log("Error al obtener top compradores: " . $th->getMessage());
+            return [];
+        }
+    }
 }

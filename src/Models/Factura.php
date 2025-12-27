@@ -23,7 +23,7 @@ class Factura extends Conexion {
     }
 
     public function mostrar() {
-        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f LEFT JOIN clientes c ON f.id_cliente = c.id";
+        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f LEFT JOIN clientes c ON f.id_cliente = c.id ORDER BY f.fecha DESC, f.id DESC";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();

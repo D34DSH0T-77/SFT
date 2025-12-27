@@ -158,6 +158,9 @@ class ReportesController {
             header('location: ' . RUTA_BASE . 'reportes/generarreporte');
             exit();
         } else if ($reportes == 'multiple') {
+            $_SESSION['reporte_cliente_id'] = $_POST['cliente_id'];
+            $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+            $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
             header('location: ' . RUTA_BASE . 'reportes/generarMultiple');
             exit();
         } else if ($reportes == 'entradas_general') {
@@ -297,6 +300,56 @@ class ReportesController {
 
         $dompdf->render();
         $dompdf->stream("reporte_entradas_local.pdf", array("Attachment" => false));
+    }
+
+
+    public function generarMultiple() {
+        verificarLogin();
+
+        $clienteId = isset($_SESSION['reporte_cliente_id']) ? $_SESSION['reporte_cliente_id'] : '';
+        $fechaInicio = isset($_SESSION['reporte_fecha_inicio']) ? $_SESSION['reporte_fecha_inicio'] : '';
+        $fechaFinal = isset($_SESSION['reporte_fecha_final']) ? $_SESSION['reporte_fecha_final'] : '';
+
+        // Fetch all sales
+        $ventas = $this->facturaModel->mostrar();
+
+        // 1. Filter by Client
+        if (!empty($clienteId)) {
+            $ventas = array_filter($ventas, function ($v) use ($clienteId) {
+                return $v->id_cliente == $clienteId;
+            });
+        }
+
+        // 2. Filter by Dates
+        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+            $ventas = array_filter($ventas, function ($v) use ($fechaInicio, $fechaFinal) {
+                $fechaVenta = date('Y-m-d', strtotime($v->fecha));
+                return $fechaVenta >= $fechaInicio && $fechaVenta <= $fechaFinal;
+            });
+        }
+
+        // Set dynamic title
+        $tituloReporte = "Reporte de Ventas por Cliente";
+        if (!empty($ventas)) {
+            // Try to get client name from first record if filtered
+            // Or we could fetch client name using client model, but we have invoice objects with client name attached
+            $first = reset($ventas); // Get first element
+            if (isset($first->cliente)) {
+                $tituloReporte .= " - " . $first->cliente;
+            }
+        }
+
+        ob_start();
+        // Reuse general sales template
+        require 'src/Views/reportegenerarventa.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_ventas_cliente.pdf", array("Attachment" => false));
     }
 
     public function generarReporteInventario() {

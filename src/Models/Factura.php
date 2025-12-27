@@ -100,4 +100,20 @@ class Factura extends Conexion {
             return false;
         }
     }
+
+    public function obtenerPendientes() {
+        $sql = "SELECT f.*, c.nombre as cliente 
+                FROM {$this->tabla} f 
+                JOIN clientes c ON f.id_cliente = c.id 
+                WHERE f.estado = 'En proceso' 
+                ORDER BY f.fecha DESC";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Factura::class);
+        } catch (\Exception $e) {
+            error_log("Error al obtener facturas pendientes: " . $e->getMessage());
+            return [];
+        }
+    }
 }

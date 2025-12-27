@@ -31,9 +31,9 @@
 
     <!-- 3. Pagos Pendientes -->
     <div class="col-md-3">
-        <div class="stats-card">
+        <div class="stats-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalPagosPendientes">
             <div class="stats-info">
-                <h3>12</h3>
+                <h3><?= isset($pagosPendientes) ? count($pagosPendientes) : 0 ?></h3>
                 <p>Pagos pendientes </p>
             </div>
             <div class="stats-icon bg-pastel-peach">

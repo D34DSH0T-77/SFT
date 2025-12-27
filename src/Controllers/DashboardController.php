@@ -96,6 +96,17 @@ class DashboardController {
         }
 
 
+        $pagosPendientes = $this->facturaModel->obtenerPendientes();
+        $totalPendienteBs = 0;
+        $totalPendienteUsd = 0;
+
+        if ($pagosPendientes) {
+            foreach ($pagosPendientes as $pago) {
+                $totalPendienteBs += floatval($pago->total_bs);
+                $totalPendienteUsd += floatval($pago->total_usd);
+            }
+        }
+
         $data = [
             'title' => 'Dashboard',
             'moduloActivo' => 'dashboard',
@@ -107,7 +118,10 @@ class DashboardController {
             'productosMasVendidos' => json_encode($this->detallesFacturaModel->getProductosMasVendidos()),
             'ultimasFacturas' => $this->facturaModel->obtenerRecientes(5),
             'productosBajoStock' => $this->lotes->obtenerBajoStock(4),
-            'topCompradores' => $topCompradores
+            'topCompradores' => $topCompradores,
+            'pagosPendientes' => $pagosPendientes,
+            'totalPendienteBs' => $totalPendienteBs,
+            'totalPendienteUsd' => $totalPendienteUsd
         ];
         render_view('dashboard', $data);
     }

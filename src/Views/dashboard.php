@@ -189,6 +189,8 @@
         </div>
     </div>
 
+    <?php require('src/Assets/layout/dashboard/modal.php') ?>
+
     <?php require('src/Assets/layout/script-footer.php') ?>
 
     <script>

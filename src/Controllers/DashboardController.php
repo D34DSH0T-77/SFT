@@ -31,11 +31,13 @@ class DashboardController {
         $topCompradores = $this->clientes->obtenerTopCompradores(8);
 
 
-        // Lógica de Capital (Copiada de CapitalController)
         $facturas = $this->facturaModel->mostrar();
         $entradas = $this->entradasModel->mostrarEntradas();
 
         $transactions = [];
+
+        $totalIngresoUsd = 0;
+        $totalEgresoUsd = 0;
 
         if ($facturas) {
             foreach ($facturas as $f) {
@@ -46,6 +48,8 @@ class DashboardController {
                     }
                     $transactions[$date]['income_usd'] += floatval($f->total_usd);
                     $transactions[$date]['income_bs'] += floatval($f->total_bs);
+
+                    $totalIngresoUsd += floatval($f->total_usd);
                 }
             }
         }
@@ -58,8 +62,12 @@ class DashboardController {
                 }
                 $transactions[$date]['expense_usd'] += floatval($e->precio_usd);
                 $transactions[$date]['expense_bs'] += floatval($e->precio_bs);
+
+                $totalEgresoUsd += floatval($e->precio_usd);
             }
         }
+
+        $gananciaTotalUsd = $totalIngresoUsd - $totalEgresoUsd;
 
         ksort($transactions);
 
@@ -93,6 +101,7 @@ class DashboardController {
             'moduloActivo' => 'dashboard',
             'totalClientes' => $totalClientes,
             'totalTortas' => $totalTortas,
+            'gananciaTotalUsd' => $gananciaTotalUsd,
             'chartData' => json_encode($chartData),
             'chartDataBs' => json_encode($chartDataBs),
             'productosMasVendidos' => json_encode($this->detallesFacturaModel->getProductosMasVendidos()),

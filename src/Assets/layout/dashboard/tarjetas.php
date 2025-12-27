@@ -46,8 +46,8 @@
     <div class="col-md-3">
         <div class="stats-card">
             <div class="stats-info">
-                <h3>$120</h3>
-                <p>Ganancia</p>
+                <h3>$<?= number_format($gananciaTotalUsd ?? 0, 2) ?></h3>
+                <p>Ganancia (USD)</p>
             </div>
             <div class="stats-icon bg-pastel-mint">
                 <span class="material-symbols-sharp">payments</span>

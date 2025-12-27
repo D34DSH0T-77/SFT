@@ -40,17 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     document.addEventListener('click', (e) => {
         // Productos
-        if (!e.target.closest('#resultadosBusqueda') &&
-            !e.target.closest('#inputBusquedaProductos') &&
-            !e.target.closest('#btnMostrarTodo')) {
+        if (!e.target.closest('#resultadosBusqueda') && !e.target.closest('#inputBusquedaProductos') && !e.target.closest('#btnMostrarTodo')) {
             const resProd = document.getElementById('resultadosBusqueda');
             if (resProd) resProd.style.display = 'none';
         }
 
         // Clientes
-        if (!e.target.closest('#resultadosBusquedaClientes') &&
-            !e.target.closest('#inputBusquedaClientes') &&
-            !e.target.closest('#btnMostrarTodoClientes')) {
+        if (!e.target.closest('#resultadosBusquedaClientes') && !e.target.closest('#inputBusquedaClientes') && !e.target.closest('#btnMostrarTodoClientes')) {
             const resCli = document.getElementById('resultadosBusquedaClientes');
             if (resCli) resCli.style.display = 'none';
         }
@@ -89,10 +85,7 @@ function filtrarProductos(termino) {
 
     termino = termino.toLowerCase();
 
-    const resultados = tortasDisponibles.filter(p =>
-        p.nombre.toLowerCase().includes(termino) ||
-        (p.id && p.id.toString().includes(termino))
-    );
+    const resultados = tortasDisponibles.filter((p) => p.nombre.toLowerCase().includes(termino) || (p.id && p.id.toString().includes(termino)));
 
     mostrarResultados(resultados);
 }
@@ -107,7 +100,7 @@ function mostrarResultados(resultados) {
         return;
     }
 
-    resultados.forEach(p => {
+    resultados.forEach((p) => {
         const item = document.createElement('div');
         item.className = 'list-group-item list-group-item-action cursor-pointer';
         item.style.cursor = 'pointer';
@@ -130,9 +123,8 @@ function mostrarResultados(resultados) {
     contenedor.style.display = 'block';
 }
 
-
 function seleccionarProducto(producto) {
-    console.log("Producto seleccionado:", producto);
+    console.log('Producto seleccionado:', producto);
     agregarAlCarrito(producto);
 
     // Limpiar input y cerrar resultados
@@ -159,7 +151,7 @@ function mostrarTodo() {
 // =============================================================================
 
 function agregarAlCarrito(producto) {
-    const existe = carrito.find(p => p.id == producto.id);
+    const existe = carrito.find((p) => p.id == producto.id);
 
     if (existe) {
         existe.cantidad++;
@@ -236,7 +228,7 @@ function eliminarDelCarrito(index) {
 function actualizarTotales() {
     let totalUsd = 0;
 
-    carrito.forEach(p => {
+    carrito.forEach((p) => {
         totalUsd += p.precio * p.cantidad;
     });
 
@@ -274,11 +266,12 @@ function filtrarClientes(termino) {
 
     termino = termino.toLowerCase();
 
-    const resultados = typeof clientesDisponibles !== 'undefined' ? clientesDisponibles.filter(c =>
-        c.nombre.toLowerCase().includes(termino) ||
-        c.apellido.toLowerCase().includes(termino) ||
-        (c.id && c.id.toString().includes(termino))
-    ) : [];
+    const resultados =
+        typeof clientesDisponibles !== 'undefined'
+            ? clientesDisponibles.filter(
+                  (c) => c.nombre.toLowerCase().includes(termino) || c.apellido.toLowerCase().includes(termino) || (c.id && c.id.toString().includes(termino))
+              )
+            : [];
 
     mostrarResultadosClientes(resultados);
 }
@@ -293,7 +286,7 @@ function mostrarResultadosClientes(resultados) {
         return;
     }
 
-    resultados.forEach(c => {
+    resultados.forEach((c) => {
         const item = document.createElement('div');
         item.className = 'list-group-item list-group-item-action cursor-pointer';
         item.style.cursor = 'pointer';
@@ -312,7 +305,7 @@ function mostrarResultadosClientes(resultados) {
 }
 
 function seleccionarCliente(cliente) {
-    console.log("Cliente seleccionado:", cliente);
+    console.log('Cliente seleccionado:', cliente);
 
     const input = document.getElementById('inputBusquedaClientes');
     if (input) {
@@ -398,10 +391,23 @@ window.prepararPago = async function (idFactura) {
             // Trigger validación visual inicial (limpia colores previos)
             validarMontoVisualmente();
         } else {
-            alert('Error obteniendo saldo');
+            Swal.fire({
+                title: 'Error!',
+                text: 'Error obteniendo saldo',
+                icon: 'error',
+                background: '#252525',
+                color: '#fff'
+            });
         }
     } catch (e) {
         console.error(e);
+        Swal.fire({
+            title: 'Error!',
+            text: 'Error obteniendo saldo',
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
         setObjetoTexto('restanteUsdDisplay', 'Error');
     }
 
@@ -418,7 +424,7 @@ window.prepararPago = async function (idFactura) {
     if (inputMetodo) {
         inputMetodo.onchange = validarMontoVisualmente;
     }
-}
+};
 
 function validarMontoVisualmente() {
     const inputMonto = document.getElementById('pagoMonto');
@@ -485,7 +491,13 @@ async function procesarPagoExistente() {
     const monto = parseFloat(document.getElementById('pagoMonto')?.value) || 0;
 
     if (monto <= 0) {
-        alert('Ingrese un monto de pago válido');
+        Swal.fire({
+            title: 'Error!',
+            text: 'Ingrese un monto de pago válido',
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
         return;
     }
 
@@ -497,8 +509,14 @@ async function procesarPagoExistente() {
 
     // VALIDACION: No pagar más de lo que se debe
     // Usamos un pequeño margen de error para comparaciones de punto flotante
-    if ((pagoReal - restanteUsdGlobal) > 0.01) {
-        alert(`El monto ingresado excede la deuda pendiente.\nDeuda actual: $${restanteUsdGlobal.toFixed(2)}\nIntenta pagar: $${pagoReal.toFixed(2)}`);
+    if (pagoReal - restanteUsdGlobal > 0.01) {
+        Swal.fire({
+            title: 'Error!',
+            text: `El monto ingresado excede la deuda pendiente.\nDeuda actual: $${restanteUsdGlobal.toFixed(2)}\nIntenta pagar: $${pagoReal.toFixed(2)}`,
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
         return;
     }
 
@@ -515,25 +533,55 @@ async function procesarPagoExistente() {
 
         const data = await response.json();
         if (data.status) {
-            alert('Pago registrado correctamente');
+            Swal.fire({
+                title: 'Éxito!',
+                text: 'Pago registrado correctamente',
+                icon: 'success',
+                background: '#252525',
+                color: '#fff'
+            });
             location.reload();
         } else {
-            alert('Error: ' + data.message);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Error: ' + data.message,
+                icon: 'error',
+                background: '#252525',
+                color: '#fff'
+            });
         }
     } catch (error) {
         console.error(error);
-        alert('Error al registrar pago');
+        Swal.fire({
+            title: 'Error!',
+            text: 'Error al registrar pago',
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
     }
 }
 
 async function registrarVenta() {
     if (carrito.length === 0) {
-        alert('El carrito está vacío');
+        Swal.fire({
+            title: 'Error!',
+            text: 'El carrito está vacío',
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
         return;
     }
 
     if (!clienteSeleccionadoId) {
-        alert('Debe seleccionar un cliente');
+        Swal.fire({
+            title: 'Error!',
+            text: 'Debe seleccionar un cliente',
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
         return;
     }
 
@@ -599,7 +647,7 @@ window.copiarMontoPago = function (textoMonto, moneda) {
 
     // Opcional: Cambiar placeholder o indicador de moneda si existiera
     // El input tiene un span "BS" al lado hardcodeado en el HTML?
-    // <span class="input-group-text">BS</span> 
+    // <span class="input-group-text">BS</span>
     // Deberíamos cambiar ese span según la moneda seleccionada, pero el input es numérico.
     // El usuario debe seleccionar el metodo de pago correcto (Divisa vs Bs).
-}
+};

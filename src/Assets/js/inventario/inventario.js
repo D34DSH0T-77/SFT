@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Fetch lots
         fetch(BASE_URL + 'Inventario/getLotes/' + id)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 if (Array.isArray(data) && data.length > 0) {
                     renderLotesTable(data, container);
                 } else if (Object.keys(data).length > 0) {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     container.innerHTML = '<div class="alert alert-info">No se encontraron lotes para este producto.</div>';
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error:', error);
                 container.innerHTML = '<div class="alert alert-danger">Error al cargar lo lotes.</div>';
             });
@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // If data is just one object (unlikely with fetchAll), wrap it.
         if (!Array.isArray(data)) data = [data];
 
-        data.forEach(lote => {
-            // User requested specific format "lote 1 20" (i.e. Name Quantity). 
+        data.forEach((lote) => {
+            // User requested specific format "lote 1 20" (i.e. Name Quantity).
             // We will display "Lote {id}" in the name column.
             var label = 'Lote ' + lote.id;
             if (lote.created_at) {
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         container.innerHTML = html;
 
         // Attach event listeners to new buttons
-        container.querySelectorAll('.btn-update-lote').forEach(btn => {
+        container.querySelectorAll('.btn-update-lote').forEach((btn) => {
             btn.addEventListener('click', function () {
                 var id = this.getAttribute('data-id');
                 var qtyInput = document.getElementById('qty-' + id);
@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({ id: id, cantidad: cantidad })
         })
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 if (data.status === 'success') {
                     btn.innerHTML = '✔';
                     btn.className = 'btn btn-sm btn-success'; // ensure it stays green or success
@@ -103,14 +103,26 @@ document.addEventListener('DOMContentLoaded', function () {
                         btn.disabled = false;
                     }, 1500);
                 } else {
-                    alert('No se pudo actualizar el lote. Tenga en cuenta que el inventario no se actualiza, solo el lote.');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'No se pudo actualizar el lote. Tenga en cuenta que el inventario no se actualiza, solo el lote.',
+                        icon: 'error',
+                        background: '#252525',
+                        color: '#fff'
+                    });
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error:', error);
-                alert('Error de conexión');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Error de conexión',
+                    icon: 'error',
+                    background: '#252525',
+                    color: '#fff'
+                });
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             });

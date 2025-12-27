@@ -106,14 +106,14 @@
                     const divFechaFinal = document.getElementById('div_fecha_final');
 
                     function toggleInputs() {
+                        // Always show dates
+                        divFechaInicio.style.display = 'block';
+                        divFechaFinal.style.display = 'block';
+
                         if (tipoSelect.value === 'entradas_general') {
                             divLocal.style.display = 'none';
-                            divFechaInicio.style.display = 'none';
-                            divFechaFinal.style.display = 'none';
                         } else {
                             divLocal.style.display = 'block';
-                            divFechaInicio.style.display = 'block';
-                            divFechaFinal.style.display = 'block';
                         }
                     }
 

@@ -164,10 +164,14 @@ class ReportesController {
             header('location: ' . RUTA_BASE . 'reportes/generarMultiple');
             exit();
         } else if ($reportes == 'entradas_general') {
+            $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+            $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteEntradas');
             exit();
         } else if ($reportes == 'multiple_local') {
             $_SESSION['reporte_local'] = $_POST['local'];
+            $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+            $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
             header('location: ' . RUTA_BASE . 'reportes/generarMultipleentrada');
             exit();
         } else if ($reportes == 'inventario_general') {
@@ -181,10 +185,14 @@ class ReportesController {
             header('location: ' . RUTA_BASE . 'reportes/generarReporteInventarioBajoStock');
             exit();
         } else if ($reportes == 'ventas_general') {
+            $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+            $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteVenta');
             exit();
         } else if ($reportes == 'ventas_estado') {
             $_SESSION['reporte_estado'] = $_POST['estado'];
+            $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+            $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteVentaEstado');
             exit();
         } else if ($reportes == 'mas_vendidas' || $reportes == 'menos_vendidas') {
@@ -198,7 +206,17 @@ class ReportesController {
 
     public function generarReporteVenta() {
         verificarLogin();
+        $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : '';
+        $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : '';
+
         $ventas = $this->facturaModel->mostrar();
+
+        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+            $ventas = array_filter($ventas, function ($v) use ($fechaInicio, $fechaFinal) {
+                $fechaVenta = date('Y-m-d', strtotime($v->fecha));
+                return $fechaVenta >= $fechaInicio && $fechaVenta <= $fechaFinal;
+            });
+        }
 
         ob_start();
         require 'src/Views/reportegenerarventa.php';
@@ -215,7 +233,18 @@ class ReportesController {
     public function generarReporteVentaEstado() {
         verificarLogin();
         $estado = isset($_SESSION['reporte_estado']) ? trim($_SESSION['reporte_estado']) : '';
+        $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : '';
+        $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : '';
+
         $ventas = $this->facturaModel->mostrar();
+
+        // Filter by date
+        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+            $ventas = array_filter($ventas, function ($v) use ($fechaInicio, $fechaFinal) {
+                $fechaVenta = date('Y-m-d', strtotime($v->fecha));
+                return $fechaVenta >= $fechaInicio && $fechaVenta <= $fechaFinal;
+            });
+        }
 
         // Filter by state (Case insensitive and trimmed)
         if (!empty($estado)) {
@@ -269,8 +298,18 @@ class ReportesController {
 
     public function generarReporteEntradas() {
         verificarLogin();
+        $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : '';
+        $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : '';
+
         // Use new method to get Entradas with 'total_items' (quantity)
         $entradas = $this->entradasModel->obtenerEntradasConCantidad();
+
+        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+            $entradas = array_filter($entradas, function ($e) use ($fechaInicio, $fechaFinal) {
+                $fechaEntrada = date('Y-m-d', strtotime($e->fecha));
+                return $fechaEntrada >= $fechaInicio && $fechaEntrada <= $fechaFinal;
+            });
+        }
 
         ob_start();
         require 'src/Views/reportegenerarentrada.php';
@@ -288,9 +327,20 @@ class ReportesController {
         verificarLogin();
 
         $localSeleccionado = isset($_SESSION['reporte_local']) ? trim($_SESSION['reporte_local']) : '';
+        $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : '';
+        $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : '';
+
         // isset($_SESSION['reporte_local']) ? unset($_SESSION['reporte_local']) : '';
 
         $entradas = $this->entradasModel->obtenerEntradasConCantidad();
+
+        // Filter by date
+        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+            $entradas = array_filter($entradas, function ($e) use ($fechaInicio, $fechaFinal) {
+                $fechaEntrada = date('Y-m-d', strtotime($e->fecha));
+                return $fechaEntrada >= $fechaInicio && $fechaEntrada <= $fechaFinal;
+            });
+        }
 
         // Filter by local
         if (!empty($localSeleccionado)) {

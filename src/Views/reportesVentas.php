@@ -100,18 +100,17 @@
                     function toggleInputs() {
                         const selectedValue = selectReporte.value;
 
-                        // Hide all by default
+                        // Hide all by default first
                         divEstado.style.display = 'none';
-                        divFechaInicio.style.display = 'none';
-                        divFechaFinal.style.display = 'none';
+
+                        // Always show dates for all reports in this view (based on request)
+                        // Or conditionally:
+                        divFechaInicio.style.display = 'block';
+                        divFechaFinal.style.display = 'block';
 
                         if (selectedValue === 'ventas_estado') {
                             divEstado.style.display = 'block';
-                        } else if (selectedValue === 'mas_vendidas' || selectedValue === 'menos_vendidas') {
-                            divFechaInicio.style.display = 'block';
-                            divFechaFinal.style.display = 'block';
                         }
-                        // For 'ventas_general', all remain hidden (default behavior)
                     }
 
                     toggleInputs(); // Call on page load

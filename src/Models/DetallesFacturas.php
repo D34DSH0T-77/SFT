@@ -73,7 +73,7 @@ class DetallesFacturas extends Conexion {
         $orden = strtoupper($orden) === 'ASC' ? 'ASC' : 'DESC';
         $sql = "SELECT t.nombre, SUM(d.cantidad) as total_vendido, SUM(d.cantidad * d.precio_usd) as total_ingreso_usd
                 FROM {$this->tabla} d
-                JOIN facturas f ON d.id_factura = f.id
+                JOIN factura f ON d.id_factura = f.id
                 JOIN tortas t ON d.id_torta = t.id
                 WHERE f.estado != 'Anulado'
                 AND DATE(f.fecha) BETWEEN :fechaInicio AND :fechaFinal

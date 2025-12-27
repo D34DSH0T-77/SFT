@@ -445,8 +445,8 @@ class ReportesController {
         verificarLogin();
 
         $tipo = isset($_SESSION['reporte_ranking_tipo']) ? $_SESSION['reporte_ranking_tipo'] : 'mas_vendidas';
-        $fechaInicio = isset($_SESSION['reporte_fecha_inicio']) ? $_SESSION['reporte_fecha_inicio'] : date('Y-m-01');
-        $fechaFinal = isset($_SESSION['reporte_fecha_final']) ? $_SESSION['reporte_fecha_final'] : date('Y-m-t');
+        $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : date('Y-m-01');
+        $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : date('Y-m-t');
 
         $orden = ($tipo == 'mas_vendidas') ? 'DESC' : 'ASC';
         $titulo = ($tipo == 'mas_vendidas') ? 'Tortas Más Vendidas' : 'Tortas Menos Vendidas';
@@ -457,6 +457,13 @@ class ReportesController {
         // Best practice: add to constructor, but for quick fix:
         $detallesModel = new \App\Models\DetallesFacturas();
         $datos = $detallesModel->obtenerVentasPorProducto($fechaInicio, $fechaFinal, $orden);
+
+        // Filter for "Tortas Menos Vendidas" threshold (<= 3)
+        if ($tipo == 'menos_vendidas') {
+            $datos = array_filter($datos, function ($item) {
+                return $item->total_vendido <= 3;
+            });
+        }
 
         ob_start();
         require 'src/Views/reportegenerarrankingventas.php';

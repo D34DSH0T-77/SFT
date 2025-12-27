@@ -68,7 +68,6 @@
                         <select name="estado" id="estado" class="form-select bg-dark text-light border-secondary">
                             <option value="Completado">Completado</option>
                             <option value="En proceso">En proceso</option>
-                            <option value="Anulado">Anulado</option>
                         </select>
                     </div>
 

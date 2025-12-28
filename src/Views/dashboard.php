@@ -194,6 +194,32 @@
     <?php require('src/Assets/layout/script-footer.php') ?>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchTasaBCV();
+        });
+
+        async function fetchTasaBCV() {
+            try {
+                const response = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
+                const data = await response.json();
+
+                if (data && data.promedio) {
+                    const tasa = parseFloat(data.promedio);
+                    const usdAmount = parseFloat(document.getElementById('pendingUsdAmount').value) || 0;
+                    const bsAmount = usdAmount * tasa;
+
+                    const bsElement = document.getElementById('totalPendienteBs');
+                    if (bsElement) {
+                        bsElement.innerText = 'Bs ' + bsAmount.toLocaleString('es-VE', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    }
+                }
+            } catch (error) {
+                console.warn('No se pudo obtener la tasa para actualizar el saldo pendiente.', error);
+            }
+        }
         // --- Capital Chart Global Variables ---
         var chart; // Global chart instance
         var chartDataUsd = <?= $chartData ?>;

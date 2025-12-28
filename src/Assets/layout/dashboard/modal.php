@@ -44,7 +44,8 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-between w-100 align-items-center">
-                    <small>Saldo pendiente: Bs <?= number_format($totalPendienteBs, 2) ?> | USD <?= number_format($totalPendienteUsd, 2) ?></small>
+                    <small>Saldo pendiente: <span id="totalPendienteBs">Bs <?= number_format($totalPendienteBs, 2) ?></span> | USD <?= number_format($totalPendienteUsd, 2) ?></small>
+                    <input type="hidden" id="pendingUsdAmount" value="<?= $totalPendienteUsd ?>">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>

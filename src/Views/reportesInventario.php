@@ -70,7 +70,6 @@
                         <label for="tipos_inv" class="form-label text-light">Tipo de reporte</label>
                         <select name="reportes" id="tipos_inv" class="form-select" required>
                             <option value="inventario_general" selected>Reporte General</option>
-                            <option value="por_producto">Reporte por Producto</option>
                             <option value="inventario_bajo_stock">Reporte Stock Mínimo</option>
                         </select>
                     </div>

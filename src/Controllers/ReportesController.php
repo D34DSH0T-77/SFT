@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Clientes;
+use App\Models\DetallesFacturas;
 use App\Models\Entradas;
 use App\Models\DetallesEntradas;
 use App\Models\Factura;
@@ -16,6 +17,7 @@ class ReportesController {
     private $facturaModel;
     private $lotesModel;
     private $detallesEntradasModel;
+    private $detallesFacturasModel;
 
     public function __construct() {
         $this->clientesModel = new Clientes();
@@ -23,6 +25,7 @@ class ReportesController {
         $this->facturaModel = new Factura();
         $this->lotesModel = new Lotes();
         $this->detallesEntradasModel = new DetallesEntradas();
+        $this->detallesFacturasModel = new DetallesFacturas();
     }
 
     public function entradas() {
@@ -215,11 +218,21 @@ class ReportesController {
 
         $ventas = $this->facturaModel->mostrar();
 
-        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+        if (!empty($fechaInicio) || !empty($fechaFinal)) {
             $ventas = array_filter($ventas, function ($v) use ($fechaInicio, $fechaFinal) {
                 $fechaVenta = date('Y-m-d', strtotime($v->fecha));
-                return $fechaVenta >= $fechaInicio && $fechaVenta <= $fechaFinal;
+                $validStart = empty($fechaInicio) || $fechaVenta >= $fechaInicio;
+                $validEnd = empty($fechaFinal) || $fechaVenta <= $fechaFinal;
+                return $validStart && $validEnd;
             });
+        }
+
+        // Fetch details for each sale
+        foreach ($ventas as $venta) {
+            $venta->detalles = $this->detallesFacturasModel->obtenerPorFacturaId($venta->id);
+            // Ensure numeric values for formatting
+            $venta->total_usd = floatval($venta->total_usd);
+            $venta->total_bs = floatval($venta->total_bs);
         }
 
         ob_start();
@@ -243,10 +256,13 @@ class ReportesController {
         $ventas = $this->facturaModel->mostrar();
 
         // Filter by date
-        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+        // Filter by date
+        if (!empty($fechaInicio) || !empty($fechaFinal)) {
             $ventas = array_filter($ventas, function ($v) use ($fechaInicio, $fechaFinal) {
                 $fechaVenta = date('Y-m-d', strtotime($v->fecha));
-                return $fechaVenta >= $fechaInicio && $fechaVenta <= $fechaFinal;
+                $validStart = empty($fechaInicio) || $fechaVenta >= $fechaInicio;
+                $validEnd = empty($fechaFinal) || $fechaVenta <= $fechaFinal;
+                return $validStart && $validEnd;
             });
         }
 
@@ -284,7 +300,8 @@ class ReportesController {
 
     public function generarreporte() {
         verificarLogin();
-        $clientes = $this->clientesModel->mostrar();
+        // Fetch clients with sales statistics for a richer report
+        $clientes = $this->clientesModel->obtenerClientesConVentas();
         ob_start();
         require 'src/Views/reportegenerarcliente.php';
         $html = ob_get_clean();
@@ -309,14 +326,13 @@ class ReportesController {
         // Use new method to get Entradas with 'total_items' (quantity)
         $entradas = $this->entradasModel->obtenerEntradasConCantidad();
 
-        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+        if (!empty($fechaInicio) || !empty($fechaFinal)) {
             $entradas = array_filter($entradas, function ($e) use ($fechaInicio, $fechaFinal) {
                 $fechaEntrada = date('Y-m-d', strtotime($e->fecha));
-                $keep = $fechaEntrada >= $fechaInicio && $fechaEntrada <= $fechaFinal;
-                error_log("Filtering entry: ID={$e->id}, Date={$fechaEntrada} vs Range {$fechaInicio}-{$fechaFinal} => " . ($keep ? 'Keep' : 'Discard'));
-                return $keep;
+                $validStart = empty($fechaInicio) || $fechaEntrada >= $fechaInicio;
+                $validEnd = empty($fechaFinal) || $fechaEntrada <= $fechaFinal;
+                return $validStart && $validEnd;
             });
-            error_log("After filtering: " . count($entradas) . " entries remain.");
         }
 
         // Fetch details for each entry
@@ -350,10 +366,13 @@ class ReportesController {
         $entradas = $this->entradasModel->obtenerEntradasConCantidad();
 
         // Filter by date
-        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+        // Filter by date
+        if (!empty($fechaInicio) || !empty($fechaFinal)) {
             $entradas = array_filter($entradas, function ($e) use ($fechaInicio, $fechaFinal) {
                 $fechaEntrada = date('Y-m-d', strtotime($e->fecha));
-                return $fechaEntrada >= $fechaInicio && $fechaEntrada <= $fechaFinal;
+                $validStart = empty($fechaInicio) || $fechaEntrada >= $fechaInicio;
+                $validEnd = empty($fechaFinal) || $fechaEntrada <= $fechaFinal;
+                return $validStart && $validEnd;
             });
         }
 
@@ -402,10 +421,13 @@ class ReportesController {
         }
 
         // 2. Filter by Dates
-        if (!empty($fechaInicio) && !empty($fechaFinal)) {
+        // 2. Filter by Dates
+        if (!empty($fechaInicio) || !empty($fechaFinal)) {
             $ventas = array_filter($ventas, function ($v) use ($fechaInicio, $fechaFinal) {
                 $fechaVenta = date('Y-m-d', strtotime($v->fecha));
-                return $fechaVenta >= $fechaInicio && $fechaVenta <= $fechaFinal;
+                $validStart = empty($fechaInicio) || $fechaVenta >= $fechaInicio;
+                $validEnd = empty($fechaFinal) || $fechaVenta <= $fechaFinal;
+                return $validStart && $validEnd;
             });
         }
 
@@ -413,11 +435,18 @@ class ReportesController {
         $tituloReporte = "Reporte de Ventas por Cliente";
         if (!empty($ventas)) {
             // Try to get client name from first record if filtered
-            // Or we could fetch client name using client model, but we have invoice objects with client name attached
             $first = reset($ventas); // Get first element
             if (isset($first->cliente)) {
                 $tituloReporte .= " - " . $first->cliente;
             }
+        }
+
+        // Fetch details for each filtered sale (Critical for Ticket Design)
+        foreach ($ventas as $venta) {
+            $venta->detalles = $this->detallesFacturasModel->obtenerPorFacturaId($venta->id);
+            // Ensure numeric values for formatting
+            $venta->total_usd = floatval($venta->total_usd);
+            $venta->total_bs = floatval($venta->total_bs);
         }
 
         ob_start();

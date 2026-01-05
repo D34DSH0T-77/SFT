@@ -75,17 +75,9 @@
                         </select>
                     </div>
 
-                    <!-- Fecha Inicio -->
-                    <div class="col-md-6" id="div_fecha_inicio_inv">
-                        <label for="fecha_inicio_inv" class="form-label text-light">Fecha de inicio</label>
-                        <input type="date" name="fecha_inicio" id="fecha_inicio_inv" class="form-control">
-                    </div>
 
-                    <!-- Fecha Final -->
-                    <div class="col-md-6" id="div_fecha_final_inv">
-                        <label for="fecha_final_inv" class="form-label text-light">Fecha de final</label>
-                        <input type="date" name="fecha_final" id="fecha_final_inv" class="form-control">
-                    </div>
+
+
                 </div>
 
                 <!-- Submit Button -->

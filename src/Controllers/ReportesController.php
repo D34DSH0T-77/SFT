@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Clientes;
 use App\Models\Entradas;
+use App\Models\DetallesEntradas;
 use App\Models\Factura;
 use App\Models\Lotes;
 use Dompdf\Dompdf;
@@ -14,12 +15,14 @@ class ReportesController {
     private $entradasModel;
     private $facturaModel;
     private $lotesModel;
+    private $detallesEntradasModel;
 
     public function __construct() {
         $this->clientesModel = new Clientes();
         $this->entradasModel = new Entradas();
         $this->facturaModel = new Factura();
         $this->lotesModel = new Lotes();
+        $this->detallesEntradasModel = new DetallesEntradas();
     }
 
     public function entradas() {
@@ -154,6 +157,7 @@ class ReportesController {
 
     public function tiposdereporte() {
         $reportes = trim($_POST['reportes']);
+        error_log("ReportesController::tiposdereporte POST: " . print_r($_POST, true));
         if ($reportes == 'detallado') {
             header('location: ' . RUTA_BASE . 'reportes/generarreporte');
             exit();
@@ -300,6 +304,7 @@ class ReportesController {
         verificarLogin();
         $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : '';
         $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : '';
+        error_log("ReportesController::generarReporteEntradas SESSION dates: Start=$fechaInicio, End=$fechaFinal");
 
         // Use new method to get Entradas with 'total_items' (quantity)
         $entradas = $this->entradasModel->obtenerEntradasConCantidad();
@@ -307,8 +312,18 @@ class ReportesController {
         if (!empty($fechaInicio) && !empty($fechaFinal)) {
             $entradas = array_filter($entradas, function ($e) use ($fechaInicio, $fechaFinal) {
                 $fechaEntrada = date('Y-m-d', strtotime($e->fecha));
-                return $fechaEntrada >= $fechaInicio && $fechaEntrada <= $fechaFinal;
+                $keep = $fechaEntrada >= $fechaInicio && $fechaEntrada <= $fechaFinal;
+                error_log("Filtering entry: ID={$e->id}, Date={$fechaEntrada} vs Range {$fechaInicio}-{$fechaFinal} => " . ($keep ? 'Keep' : 'Discard'));
+                return $keep;
             });
+            error_log("After filtering: " . count($entradas) . " entries remain.");
+        }
+
+        // Fetch details for each entry
+        foreach ($entradas as $entrada) {
+            $entrada->detalles = $this->detallesEntradasModel->obtenerPorEntradaId($entrada->id);
+            $entrada->precio_usd = floatval($entrada->precio_usd);
+            $entrada->precio_bs = floatval($entrada->precio_bs);
         }
 
         ob_start();
@@ -347,6 +362,13 @@ class ReportesController {
             $entradas = array_filter($entradas, function ($entrada) use ($localSeleccionado) {
                 return $entrada->local === $localSeleccionado;
             });
+        }
+
+        // Fetch details for each entry
+        foreach ($entradas as $entrada) {
+            $entrada->detalles = $this->detallesEntradasModel->obtenerPorEntradaId($entrada->id);
+            $entrada->precio_usd = floatval($entrada->precio_usd);
+            $entrada->precio_bs = floatval($entrada->precio_bs);
         }
 
         ob_start();

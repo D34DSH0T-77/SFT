@@ -104,4 +104,14 @@ class Tortas extends Conexion {
             return [];
         }
     }
+    public function actualizarPrecioGlobal($precio) {
+        $sql = "UPDATE {$this->tabla} SET precio = :precio";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":precio", $precio);
+            return $stmt->execute();
+        } catch (\Throwable $th) {
+            error_log("Error al actualizar precio global: " . $th->getMessage());
+        }
+    }
 }

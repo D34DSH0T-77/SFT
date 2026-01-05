@@ -5,89 +5,171 @@
     <meta charset="UTF-8">
     <title>Reporte de Entradas</title>
     <style>
-        body {
-            font-family: sans-serif;
+        @page {
+            margin: 20px;
         }
 
-        h1 {
-            text-align: center;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
             color: #333;
         }
 
-        table {
+        .entry-card {
+            border: 2px solid #333;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 0;
+            /* Remove padding to flush header */
+            overflow: hidden;
+            /* For header radius */
+            page-break-inside: avoid;
+        }
+
+        .header-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            border-bottom: 2px solid #333;
+            background-color: #a0c4ff;
+            /* Pastel Blue */
         }
 
-        th,
-        td {
-            border: 1px solid #ddd;
+        .header-table td {
             padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
             font-weight: bold;
-        }
-
-        .text-center {
             text-align: center;
+            border-right: 2px solid #333;
+            color: #121212;
         }
 
-        .text-right {
-            text-align: right;
+        .header-table td:last-child {
+            border-right: none;
         }
 
-        .total-row {
+        .products-container {
+            padding: 10px;
+        }
+
+        .products-table-container {
+            border: 2px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table td {
+            padding: 5px 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .products-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product-name {
+            text-align: left;
+            border-right: 2px solid #333;
+        }
+
+        .product-qty {
+            text-align: center;
+            width: 80px;
             font-weight: bold;
-            background-color: #fafafa;
+        }
+
+        .amounts-table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .amount-box {
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            width: 60%;
+            margin: 0 auto;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .bg-pastel-pink {
+            background-color: #ffb7b2;
+            /* Pastel Pink */
+        }
+
+        .bg-pastel-mint {
+            background-color: #b5ead7;
+            /* Pastel Mint */
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Reporte de Entradas</h1>
+    <h2 style="text-align: center;">Reporte de Entradas</h2>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Local</th>
-                <th class="text-center">Cantidad Items</th>
-                <th class="text-right">Monto (USD)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (isset($entradas) && !empty($entradas)): ?>
-                <?php
-                $totalCantidad = 0;
-                $totalMontoUsd = 0;
-                ?>
-                <?php foreach ($entradas as $entrada): ?>
-                    <?php
-                    $totalCantidad += $entrada->total_items;
-                    $totalMontoUsd += $entrada->precio_usd;
-                    ?>
+    <?php if (isset($entradas) && !empty($entradas)): ?>
+        <?php foreach ($entradas as $entrada): ?>
+            <div class="entry-card">
+                <!-- Header: Code | Local | Date -->
+                <table class="header-table">
                     <tr>
-                        <td><?= $entrada->local ?></td>
-                        <td class="text-center"><?= $entrada->total_items ?></td>
-                        <td class="text-right">$<?= number_format($entrada->precio_usd, 2) ?></td>
+                        <td width="20%">COD: <?= $entrada->codigo ?? $entrada->id ?></td>
+                        <td width="55%">Local: <?= $entrada->local ?></td>
+                        <td width="25%">Fecha: <?= date('d/m/Y', strtotime($entrada->fecha)) ?></td>
                     </tr>
-                <?php endforeach; ?>
-                <tr class="total-row">
-                    <td>Total</td>
-                    <td class="text-center"><?= $totalCantidad ?></td>
-                    <td class="text-right">$<?= number_format($totalMontoUsd, 2) ?></td>
-                </tr>
-            <?php else: ?>
-                <tr>
-                    <td colspan="3" class="text-center">No hay registros de entradas</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                </table>
+
+                <!-- Products List -->
+                <div class="products-container">
+                    <div class="products-table-container">
+                        <table class="products-table">
+                            <?php
+                            $detalles = isset($entrada->detalles) ? $entrada->detalles : [];
+                            if (empty($detalles) && isset($entrada->total_items)) {
+                                echo "<tr><td colspan='2' style='text-align:center;'>Detalles no disponibles (Items: {$entrada->total_items})</td></tr>";
+                            } elseif (!empty($detalles)) {
+                                foreach ($detalles as $detalle):
+                            ?>
+                                    <tr>
+                                        <td class="product-name"><?= $detalle->nombre_torta ?></td>
+                                        <td class="product-qty"><?= $detalle->cantidad ?></td>
+                                    </tr>
+                            <?php
+                                endforeach;
+                            } else {
+                                echo "<tr><td colspan='2' style='text-align:center;'>Sin productos</td></tr>";
+                            }
+                            ?>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Footer: Amounts -->
+                <table class="amounts-table">
+                    <tr>
+                        <td align="center">
+                            <div class="amount-box bg-pastel-pink">
+                                Bs <?= number_format($entrada->precio_bs, 2) ?>
+                            </div>
+                        </td>
+                        <td align="center">
+                            <div class="amount-box bg-pastel-mint">
+                                $ <?= number_format($entrada->precio_usd, 2) ?>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p style="text-align:center;">No se encontraron registros para el rango seleccionado.</p>
+    <?php endif; ?>
 
 </body>
 

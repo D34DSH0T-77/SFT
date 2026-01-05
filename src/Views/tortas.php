@@ -11,9 +11,14 @@
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="text-light">Gestión de Tortas</h2>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTortas">
-                    <span class="material-symbols-sharp me-2" style="vertical-align: middle;">add</span> Agregar Torta
-                </button>
+                <div>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalPrecioGlobal">
+                        <span class="material-symbols-sharp me-2" style="vertical-align: middle;">build</span>Precio Global
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTortas">
+                        <span class="material-symbols-sharp me-2" style="vertical-align: middle;">add</span> Agregar Torta
+                    </button>
+                </div>
             </div>
             <?php require('src/Assets/layout/notificaciones.php') ?>
             <div class="table-container">

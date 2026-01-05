@@ -108,3 +108,29 @@
           </div>
       </div>
   </div>
+
+  <!--precio global-->
+  <div class="modal fade" id="modalPrecioGlobal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+          <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main);">
+              <form action="<?= RUTA_BASE . 'tortas/precioGlobal' ?>" method="post">
+                  <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                      <h5 class="modal-title">Precio Global</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="precioGlobal" class="form-label">Nuevo Precio</label>
+                      <input type="number" name="precioGlobal" class="form-control" step="0.01" min="0" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                  </div>
+
+
+                  <div class="modal-footer" style="border-top-color: var(--border-color);">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Atrás</button>
+                      <button type="submit" class="btn btn-primary">Confirmar y Guardar</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  </div>

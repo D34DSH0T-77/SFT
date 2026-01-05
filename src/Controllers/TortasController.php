@@ -171,4 +171,26 @@ class TortasController {
             exit();
         }
     }
+    public function precioGlobal() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . RUTA_BASE . 'tortas');
+            exit();
+        }
+        $precioglobal = $_POST['precioGlobal'];
+        if ($this->tortasModelo->actualizarPrecioGlobal($precioglobal)) {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'success',
+                'texto' => 'Precio global actualizado correctamente'
+            ];
+            header('Location: ' . RUTA_BASE . 'tortas');
+            exit();
+        } else {
+            $_SESSION['mensaje'] = [
+                'tipo' => 'danger',
+                'texto' => 'Error al actualizar el precio global'
+            ];
+            header('Location: ' . RUTA_BASE . 'tortas');
+            exit();
+        }
+    }
 }

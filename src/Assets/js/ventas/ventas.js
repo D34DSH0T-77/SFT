@@ -332,6 +332,116 @@ function mostrarTodoClientes() {
 }
 
 // =============================================================================
+// NUEVO CLIENTE AJAX
+// =============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Listener boton + Nuevo
+    const btnNuevo = document.getElementById('btnNuevoCliente');
+    if (btnNuevo) {
+        btnNuevo.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Abrir modal
+            const el = document.getElementById('modalNuevoClienteAjax');
+            if (el) {
+                const modal = new bootstrap.Modal(el);
+                modal.show();
+            }
+        });
+    }
+
+    // Listener Form Submit
+    const formAjax = document.getElementById('formNuevoClienteAjax');
+    if (formAjax) {
+        formAjax.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Disable button and show loading
+            const btnSubmit = formAjax.querySelector('button[type="submit"]');
+            if (btnSubmit) btnSubmit.disabled = true;
+
+            Swal.fire({
+                title: 'Guardando cliente...',
+                text: 'Por favor espere',
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                allowOutsideClick: false,
+                background: '#252525',
+                color: '#fff'
+            });
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombreAjax').value;
+            const apellido = document.getElementById('apellidoAjax').value;
+
+            try {
+                const response = await fetch(RUTA_BASE + 'Clientes/agregarAjax', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, apellido })
+                });
+
+                const data = await response.json();
+
+                if (data.status) {
+                    // 1. Cerrar Modal
+                    const el = document.getElementById('modalNuevoClienteAjax');
+                    const modal = bootstrap.Modal.getInstance(el);
+                    modal.hide();
+
+                    // 2. Agregar a la lista local
+                    const newClient = {
+                        id: data.data.id,
+                        nombre: data.data.nombre,
+                        apellido: data.data.apellido,
+                        estado: 'Activo'
+                    };
+
+                    if (typeof clientesDisponibles !== 'undefined') {
+                        clientesDisponibles.push(newClient);
+                    }
+
+                    // 3. Seleccionar automaticamente
+                    seleccionarCliente(newClient);
+
+                    // 4. Limpiar form
+                    document.getElementById('nombreAjax').value = '';
+                    document.getElementById('apellidoAjax').value = '';
+
+                    Swal.fire({
+                        title: 'Excelente!',
+                        text: 'Cliente creado y seleccionado',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: '#252525',
+                        color: '#fff'
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                        background: '#252525',
+                        color: '#fff'
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error de conexión',
+                    icon: 'error',
+                    background: '#252525',
+                    color: '#fff'
+                });
+            }
+        });
+    }
+});
+
+// =============================================================================
 // REGISTRAR VENTA / PAGO
 // =============================================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -670,6 +780,8 @@ async function registrarVenta() {
         icon: 'info',
         allowOutsideClick: false,
         showConfirmButton: false,
+        background: '#252525',
+        color: '#fff',
         didOpen: () => {
             Swal.showLoading();
         }
@@ -684,9 +796,6 @@ window.copiarMontoPago = function (textoMonto, moneda) {
     const monto = parseFloat(textoMonto);
     document.getElementById('pagoMonto').value = monto.toFixed(2);
 
-    // Opcional: Cambiar placeholder o indicador de moneda si existiera
-    // El input tiene un span "BS" al lado hardcodeado en el HTML?
-    // <span class="input-group-text">BS</span>
-    // Deberíamos cambiar ese span según la moneda seleccionada, pero el input es numérico.
-    // El usuario debe seleccionar el metodo de pago correcto (Divisa vs Bs).
 };
+
+

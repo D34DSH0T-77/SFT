@@ -116,4 +116,17 @@ class Factura extends Conexion {
             return [];
         }
     }
+    public function obtenerCompletadasMes($mes, $anio) {
+        $sql = "SELECT * FROM {$this->tabla} WHERE (estado = 'Completado' OR estado = 'Entregado') AND MONTH(fecha) = :mes AND YEAR(fecha) = :anio";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+            $stmt->bindParam(':anio', $anio, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Factura::class);
+        } catch (\Exception $e) {
+            error_log("Error al obtener facturas completadas del mes: " . $e->getMessage());
+            return [];
+        }
+    }
 }

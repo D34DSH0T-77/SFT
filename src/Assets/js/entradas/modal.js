@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // -------------------------------------------------------------------------
     if (inputBusqueda) {
         inputBusqueda.addEventListener('input', (e) => filtrarProductos(e.target.value));
-        
+
         // Close search when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#resultadosBusqueda') && !e.target.closest('#inputBusquedaProductos') && !e.target.closest('#btnMostrarTodo')) {
@@ -39,17 +39,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         termino = termino.toLowerCase();
         // tortasDisponibles defined in the view
-        const resultados = typeof tortasDisponibles !== 'undefined' 
-            ? tortasDisponibles.filter((p) => p.nombre.toLowerCase().includes(termino)) 
+        const resultados = typeof tortasDisponibles !== 'undefined'
+            ? tortasDisponibles.filter((p) => p.nombre.toLowerCase().includes(termino))
             : [];
         mostrarResultados(resultados);
     }
 
     function mostrarTodo() {
-         if (inputBusqueda) inputBusqueda.focus();
-         if (typeof tortasDisponibles !== 'undefined') {
-             mostrarResultados(tortasDisponibles);
-         }
+        if (inputBusqueda) inputBusqueda.focus();
+        if (typeof tortasDisponibles !== 'undefined') {
+            mostrarResultados(tortasDisponibles);
+        }
     }
 
     function mostrarResultados(resultados) {
@@ -83,15 +83,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function seleccionarProducto(producto) {
         productoSeleccionado = producto;
-        
+
         // Update Search Input to show selection
         if (inputBusqueda) inputBusqueda.value = producto.nombre;
-        
+
         // Update Hidden Input (if still needed)
         if (tortaSelectHidden) tortaSelectHidden.value = producto.id;
 
         resultadosContainer.style.display = 'none';
-        
+
         // Auto-focus quantity
         if (cantidadInput) {
             cantidadInput.focus();
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnAgregar.addEventListener('click', function () {
         if (!productoSeleccionado) {
-             Swal.fire({
+            Swal.fire({
                 title: 'Error!',
                 text: 'Por favor busque y seleccione una torta.',
                 icon: 'error',
@@ -357,6 +357,18 @@ document.addEventListener('DOMContentLoaded', function () {
         addHiddenInput('precio_bs', totalBs);
         addHiddenInput('precio_usd', totalUsd);
 
+        Swal.fire({
+            title: 'Procesando entrada...',
+            text: 'Por favor espere mientras se registra la entrada',
+            icon: 'info',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            background: '#252525',
+            color: '#fff',
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         form.submit();
     }
 

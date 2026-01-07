@@ -22,7 +22,7 @@
                 <div class="col-md-6">
                     <div class="stats-card">
                         <div class="stats-info">
-                            <h3>$<?= number_format($totalGananciasUsd ?? 0, 2) ?></h3>
+                            <h3>$<?= number_format($totalUsd ?? 0, 2) ?></h3>
                             <p>Ingresos USD</p>
                         </div>
                         <div class="stats-icon bg-pastel-mint">
@@ -33,7 +33,7 @@
                 <div class="col-md-6">
                     <div class="stats-card">
                         <div class="stats-info">
-                            <h3>Bs <?= number_format($totalGananciasBs ?? 0, 2) ?></h3>
+                            <h3>Bs <?= number_format($totalBs ?? 0, 2) ?></h3>
                             <p>Ingresos BS</p>
                         </div>
                         <div class="stats-icon bg-pastel-lavender">
@@ -101,7 +101,7 @@
                                             'nombre' => $torta->nombre,
                                             'precio' => $torta->precio,
                                             'stock' => $torta->stock,
-                                            'imagen' => $torta->imagen,
+                                            'imagen' => $torta->img,
                                         ];
                                     }, $tortas)); ?>;
         const clientesDisponibles = <?= json_encode(array_map(function ($cliente) {

@@ -15,7 +15,7 @@
                             <div class="card card-custom mb-3">
                                 <div class="card-header-custom d-flex justify-content-between align-items-center">
                                     <span>Cliente</span>
-                                    <button class="btn btn-outline-secondary btn-sm btn-custom">+ Nuevo</button>
+                                    <button class="btn btn-outline-secondary btn-sm btn-custom" id="btnNuevoCliente">+ Nuevo</button>
                                 </div>
                                 <div class="card-body-custom">
                                     <div class="position-relative">
@@ -177,6 +177,33 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nuevo Cliente Ajax -->
+<div class="modal fade" id="modalNuevoClienteAjax" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main);">
+            <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                <h5 class="modal-title">Nuevo Cliente Rápido</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNuevoClienteAjax">
+                    <div class="mb-3">
+                        <label for="nombreAjax" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreAjax" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellidoAjax" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="apellidoAjax" required style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

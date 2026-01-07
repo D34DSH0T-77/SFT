@@ -29,12 +29,50 @@ class VentasController {
         $tortas = $this->lotesModel->obtenerstock();
 
         $facturas = $this->facturaModel->mostrar();
+
+        // Calcular Ingresos (Pagos Reales)
+        $pagosModel = new Pagos();
+        $todosPagos = $pagosModel->obtenerTodos();
+
+        $totalGananciasUsd = 0;
+        $totalGananciasBs = 0;
+
+        foreach ($todosPagos as $p) {
+            $monto = floatval($p['monto']);
+            $metodo = $p['metodo'];
+
+            // Logica simple de clasificacion
+            if ($metodo === 'Divisa' || $metodo === 'Efectivo USD') {
+                $totalGananciasUsd += $monto;
+            } else {
+                $totalGananciasBs += $monto;
+            }
+        }
+
+        $totalVentas = 0;
+        $totalUsd = 0;
+        $totalBs = 0;
+        if (!empty($facturas)) {
+            foreach ($facturas as $venta) {
+                if ($venta->estado != 'Anulado') {
+                    $totalVentas++;
+                    $totalUsd += $venta->total_usd;
+                    $totalBs += $venta->total_bs;
+                }
+            }
+        }
+
+
+
         $data = [
             'title' => 'Ventas',
             'moduloActivo' => 'ventas',
             'clientes' => $clientes,
             'tortas' => $tortas,
             'ventas' => $facturas,
+            'totalVentas' => $totalVentas,
+            'totalUsd' => $totalUsd,
+            'totalBs' => $totalBs,
             'mensaje' => $_SESSION['mensaje'] ?? []
         ];
         render_view('ventas', $data);

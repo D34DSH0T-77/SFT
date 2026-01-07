@@ -45,4 +45,15 @@ class Pagos extends Conexion {
             return [];
         }
     }
+    public function obtenerTodos() {
+        $sql = "SELECT * FROM {$this->tabla}";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Error al obtener todos los pagos: " . $e->getMessage());
+            return [];
+        }
+    }
 }

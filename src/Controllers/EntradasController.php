@@ -29,9 +29,11 @@ class EntradasController {
             'title' => 'Entradas',
             'moduloActivo' => 'entradas',
             'tortas' => $tortas,
-            'entradas' => $entradas
+            'entradas' => $entradas,
+            'mensaje' => $_SESSION['mensaje'] ?? []
         ];
         render_view('entradas', $data);
+        unset($_SESSION['mensaje']);
     }
     public function agregar() {
         verificarLogin();
@@ -74,9 +76,17 @@ class EntradasController {
             }
 
             header('Location: ' . RUTA_BASE . 'entradas');
+            $_SESSION['mensaje'] = [
+                'tipo' => 'success',
+                'texto' => 'Entrada registrada correctamente'
+            ];
             exit;
         } else {
             // Manejar error si no se guarda la entrada
+            $_SESSION['mensaje'] = [
+                'tipo' => 'error',
+                'texto' => 'Error al registrar entrada'
+            ];
             header('Location: ' . RUTA_BASE . 'entradas');
             exit;
         }

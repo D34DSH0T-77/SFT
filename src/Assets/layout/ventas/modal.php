@@ -23,7 +23,7 @@
                                             <input type="text" id="inputBusquedaClientes" class="form-control form-control-custom" placeholder="Buscar cliente..." autocomplete="off">
                                             <button class="btn btn-outline-secondary" type="button" id="btnMostrarTodoClientes"><i class="material-symbols-sharp">expand_more</i></button>
                                         </div>
-                                        <div id="resultadosBusquedaClientes" class="list-group position-absolute w-100 search-results-container" style="z-index: 2000; display: none;"></div>
+                                        <div id="resultadosBusquedaClientes" class="list-group position-absolute w-100 search-results-container" style="z-index: 2000; display: none; max-height: 200px; overflow-y: auto;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -39,7 +39,7 @@
                                             <input type="text" id="inputBusquedaProductos" class="form-control form-control-custom" placeholder="Buscar producto o escanear código..." autocomplete="off">
                                             <button class="btn btn-outline-secondary" type="button" id="btnMostrarTodo"><i class="material-symbols-sharp">expand_more</i></button>
                                         </div>
-                                        <div id="resultadosBusqueda" class="list-group position-absolute w-100 search-results-container" style="z-index: 2000; display: none;"></div>
+                                        <div id="resultadosBusqueda" class="list-group position-absolute w-100 search-results-container" style="z-index: 2000; display: none; max-height: 200px; overflow-y: auto;"></div>
                                     </div>
                                 </div>
                             </div>

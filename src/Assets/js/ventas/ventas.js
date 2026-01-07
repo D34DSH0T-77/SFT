@@ -183,8 +183,13 @@ function actualizarTablaCarrito() {
             <td>
                 <div class="d-flex align-items-center">
                     <div class="bg-light rounded p-2 me-2">
-                        <i class="material-symbols-sharp text-primary">inventory_2</i>
+                        <img src="${prod.imagen ? RUTA_BASE + 'img/tortas/' + prod.imagen : RUTA_BASE + 'src/Assets/img/icono.ico'}" 
+                             alt="${prod.nombre}" 
+                             class="img-fluid" 
+                             style="max-width: 50px; height: auto;"
+                             onerror="this.onerror=null; this.src='${RUTA_BASE}src/Assets/img/icono.ico';">
                     </div>
+
                     <div>
                         <div class="fw-bold">${prod.nombre}</div>
                         <small class="text-muted">Stock: ${prod.stock ?? 'N/A'}</small>
@@ -269,8 +274,8 @@ function filtrarClientes(termino) {
     const resultados =
         typeof clientesDisponibles !== 'undefined'
             ? clientesDisponibles.filter(
-                  (c) => c.nombre.toLowerCase().includes(termino) || c.apellido.toLowerCase().includes(termino) || (c.id && c.id.toString().includes(termino))
-              )
+                (c) => c.nombre.toLowerCase().includes(termino) || c.apellido.toLowerCase().includes(termino) || (c.id && c.id.toString().includes(termino))
+            )
             : [];
 
     mostrarResultadosClientes(resultados);
@@ -348,6 +353,30 @@ document.addEventListener('DOMContentLoaded', () => {
         modalVentaEl.addEventListener('show.bs.modal', () => {
             modoPago = 'nueva';
             idFacturaPago = null;
+        });
+    }
+
+    // LISTENER PARA EL BOTON COBRAR (VALIDAR CARITO VACIO)
+    const btnCobrar = document.getElementById('btnCobrar');
+    if (btnCobrar) {
+        btnCobrar.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            if (carrito.length === 0) {
+                Swal.fire({
+                    title: 'Carrito vacío!',
+                    text: 'Debe agregar al menos una torta para cobrar.',
+                    icon: 'warning',
+                    background: '#252525',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            // Si hay productos, abrir el modal de pagos
+            const modalPagosEl = document.getElementById('modalPagos');
+            const modalPagos = new bootstrap.Modal(modalPagosEl);
+            modalPagos.show();
         });
     }
 });
@@ -635,6 +664,16 @@ async function registrarVenta() {
     document.getElementById('inputCodigoFactura').value = codigoFactura;
 
     // 5. Submit Form
+    Swal.fire({
+        title: 'Procesando venta...',
+        text: 'Por favor espere mientras se registra la venta',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     form.submit();
 }
 

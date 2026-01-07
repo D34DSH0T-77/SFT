@@ -51,6 +51,16 @@
 
             <?php require('src/Assets/layout/entradas/modal.php') ?>
         </div>
+        <script>
+            const RUTA_BASE = '<?= RUTA_BASE ?>';
+            const tortasDisponibles = <?= json_encode(array_map(function ($torta) {
+                                            return [
+                                                'id' => $torta->id,
+                                                'nombre' => $torta->nombre,
+
+                                            ];
+                                        }, $tortas)); ?>;
+        </script>
     </div>
 
     <?php require('src/Assets/layout/script-footer.php') ?>

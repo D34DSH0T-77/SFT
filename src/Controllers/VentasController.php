@@ -26,12 +26,7 @@ class VentasController {
     public function index() {
         verificarLogin();
         $clientes = $this->clientesModel->mostrar();
-        $tortas = $this->tortasModel->mostrar();
-
-        $stock = $this->lotesModel->inventario();
-        foreach ($tortas as $torta) {
-            $torta->stock = $stock[$torta->id] ?? 0;
-        }
+        $tortas = $this->lotesModel->obtenerstock();
 
         $facturas = $this->facturaModel->mostrar();
         $data = [

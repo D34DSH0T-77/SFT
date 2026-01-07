@@ -28,16 +28,19 @@ use App\Models\Entradas;
                     </div>
                     <hr>
                     <div class="row mb-3">
+                        <!-- Replaced Select with Search Card structure -->
+
                         <div class="col-md-6">
-                            <label for="tortaSelect" class="form-label">Torta</label>
-                            <select id="tortaSelect" class="form-select" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
-                                <option value="" selected disabled>Seleccione una torta...</option>
-                                <?php if (isset($tortas) && !empty($tortas)): ?>
-                                    <?php foreach ($tortas as $torta): ?>
-                                        <option value="<?= $torta->id ?>" data-nombre="<?= $torta->nombre ?>"><?= $torta->nombre ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
+                            <label for="inputBusquedaProductos" class="form-label">Torta</label>
+                            <div class="position-relative">
+                                <div class="input-group">
+                                    <input type="text" id="inputBusquedaProductos" class="form-control" placeholder="Buscar producto..." autocomplete="off" style="background-color: var(--bg-body); color: var(--text-main); border-color: var(--border-color);">
+                                    <button class="btn btn-outline-secondary" type="button" id="btnMostrarTodo" style="border-color: var(--border-color); color: var(--text-main);"><i class="material-symbols-sharp">expand_more</i></button>
+                                </div>
+                                <div id="resultadosBusqueda" class="list-group position-absolute w-100 search-results-container" style="z-index: 2000; display: none;"></div>
+                            </div>
+                            <!-- Hidden input to store selected ID -->
+                            <input type="hidden" id="tortaSelect">
                         </div>
                         <div class="col-md-4">
                             <label for="cantidadInput" class="form-label">Cantidad</label>

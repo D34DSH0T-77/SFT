@@ -111,4 +111,17 @@ class lotes extends Conexion {
             return [];
         }
     }
+    public function obtenerstock() {
+        $sql = 'SELECT t.id, t.nombre, t.precio, t.img AS imagen , SUM(l.cantidad) AS stock FROM lotes l 
+            JOIN tortas t ON t.id = l.id_torta GROUP BY l.id_torta
+            HAVING stock > 0';
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (\Throwable $e) {
+            error_log("Error al obtener stock: " . $e->getMessage());
+            return [];
+        }
+    }
 }

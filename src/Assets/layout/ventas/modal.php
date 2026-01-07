@@ -105,7 +105,7 @@
 
                             <!-- Cobrar Button -->
                             <div class="d-grid mt-3">
-                                <button class="btn btn-primary btn-lg py-3" data-bs-toggle="modal" data-bs-target="#modalPagos">
+                                <button class="btn btn-primary btn-lg py-3" id="btnCobrar">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="fs-5">COBRAR</span>
                                         <i class="material-symbols-sharp">payments</i>

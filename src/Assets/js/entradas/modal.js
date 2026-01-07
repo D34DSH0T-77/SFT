@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const tortaSelect = document.getElementById('tortaSelect');
+    // Elementos del Buscador
+    const inputBusqueda = document.getElementById('inputBusquedaProductos');
+    const btnMostrarTodo = document.getElementById('btnMostrarTodo');
+    const resultadosContainer = document.getElementById('resultadosBusqueda');
+    const tortaSelectHidden = document.getElementById('tortaSelect'); // Hidden input for compatibility or just state
+
     const cantidadInput = document.getElementById('cantidadInput');
     const btnAgregar = document.getElementById('btnAgregar');
     const listaTortas = document.getElementById('listaTortas');
@@ -7,12 +12,103 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnGuardar = document.getElementById('btnGuardar');
     const form = document.getElementById('formEntrada');
 
+    let productoSeleccionado = null;
+
+    // -------------------------------------------------------------------------
+    // BUSCADOR LOGIC
+    // -------------------------------------------------------------------------
+    if (inputBusqueda) {
+        inputBusqueda.addEventListener('input', (e) => filtrarProductos(e.target.value));
+        
+        // Close search when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#resultadosBusqueda') && !e.target.closest('#inputBusquedaProductos') && !e.target.closest('#btnMostrarTodo')) {
+                if (resultadosContainer) resultadosContainer.style.display = 'none';
+            }
+        });
+    }
+
+    if (btnMostrarTodo) {
+        btnMostrarTodo.addEventListener('click', mostrarTodo);
+    }
+
+    function filtrarProductos(termino) {
+        if (!termino || termino.trim() === '') {
+            resultadosContainer.style.display = 'none';
+            return;
+        }
+        termino = termino.toLowerCase();
+        // tortasDisponibles defined in the view
+        const resultados = typeof tortasDisponibles !== 'undefined' 
+            ? tortasDisponibles.filter((p) => p.nombre.toLowerCase().includes(termino)) 
+            : [];
+        mostrarResultados(resultados);
+    }
+
+    function mostrarTodo() {
+         if (inputBusqueda) inputBusqueda.focus();
+         if (typeof tortasDisponibles !== 'undefined') {
+             mostrarResultados(tortasDisponibles);
+         }
+    }
+
+    function mostrarResultados(resultados) {
+        resultadosContainer.innerHTML = '';
+        if (resultados.length === 0) {
+            resultadosContainer.innerHTML = '<div class="list-group-item">No se encontraron productos</div>';
+            resultadosContainer.style.display = 'block';
+            return;
+        }
+
+        resultados.forEach((p) => {
+            // Check stock if available
+            const stockInfo = p.stock !== undefined ? `Stock: ${p.stock}` : '';
+
+            const item = document.createElement('div');
+            item.className = 'list-group-item list-group-item-action cursor-pointer';
+            item.style.cursor = 'pointer';
+            item.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${p.nombre}</strong><br>
+                        <small class="text-muted">${stockInfo}</small>
+                    </div>
+                </div>
+            `;
+            item.addEventListener('click', () => seleccionarProducto(p));
+            resultadosContainer.appendChild(item);
+        });
+        resultadosContainer.style.display = 'block';
+    }
+
+    function seleccionarProducto(producto) {
+        productoSeleccionado = producto;
+        
+        // Update Search Input to show selection
+        if (inputBusqueda) inputBusqueda.value = producto.nombre;
+        
+        // Update Hidden Input (if still needed)
+        if (tortaSelectHidden) tortaSelectHidden.value = producto.id;
+
+        resultadosContainer.style.display = 'none';
+        
+        // Auto-focus quantity
+        if (cantidadInput) {
+            cantidadInput.focus();
+            cantidadInput.select();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // OTHER LOGIC
+    // -------------------------------------------------------------------------
+
     // Elementos del Modal de Confirmación
     const modalConfirmacionEl = document.getElementById('modalConfirmacion');
     const btnConfirmarEnvio = document.getElementById('btnConfirmarEnvio');
     const totalBsInput = document.getElementById('totalBsInput');
     const totalUsdInput = document.getElementById('totalUsdInput');
-    const tasaInput = document.getElementById('tasaInput'); // Nuevo elemento
+    const tasaInput = document.getElementById('tasaInput');
 
     let modalConfirmacion = null;
 
@@ -92,8 +188,19 @@ document.addEventListener('DOMContentLoaded', function () {
     let detalles = [];
 
     btnAgregar.addEventListener('click', function () {
-        const idTorta = tortaSelect.value;
-        const nombreTorta = tortaSelect.options[tortaSelect.selectedIndex]?.dataset.nombre;
+        if (!productoSeleccionado) {
+             Swal.fire({
+                title: 'Error!',
+                text: 'Por favor busque y seleccione una torta.',
+                icon: 'error',
+                background: '#252525',
+                color: '#fff'
+            });
+            return;
+        }
+
+        const idTorta = productoSeleccionado.id;
+        const nombreTorta = productoSeleccionado.nombre;
         const cantidad = parseInt(cantidadInput.value);
 
         const bolivares = 0;
@@ -126,7 +233,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Clear input values
-        tortaSelect.value = '';
+        inputBusqueda.value = '';
+        if (tortaSelectHidden) tortaSelectHidden.value = '';
+        productoSeleccionado = null;
         cantidadInput.value = '1';
 
         renderTable();

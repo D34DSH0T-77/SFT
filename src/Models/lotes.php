@@ -98,7 +98,7 @@ class lotes extends Conexion {
                 FROM tortas t
                 LEFT JOIN lotes l ON t.id = l.id_torta
                 GROUP BY t.id
-                HAVING total_stock <= 3
+                HAVING total_stock > 0 AND total_stock <= 3
                 ORDER BY total_stock ASC
                 LIMIT :limit";
         try {

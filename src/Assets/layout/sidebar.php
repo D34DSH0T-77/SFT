@@ -34,6 +34,12 @@
                 <span class="link-text">Ventas</span>
             </a>
         </li>
+        <li class="sidebar-item">
+            <a href="<?= RUTA_BASE ?>devoluciones" class="sidebar-link <?= $moduloActivo === 'devoluciones' ? 'active' : '' ?>">
+                <span class="material-symbols-sharp">auto_delete</span>
+                <span class="link-text">Devoluciones</span>
+            </a>
+        </li>
 
         <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'Admin'): ?>
             <li class="sidebar-item">

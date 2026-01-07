@@ -101,7 +101,7 @@
                                             'nombre' => $torta->nombre,
                                             'precio' => $torta->precio,
                                             'stock' => $torta->stock,
-                                            'imagen' => $torta->img,
+                                            'imagen' => $torta->imagen,
                                         ];
                                     }, $tortas)); ?>;
         const clientesDisponibles = <?= json_encode(array_map(function ($cliente) {

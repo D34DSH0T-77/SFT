@@ -12,7 +12,7 @@
                         <!-- Left Column: Client & Search -->
                         <div class="col-md-3">
                             <!-- Client Card -->
-                            <div class="card card-custom mb-3">
+                            <div class="card card-custom mb-3" style="overflow: visible;">
                                 <div class="card-header-custom d-flex justify-content-between align-items-center">
                                     <span>Cliente</span>
                                     <button class="btn btn-outline-secondary btn-sm btn-custom" id="btnNuevoCliente">+ Nuevo</button>
@@ -29,7 +29,7 @@
                             </div>
 
                             <!-- Search Products Card -->
-                            <div class="card card-custom mb-3">
+                            <div class="card card-custom mb-3" style="overflow: visible;">
                                 <div class="card-header-custom">
                                     Buscar tortas
                                 </div>

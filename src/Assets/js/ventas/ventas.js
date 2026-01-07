@@ -31,12 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------------------
     const btnMostrarTodo = document.getElementById('btnMostrarTodo');
     if (btnMostrarTodo) {
-        btnMostrarTodo.addEventListener('click', mostrarTodo);
+        btnMostrarTodo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mostrarTodo();
+        });
     }
 
     const btnMostrarTodoClientes = document.getElementById('btnMostrarTodoClientes');
     if (btnMostrarTodoClientes) {
-        btnMostrarTodoClientes.addEventListener('click', mostrarTodoClientes);
+        btnMostrarTodoClientes.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mostrarTodoClientes();
+        });
     }
     document.addEventListener('click', (e) => {
         // Productos

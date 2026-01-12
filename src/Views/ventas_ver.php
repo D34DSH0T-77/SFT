@@ -52,7 +52,6 @@
                                         <th class="text-end">Precio U. ($)</th>
                                         <th class="text-end">Precio U. (Bs)</th>
                                         <th class="text-end">Total ($)</th>
-                                        <th class="text-center">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>

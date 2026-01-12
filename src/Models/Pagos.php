@@ -18,13 +18,15 @@ class Pagos extends Conexion {
         parent::__construct();
     }
 
-    public function guardarPago($id_factura, $metodo, $monto) {
-        $sql = "INSERT INTO {$this->tabla} (id_factura, metodo, monto, fecha) VALUES (:id_factura, :metodo, :monto, :fecha)";
+    public function guardarPago($id_factura, $metodo, $monto, $tasa = 1.00, $monto_original = 0.00) {
+        $sql = "INSERT INTO {$this->tabla} (id_factura, metodo, monto, tasa, monto_original, fecha) VALUES (:id_factura, :metodo, :monto, :tasa, :monto_original, :fecha)";
         // try {
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id_factura', $id_factura);
         $stmt->bindParam(':metodo', $metodo);
         $stmt->bindParam(':monto', $monto);
+        $stmt->bindParam(':tasa', $tasa);
+        $stmt->bindParam(':monto_original', $monto_original);
         $fecha = date('Y-m-d H:i:s');
         $stmt->bindParam(':fecha', $fecha);
         return $stmt->execute();

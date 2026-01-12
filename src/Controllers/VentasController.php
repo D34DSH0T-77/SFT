@@ -182,6 +182,7 @@ class VentasController {
 
         // 4. Procesar Pagos (Opcional)
         // Se recorren los pagos enviados, si vienen vacíos se ignora o se guarda 0 según lógica
+        $totalPagadoInicial = 0;
         if (!empty($metodos_pago)) {
             $pagosModel = new \App\Models\Pagos();
 
@@ -189,9 +190,25 @@ class VentasController {
                 $metodo = $metodos_pago[$j];
                 $monto = isset($montos_pago[$j]) && $montos_pago[$j] !== '' ? floatval($montos_pago[$j]) : 0;
 
-                // Si el usuario quiere guardar registro aunque el monto sea 0, lo permitimos
-                // Si preferimos no guardar pagos vacíos: if ($monto > 0) ...
-                $pagosModel->guardarPago($id_factura, $metodo, $monto);
+                // Si el método NO es Divisa ni Efectivo USD, asumimos que es en Bolivares
+                // y debemos convertirlo a USD para guardarlo en la DB
+                $monto_original = 0.00;
+                if ($metodo !== 'Divisa' && $metodo !== 'Efectivo USD' && $tasa > 0) {
+                    $monto_original = $monto; // Guardamos lo que se ingresó (ej: 500)
+                    $monto = $monto / $tasa;
+                } else {
+                    $monto_original = $monto; // Si es USD, el original es el mismo
+                }
+
+                if ($monto > 0) {
+                    $totalPagadoInicial += $monto;
+                    $pagosModel->guardarPago($id_factura, $metodo, $monto, $tasa, $monto_original);
+                }
+            }
+
+            // Validar si completó el pago
+            if ($totalPagadoInicial >= ($totalUsd - 0.01)) {
+                $this->facturaModel->actualizarEstado($id_factura, 'Completado');
             }
         }
 
@@ -242,7 +259,45 @@ class VentasController {
             }
 
             // 4. Guardar Pago
-            if ($pagosModel->guardarPago($id_factura, $metodo, $monto)) {
+            // Recalcular tasa si es BS para guardarla
+            $tasaGuardar = 1.00;
+            if ($metodo !== 'Divisa' && $metodo !== 'Efectivo USD') {
+                // Si el monto en USD es X y el pago original era Y, Tasa = Y / X
+                // Pero aquí ya recibimos el monto convertido (o no?)
+                // REVISAR: El frontend envia 'monto' ya convertido a USD si es 'agregarPago'?
+                // Mirando ventas.js: procesarPagoExistente envia `monto: pagoReal`. Donde pagoReal = monto / TASA_CAMBIO.
+                // Entonces el backend recibe USD.
+                // Necesitamos 'tasa' del frontend o estimarla.
+                // ventas.js NO envia la tasa en 'agregarPago'.
+                // Debemos asumir la tasa actual del momento para guardar referencia? 
+                // O mejor, modificar ventas.js para enviar la tasa.
+                // Por ahora, usaremos una logica inversa simple si tuvieramos el monto original, pero no lo tenemos.
+                // VAMOS A MODIFICAR ventas.js para enviar la tasa también.
+                // Mientras tanto, usaremos 1.00 si es divisa, o calcularemos si podemos.
+                // Como no tenemos la tasa, asumiremos guardar 1.00 hasta actualizar JS, pero el plan dice actualizar controller. 
+                // Voy a leer de $_POST['tasa'] si existe.
+            }
+
+            $tasa = floatval($data['tasa'] ?? 1.00);
+            $monto_exacto = floatval($data['monto_exacto'] ?? 0.00);
+
+            // Si no nos mandan el monto exacto (versiones viejas de JS?), tratar de inferirlo o usar 0
+            if ($monto_exacto <= 0) {
+                // Heurística simple: Si tasa > 1 y no es divisa, quizás $monto es ya convertido? 
+                // Pero `agregarPago` recibe `monto` ya convertido desde JS.
+                // Sin embargo el JS nuevo mandará `monto_exacto` con lo que el usuario escribió.
+                // Si es Divisa, monto_exacto debería ser igual a monto (en USD).
+                if ($metodo === 'Divisa' || $metodo === 'Efectivo USD') {
+                    $monto_exacto = $monto;
+                } else {
+                    // Si es BS, y no vino, quizas tasa * monto?
+                    if ($tasa > 1) {
+                        $monto_exacto = $monto * $tasa;
+                    }
+                }
+            }
+
+            if ($pagosModel->guardarPago($id_factura, $metodo, $monto, $tasa, $monto_exacto)) {
 
                 // Verificar si la factura está pagada por completo
                 // Recalculamos con el nuevo pago

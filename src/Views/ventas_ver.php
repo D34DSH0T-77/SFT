@@ -89,13 +89,54 @@
                                         <tr>
                                             <th>Método</th>
                                             <th class="text-end">Monto</th>
+                                            <th>Fecha</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($pagos as $pago): ?>
+                                            <?php
+                                            $esDivisa = $pago['metodo'] === 'Divisa' || $pago['metodo'] === 'Efectivo USD';
+                                            $montoUsd = floatval($pago['monto']);
+                                            $tasaPago = isset($pago['tasa']) && floatval($pago['tasa']) > 0 ? floatval($pago['tasa']) : 0;
+
+                                            // Calcular montos
+                                            // PRIORIDAD: Si tenemos monto_original guardado, usar ese.
+                                            // Si no, calcularlo con la tasa.
+                                            $montoOriginalDb = isset($pago['monto_original']) ? floatval($pago['monto_original']) : 0;
+
+                                            $montoBs = 0;
+                                            if ($montoOriginalDb > 0 && !$esDivisa) {
+                                                $montoBs = $montoOriginalDb;
+                                            } else {
+                                                $montoBs = $montoUsd * ($tasaPago > 0 ? $tasaPago : 1);
+                                            }
+                                            ?>
                                             <tr>
                                                 <td><?= $pago['metodo'] ?></td>
-                                                <td class="text-end"><?= number_format($pago['monto'], 2) ?></td>
+                                                <td class="text-end">
+                                                    <?php if ($esDivisa): ?>
+                                                        <!-- Pagó en Dólares: Mostrar USD principal, BS secundario -->
+                                                        $<?= number_format($montoUsd, 2) ?>
+                                                        <?php if ($tasaPago > 0): ?>
+                                                            <small class="text-muted d-block" style="font-size: 0.8em;">
+                                                                (<?= number_format($montoBs, 2) ?> Bs @ <?= number_format($tasaPago, 2) ?>)
+                                                            </small>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                        <!-- Pagó en Bolivares: Mostrar BS principal, USD secundario -->
+                                                        <?php if ($tasaPago > 0): ?>
+                                                            <?= number_format($montoBs, 2) ?> Bs
+                                                            <small class="text-muted d-block" style="font-size: 0.8em;">
+                                                                ($<?= number_format($montoUsd, 2) ?> @ <?= number_format($tasaPago, 2) ?>)
+                                                            </small>
+                                                        <?php else: ?>
+                                                            <!-- Fallback si no hay tasa (datos viejos) -->
+                                                            $<?= number_format($montoUsd, 2) ?>
+                                                            <small class="text-muted">(Sin tasa)</small>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?= date('d/m/Y H:i', strtotime($pago['fecha'])) ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>

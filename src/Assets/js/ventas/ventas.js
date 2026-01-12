@@ -672,7 +672,9 @@ async function procesarPagoExistente() {
             body: JSON.stringify({
                 id_factura: idFacturaPago,
                 metodo: metodo,
-                monto: pagoReal
+                monto: pagoReal,
+                tasa: TASA_CAMBIO,
+                monto_exacto: monto // El valor crudo del input
             })
         });
 

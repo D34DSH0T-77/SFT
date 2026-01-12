@@ -52,6 +52,7 @@
                                         <th class="text-end">Precio U. ($)</th>
                                         <th class="text-end">Precio U. (Bs)</th>
                                         <th class="text-end">Total ($)</th>
+                                        <th class="text-center">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,6 +66,9 @@
                                                 <td class="text-end">$ <?= number_format($detalle['precio_usd'], 2) ?></td>
                                                 <td class="text-end">Bs <?= number_format($detalle['precio_bs'], 2) ?></td>
                                                 <td class="text-end">$ <?= number_format($detalle['cantidad'] * $detalle['precio_usd'], 2) ?></td>
+                                                <td class="text-center">
+
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
@@ -100,7 +104,12 @@
                             </div>
                         <?php endif; ?>
 
+
                         <div class="mt-4 d-flex justify-content-end">
+                            <a href="<?= RUTA_BASE ?>reportes/generarFacturaDetalle/<?= $detalle['id'] ?>" class="btn btn-success mt-4 d-flex justify-content-end" target="_blank" title="Generar Reporte del Detalle">
+                                <i class="material-symbols-sharp">picture_as_pdf</i> Generar Reporte
+                            </a>
+
                             <a href="<?= RUTA_BASE ?>ventas" class="btn btn-secondary">Volver</a>
                         </div>
                     </div>

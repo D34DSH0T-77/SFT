@@ -667,4 +667,49 @@ class ReportesController {
         ];
         render_view('reportesCapital', $data);
     }
+
+    public function generarFacturaDetalle($idDetalle) {
+        verificarLogin();
+
+        // 1. Get the specific detail
+        $detalle = $this->detallesFacturasModel->obtenerDetalle($idDetalle);
+
+        if (!$detalle) {
+            // Handle error (e.g., redirect or show error)
+            echo "Detalle no encontrado.";
+            return;
+        }
+
+        // 2. Get the invoice to have client/date context
+        $venta = $this->facturaModel->buscarPorId($detalle['id_factura']);
+
+        if (!$venta) {
+            echo "Venta no encontrada.";
+            return;
+        }
+
+        // 3. Override totals to reflect ONLY this detail
+        $venta->total_usd = $detalle['precio_usd'] * $detalle['cantidad'];
+        $venta->total_bs = $detalle['precio_bs'] * $detalle['cantidad'];
+
+        // 4. Override details array to contain ONLY this detail
+        $venta->detalles = [$detalle];
+
+        // 5. Wrap in an array as the view expects a list of sales ($ventas)
+        $ventas = [$venta];
+
+        $tituloReporte = "Reporte de Detalle de Venta #" . $venta->codigo;
+
+        ob_start();
+        // Reuse general sales template
+        require 'src/Views/reportegenerarventa.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_detalle_venta_" . $venta->codigo . ".pdf", array("Attachment" => false));
+    }
 }

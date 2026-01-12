@@ -90,4 +90,20 @@ class DetallesFacturas extends Conexion {
             return [];
         }
     }
+
+    public function obtenerDetalle($id) {
+        $sql = "SELECT d.*, t.nombre as tortas 
+            FROM {$this->tabla} d 
+            JOIN tortas t ON d.id_torta = t.id 
+            WHERE d.id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Error al obtener detalle factura: " . $e->getMessage());
+            return false;
+        }
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 
 define('RUTA_BASE', 'http://localhost/SFT/');
-define('DB_HOST', 'mysql-deadshot.alwaysdata.net');
-define('DB_USER', 'deadshot');
-define('DB_PASS', '__Hola1234__');
-define('DB_NAME', 'deadshot_tortas');
+define('DB_HOST', 'mysql-deadshot-77-cjoyner1402-941e.g.aivencloud.com');
+define('DB_USER', 'avnadmin');
+define('DB_PASS', 'AVNS_k0D88rBytH1YDz-awCR');
+define('DB_NAME', 'defaultdb');
 define('UTF8', 'utf8mb4');

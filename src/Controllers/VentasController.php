@@ -100,7 +100,7 @@ class VentasController {
 
         // Validaciones básicas
         if (empty($id_cliente) || empty($id_tortas)) {
-            $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Datos incompletos para la venta.'];
+            $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Datos incompletos para la venta.'];
             header('Location: ' . RUTA_BASE . 'ventas');
             exit;
         }
@@ -128,7 +128,7 @@ class VentasController {
         $id_factura = $this->facturaModel->guardarFactura($factura);
 
         if (!$id_factura) {
-            $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al crear la factura.'];
+            $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Error al crear la factura.'];
             header('Location: ' . RUTA_BASE . 'ventas');
             exit;
         }

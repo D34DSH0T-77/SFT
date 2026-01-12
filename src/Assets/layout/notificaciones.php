@@ -1,6 +1,14 @@
 <?php if (!empty($mensaje)): ?>
-    <div class="alert alert-<?= htmlspecialchars($mensaje['tipo']) ?> alert-dismissible fade show" role="alert">
-        <?= htmlspecialchars($mensaje['texto'] ?? '') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: '<?= $mensaje['tipo'] ?>',
+                title: '<?= $mensaje['texto'] ?>',
+                background: '#252525',
+                color: '#fff',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+    </script>
 <?php endif; ?>

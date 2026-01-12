@@ -57,12 +57,12 @@ class TortasController {
                     // Solo si se mueve bien, asignamos la ruta al objeto
                     $torta->img = $rutaDestino;
                 } else {
-                    $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al subir la imagen'];
+                    $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Error al subir la imagen'];
                     header('Location: ' . RUTA_BASE . 'tortas');
                     exit();
                 }
             } else {
-                $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Formato no permitido (solo JPG/PNG)'];
+                $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Formato no permitido (solo JPG/PNG)'];
                 header('Location: ' . RUTA_BASE . 'tortas');
                 exit();
             }
@@ -74,7 +74,7 @@ class TortasController {
             if ($this->tortasModelo->agregar($torta)) {
                 $_SESSION['mensaje'] = ['tipo' => 'success', 'texto' => 'Torta agregada correctamente'];
             } else {
-                $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al guardar en BD'];
+                $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Error al guardar en BD'];
             }
         } else {
             $_SESSION['mensaje'] = ['tipo' => 'warning', 'texto' => 'Nombre y Precio son obligatorios'];
@@ -123,12 +123,12 @@ class TortasController {
 
                     $torta->img = $rutaDestino;
                 } else {
-                    $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Error al mover la imagen a la carpeta'];
+                    $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Error al mover la imagen a la carpeta'];
                     header('Location: ' . RUTA_BASE . 'tortas');
                     exit();
                 }
             } else {
-                $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'Formato de imagen no permitido (solo JPG, PNG)'];
+                $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Formato de imagen no permitido (solo JPG, PNG)'];
                 header('Location: ' . RUTA_BASE . 'tortas');
                 exit();
             }
@@ -141,7 +141,7 @@ class TortasController {
             ];
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error al guardar los cambios en la BD'
             ];
         }
@@ -164,7 +164,7 @@ class TortasController {
             exit();
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error al eliminar la torta'
             ];
             header('Location: ' . RUTA_BASE . 'tortas');
@@ -186,7 +186,7 @@ class TortasController {
             exit();
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error al actualizar el precio global'
             ];
             header('Location: ' . RUTA_BASE . 'tortas');

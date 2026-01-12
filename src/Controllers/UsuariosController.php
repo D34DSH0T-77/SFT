@@ -51,7 +51,7 @@ class UsuariosController {
                 exit;
             } else {
                 $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
+                    'tipo' => 'error',
                     'texto' => 'Error al agregar el usuario'
                 ];
                 header('Location: ' . RUTA_BASE . 'usuarios');
@@ -59,7 +59,7 @@ class UsuariosController {
             }
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error en el formulario'
             ];
             header('Location: ' . RUTA_BASE . 'usuarios');
@@ -78,7 +78,7 @@ class UsuariosController {
         }
         if (empty($_POST)) {
             error_log("POST is empty!");
-            $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => 'No se recibieron datos del formulario'];
+            $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'No se recibieron datos del formulario'];
             header('Location: ' . RUTA_BASE . 'usuarios');
             exit();
         }
@@ -105,7 +105,7 @@ class UsuariosController {
                 exit;
             } else {
                 $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
+                    'tipo' => 'error',
                     'texto' => 'Error al editar el usuario'
                 ];
                 header('Location: ' . RUTA_BASE . 'usuarios');
@@ -113,7 +113,7 @@ class UsuariosController {
             }
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error en el formulario'
             ];
             header('Location: ' . RUTA_BASE . 'usuarios');
@@ -136,7 +136,7 @@ class UsuariosController {
             exit;
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error al eliminar el cliente'
             ];
             header('Location: ' . RUTA_BASE . 'clientes');

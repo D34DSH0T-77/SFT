@@ -82,9 +82,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateLote(id, cantidad, btn) {
-        var originalText = btn.innerHTML;
-        btn.innerHTML = '...';
-        btn.disabled = true;
+        Swal.fire({
+            title: 'Actualizando lote...',
+            text: 'Por favor espere mientras se actualiza el lote',
+            icon: 'info',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            background: '#252525',
+            color: '#fff',
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         fetch(BASE_URL + 'Inventario/updateLote', {
             method: 'POST',
@@ -96,12 +105,13 @@ document.addEventListener('DOMContentLoaded', function () {
             .then((response) => response.json())
             .then((data) => {
                 if (data.status === 'success') {
-                    btn.innerHTML = '✔';
-                    btn.className = 'btn btn-sm btn-success'; // ensure it stays green or success
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }, 1500);
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Lote actualizado correctamente',
+                        icon: 'success',
+                        background: '#252525',
+                        color: '#fff'
+                    });
                 } else {
                     Swal.fire({
                         title: 'Error!',
@@ -110,8 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         background: '#252525',
                         color: '#fff'
                     });
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
                 }
             })
             .catch((error) => {
@@ -123,8 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     background: '#252525',
                     color: '#fff'
                 });
-                btn.innerHTML = originalText;
-                btn.disabled = false;
             });
     }
 });

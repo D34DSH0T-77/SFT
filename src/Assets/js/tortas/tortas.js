@@ -1,26 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let editarModal = document.getElementById('modalEditar')
-    let eliminarModal = document.getElementById('modalEliminar')
+    let editarModal = document.getElementById('modalEditar');
+    let eliminarModal = document.getElementById('modalEliminar');
 
     editarModal.addEventListener('shown.bs.modal', function (event) {
-        let button = event.relatedTarget
-        let id = button.getAttribute('data-bs-id')
-        let nombre = button.getAttribute('data-bs-nombre')
-        let precio = button.getAttribute('data-bs-precio')
-        let estado = button.getAttribute('data-bs-estado')
-        let img = button.getAttribute('data-bs-img')
+        let button = event.relatedTarget;
+        let id = button.getAttribute('data-bs-id');
+        let nombre = button.getAttribute('data-bs-nombre');
+        let precio = button.getAttribute('data-bs-precio');
+        let estado = button.getAttribute('data-bs-estado');
+        let img = button.getAttribute('data-bs-img');
 
-        let inputId = editarModal.querySelector('.modal-body #id_edit')
-        let inputNombre = editarModal.querySelector('.modal-body #editarnombre')
-        let inputPrecio = editarModal.querySelector('.modal-body #editarprecio')
-        let inputEstado = editarModal.querySelector('.modal-body #editarestado')
-        let inputImagen = editarModal.querySelector('.modal-body #editarimagen')
-        let imgPreview = editarModal.querySelector('.modal-body #imagen-preview')
+        let inputId = editarModal.querySelector('.modal-body #id_edit');
+        let inputNombre = editarModal.querySelector('.modal-body #editarnombre');
+        let inputPrecio = editarModal.querySelector('.modal-body #editarprecio');
+        let inputEstado = editarModal.querySelector('.modal-body #editarestado');
+        let inputImagen = editarModal.querySelector('.modal-body #editarimagen');
+        let imgPreview = editarModal.querySelector('.modal-body #imagen-preview');
 
-        inputId.value = id
-        inputNombre.value = nombre
-        inputPrecio.value = precio
-        inputEstado.value = estado
+        inputId.value = id;
+        inputNombre.value = nombre;
+        inputPrecio.value = precio;
+        inputEstado.value = estado;
 
         // Set initial preview
         if (img) {
@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             imgPreview.style.display = 'none';
         }
 
-        let formEditar = document.getElementById('formTortaseditar')
-        formEditar.action = `/SFT/tortas/editar/${id}`
+        let formEditar = document.getElementById('formTortaseditar');
+        formEditar.action = `/SFT/tortas/editar/${id}`;
 
         // Preview on file selection
         inputImagen.addEventListener('change', function (e) {
@@ -40,18 +40,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 reader.onload = function (e) {
                     imgPreview.src = e.target.result;
                     imgPreview.style.display = 'block';
-                }
+                };
                 reader.readAsDataURL(e.target.files[0]);
             }
         });
-    })
+    });
 
-    let inputIdEliminar = eliminarModal.querySelector('.modal-body #id_eliminar')
+    let inputIdEliminar = eliminarModal.querySelector('.modal-body #id_eliminar');
     eliminarModal.addEventListener('shown.bs.modal', function (event) {
-        let button = event.relatedTarget
-        let id = button.getAttribute('data-bs-id')
-        inputIdEliminar.value = id
-        let formEliminar = document.getElementById('formTortaseliminar')
-        formEliminar.action = `/SFT/tortas/eliminar/${id}`
-    })
-})
+        let button = event.relatedTarget;
+        let id = button.getAttribute('data-bs-id');
+        inputIdEliminar.value = id;
+        let formEliminar = document.getElementById('formTortaseliminar');
+        formEliminar.action = `/SFT/tortas/eliminar/${id}`;
+    });
+
+    // Loader Logic
+    const forms = [
+        { id: 'formTortas', title: 'Guardando torta...', text: 'Por favor espere mientras se guarda la torta' },
+        { id: 'formTortaseditar', title: 'Actualizando torta...', text: 'Por favor espere mientras se actualiza la torta' },
+        { id: 'formTortaseliminar', title: 'Eliminando torta...', text: 'Por favor espere mientras se elimina la torta' }
+    ];
+
+    forms.forEach((item) => {
+        const form = document.getElementById(item.id);
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: item.title,
+                    text: item.text,
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    background: '#252525',
+                    color: '#fff',
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                this.submit();
+            });
+        }
+    });
+});

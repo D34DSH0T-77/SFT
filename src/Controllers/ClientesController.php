@@ -48,7 +48,7 @@ class ClientesController {
                 exit;
             } else {
                 $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
+                    'tipo' => 'error',
                     'texto' => 'Error al agregar el cliente'
                 ];
                 header('Location: ' . RUTA_BASE . 'clientes');
@@ -56,7 +56,7 @@ class ClientesController {
             }
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error en el formulario'
             ];
             header('Location: ' . RUTA_BASE . 'clientes');
@@ -89,7 +89,7 @@ class ClientesController {
                 exit;
             } else {
                 $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
+                    'tipo' => 'error',
                     'texto' => 'Error al editar el cliente'
                 ];
                 header('Location: ' . RUTA_BASE . 'clientes');
@@ -97,7 +97,7 @@ class ClientesController {
             }
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error en el formulario'
             ];
             header('Location: ' . RUTA_BASE . 'clientes');
@@ -119,7 +119,7 @@ class ClientesController {
             exit;
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Error al eliminar el cliente'
             ];
             header('Location: ' . RUTA_BASE . 'clientes');

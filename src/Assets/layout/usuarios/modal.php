@@ -6,7 +6,7 @@
                 <h5 class="modal-title">Nuevo Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="usuarios/guardar" method="POST">
+            <form id="formUsuarios" action="usuarios/guardar" method="POST">
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-12">

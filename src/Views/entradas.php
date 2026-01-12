@@ -65,20 +65,6 @@
 
     </div>
 
-    <?php if (isset($mensaje) && !empty($mensaje)): ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    icon: '<?= $mensaje['tipo'] ?>',
-                    title: '<?= $mensaje['texto'] ?>',
-                    background: '#252525',
-                    color: '#fff',
-                    confirmButtonColor: '#e75e8d'
-                });
-            });
-        </script>
-    <?php endif; ?>
-
     <?php require('src/Assets/layout/script-footer.php') ?>
     <script src="<?= RUTA_BASE ?>src/Assets/js/entradas/modal.js"></script>
 </body>

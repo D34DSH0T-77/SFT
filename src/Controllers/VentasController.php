@@ -62,8 +62,6 @@ class VentasController {
             }
         }
 
-
-
         $data = [
             'title' => 'Ventas',
             'moduloActivo' => 'ventas',
@@ -121,7 +119,7 @@ class VentasController {
         $factura->id_cliente = $id_cliente;
         $factura->total_usd = $totalUsd;
         $factura->total_bs = $totalBs;
-        $factura->fecha = date('Y-m-d H:i:s');
+        $factura->fecha = date('Y-m-d');
         $factura->estado = 'En proceso';
         $factura->codigo = $codigo;
 

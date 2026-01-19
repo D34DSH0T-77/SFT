@@ -413,3 +413,7 @@ html.sidebar-is-collapsed .sidebar .link-text {
 html.sidebar-is-collapsed .main-content {
     margin-left: var(--sidebar-width-collapsed);
 }
+
+.bg-primary-custom {
+    background-color: var(--btn-primary) !important;
+}

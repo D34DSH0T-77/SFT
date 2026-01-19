@@ -38,7 +38,7 @@ class LoginController {
 
         if (empty($usuarioPost) || empty($cedulaPost)) {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Todos los campos son obligatorios'
             ];
             header('Location: ' . RUTA_BASE . 'login');
@@ -60,7 +60,7 @@ class LoginController {
                 exit;
             } else {
                 $_SESSION['mensaje'] = [
-                    'tipo' => 'danger',
+                    'tipo' => 'error',
                     'texto' => 'Usuario inactivo'
                 ];
                 header('Location: ' . RUTA_BASE . 'login');
@@ -68,7 +68,7 @@ class LoginController {
             }
         } else {
             $_SESSION['mensaje'] = [
-                'tipo' => 'danger',
+                'tipo' => 'error',
                 'texto' => 'Credenciales incorrectas'
             ];
             header('Location: ' . RUTA_BASE . 'login');

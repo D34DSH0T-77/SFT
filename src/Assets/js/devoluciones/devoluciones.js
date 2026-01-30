@@ -1,17 +1,50 @@
+let TASA_CAMBIO = 60; // Valor inicial por defecto
+
 document.addEventListener('DOMContentLoaded', () => {
+    fetchTasaBCV();
+
     const inputBusqueda = document.getElementById('inputBusquedaVentas');
     if (inputBusqueda) {
         inputBusqueda.addEventListener('input', (e) => filtrarVentas(e.target.value));
     }
 
+    const btnMostrarTodo = document.getElementById('btnMostrarTodasVentas');
+    if (btnMostrarTodo) {
+        btnMostrarTodo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mostrarTodasVentas();
+        });
+    }
+
     // Listener para cerrar resultados al hacer click fuera
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('#resultadosBusquedaVentas') && !e.target.closest('#inputBusquedaVentas')) {
+        if (!e.target.closest('#resultadosBusquedaVentas') && !e.target.closest('#inputBusquedaVentas') && !e.target.closest('#btnMostrarTodasVentas')) {
             const res = document.getElementById('resultadosBusquedaVentas');
             if (res) res.style.display = 'none';
         }
     });
 });
+
+async function fetchTasaBCV() {
+    try {
+        const response = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
+        const data = await response.json();
+
+        if (data && data.promedio) {
+            TASA_CAMBIO = data.promedio;
+            console.log('Tasa BCV actualizada:', TASA_CAMBIO);
+
+            const display = document.getElementById('tasaCambioDisplay');
+            if (display) display.textContent = TASA_CAMBIO.toFixed(2);
+
+            // Recalculate if there are items
+            // const inputs = document.querySelectorAll('.input-cantidad-devolver');
+            // if (inputs.length > 0) { ... } // Optional, usually user flow starts empty
+        }
+    } catch (error) {
+        console.warn('Error obteniendo tasa BCV, usando valor por defecto:', error);
+    }
+}
 
 function filtrarVentas(termino) {
     const contenedor = document.getElementById('resultadosBusquedaVentas');
@@ -27,6 +60,14 @@ function filtrarVentas(termino) {
             ? ventasDisponibles.filter((v) => (v.codigo && v.codigo.toLowerCase().includes(termino)) || (v.cliente && v.cliente.toLowerCase().includes(termino)))
             : [];
 
+    mostrarResultadosVentas(resultados);
+}
+
+function mostrarTodasVentas() {
+    const input = document.getElementById('inputBusquedaVentas');
+    if (input) input.focus();
+
+    const resultados = typeof ventasDisponibles !== 'undefined' ? ventasDisponibles : [];
     mostrarResultadosVentas(resultados);
 }
 
@@ -72,6 +113,12 @@ function seleccionarVenta(venta) {
         input.value = `${venta.codigo} - ${venta.cliente}`;
     }
 
+    // Populate hidden inputs
+    const hiddenCodigo = document.getElementById('inputCodigoVentaHidden');
+    if (hiddenCodigo) {
+        hiddenCodigo.value = venta.codigo; // Send only the code
+    }
+
     const itemsContainer = document.getElementById('itemsDevolucionContainer');
     if (itemsContainer) {
         itemsContainer.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
@@ -108,6 +155,7 @@ function seleccionarVenta(venta) {
                                 <td class="text-center">$${parseFloat(d.precio_usd).toFixed(2)}</td>
                                 <td class="text-center">
                                     <input type="number" class="form-control form-control-sm text-center input-cantidad-devolver" 
+                                        name="detalles[${d.id}]"
                                         data-id-detalle="${d.id}" 
                                         data-max="${d.cantidad}" 
                                         min="0" max="${d.cantidad}" value="0">
@@ -125,6 +173,13 @@ function seleccionarVenta(venta) {
                 } else {
                     itemsContainer.innerHTML = '<div class="alert alert-warning">No se encontraron detalles para esta venta o no tiene items.</div>';
                 }
+
+                // Add listeners for calculation
+                const inputs = document.querySelectorAll('.input-cantidad-devolver');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => calcularTotalesDevolucion(data.detalles));
+                });
+
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -134,3 +189,33 @@ function seleccionarVenta(venta) {
 
     document.getElementById('resultadosBusquedaVentas').style.display = 'none';
 }
+
+function calcularTotalesDevolucion(detalles) {
+    let totalUsd = 0;
+
+    const inputs = document.querySelectorAll('.input-cantidad-devolver');
+    inputs.forEach(input => {
+        const idDetalle = input.dataset.idDetalle;
+        const cantidad = parseFloat(input.value) || 0;
+
+        // Find original price from details
+        const detalle = detalles.find(d => d.id == idDetalle);
+        if (detalle) {
+            totalUsd += cantidad * parseFloat(detalle.precio_usd);
+        }
+    });
+
+    // Use global TASA_CAMBIO updated by fetchTasaBCV
+    const tasa = typeof TASA_CAMBIO !== 'undefined' ? TASA_CAMBIO : 60;
+    const totalBs = totalUsd * tasa;
+
+    // Update hidden inputs
+    const inputBs = document.getElementById('inputTotalBsHidden');
+    const inputUsd = document.getElementById('inputTotalUsdHidden');
+
+    if (inputBs) inputBs.value = totalBs.toFixed(2);
+    if (inputUsd) inputUsd.value = totalUsd.toFixed(2);
+
+    console.log(`Totales calculados: $${totalUsd.toFixed(2)} / Bs ${totalBs.toFixed(2)}`);
+}
+

@@ -53,9 +53,9 @@
                                 <th class="no-ordenar">Codigo Venta</th>
                                 <th class="no-ordenar">Cliente</th>
                                 <th class="no-ordenar">Fecha</th>
-                                <th class="no-ordenar">Total Reembolsado</th>
+                                <th class="no-ordenar">Total Reembolsado $</th>
+                                <th class="no-ordenar">Total Reembolsado Bs</th>
                                 <th class="no-ordenar">Motivo</th>
-                                <th width="10%" class="text-center no-ordenar">Estado</th>
                                 <th width="15%" class="text-center no-ordenar">Acciones</th>
                             </tr>
                         </thead>
@@ -65,16 +65,16 @@
                                 <?php foreach ($devoluciones as $devolucion): ?>
                                     <tr>
                                         <td class="text-center"><?= $contador++ ?></td>
-                                        <td><?= $devolucion->codigo_venta ?></td>
-                                        <td><?= $devolucion->cliente ?></td>
+                                        <td><?= $devolucion->codigo ?></td>
+                                        <td><?= $devolucion->nombre ?> <?= $devolucion->apellido ?></td>
                                         <td><?= date('d/m/Y', strtotime($devolucion->fecha)) ?></td>
-                                        <td>$<?= number_format($devolucion->total_reembolsado, 2) ?></td>
-                                        <td><?= $devolucion->motivo ?></td>
+                                        <td>$<?= number_format($devolucion->total_devuelto_dolar, 2) ?></td>
+                                        <td>Bs <?= number_format($devolucion->total_devuelto_bolivar, 2) ?></td>
                                         <td class="text-center">
-                                            <span class="badge bg-<?= $devolucion->estado == 'Completado' ? 'success' : 'warning' ?>"><?= $devolucion->estado ?></span>
+                                            <span class="badge bg-success"><?= $devolucion->motivo ?></span>
                                         </td>
                                         <td class="text-center">
-                                            <a href="#" class="btn btn-sm btn-info text-white" title="Ver Detalle">
+                                            <a href="<?= RUTA_BASE ?>Devoluciones/ver/<?= $devolucion->id ?>" class="btn btn-sm btn-info text-white" title="Ver Detalle">
                                                 <span class="material-symbols-sharp">visibility</span>
                                             </a>
                                         </td>
@@ -98,27 +98,34 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Nueva Devolución</h5>
+                    <div class="ms-auto me-3 text-muted">
+                        <small>Tasa: <strong>Bs <span id="tasaCambioDisplay">0.00</span></strong></small>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formDevolucion">
+                    <form id="formDevolucion" method="POST" action="<?= RUTA_BASE ?>Devoluciones/guardarDevolucion">
+                        <!-- Hidden Inputs -->
+                        <input type="hidden" name="codigo" id="inputCodigoVentaHidden">
+                        <input type="hidden" name="total_devuelto_bolivar" id="inputTotalBsHidden" value="0">
+                        <input type="hidden" name="total_devuelto_dolar" id="inputTotalUsdHidden" value="0">
                         <div class="row mb-3">
                             <div class="col-md-6 position-relative">
                                 <label class="form-label">Buscar Venta</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="inputBusquedaVentas" placeholder="Código de venta o Cliente" autocomplete="off">
-                                    <button class="btn btn-outline-secondary" type="button"><i class="material-symbols-sharp">expand_more</i></button>
+                                    <button class="btn btn-outline-secondary" type="button" id="btnMostrarTodasVentas"><i class="material-symbols-sharp">expand_more</i></button>
                                 </div>
                                 <div id="resultadosBusquedaVentas" class="list-group position-absolute w-100 mt-1" style="z-index: 1000; display: none; max-height: 200px; overflow-y: auto;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Fecha</label>
-                                <input type="date" class="form-control" value="<?= date('Y-m-d') ?>" readonly>
+                                <input type="date" class="form-control" name="fecha" value="<?= date('Y-m-d') ?>" readonly>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Motivo de Devolución</label>
-                            <select class="form-select" id="selectMotivo">
+                            <select class="form-select" id="selectMotivo" name="motivo">
                                 <option value="" selected disabled>Seleccione un motivo</option>
                                 <option value="Vencido">Vencido</option>
                                 <option value="Dañado">Dañado</option>
@@ -131,12 +138,13 @@
                                 <div class="alert alert-info">Seleccione una venta para ver los items disponibles.</div>
                             </div>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Devolución</button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Guardar Devolución</button>
-                </div>
+
             </div>
         </div>
     </div>

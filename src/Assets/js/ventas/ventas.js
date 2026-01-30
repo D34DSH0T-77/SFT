@@ -455,10 +455,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnRegistrar) {
         btnRegistrar.addEventListener('click', (e) => {
             e.preventDefault(); // Evitar submit automático
+
+            // UI Feedback imediato to prevent double click
+            const btn = document.getElementById('btnRegistrarVenta');
+            const originalContent = btn.innerHTML;
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Procesando...';
+            }
+
             if (modoPago === 'existente') {
-                procesarPagoExistente();
+                procesarPagoExistente(btn, originalContent);
             } else {
-                registrarVenta();
+                registrarVenta(btn, originalContent);
             }
         });
     }
@@ -631,7 +641,7 @@ function validarMontoVisualmente() {
     }
 }
 
-async function procesarPagoExistente() {
+async function procesarPagoExistente(btn, originalContent) {
     const metodo = document.getElementById('pagoMetodo')?.value;
     const monto = parseFloat(document.getElementById('pagoMonto')?.value) || 0;
 
@@ -643,6 +653,17 @@ async function procesarPagoExistente() {
             background: '#252525',
             color: '#fff'
         });
+        Swal.fire({
+            title: 'Pago Invalidp!',
+            text: 'Por faor ingrese un monto de pago válido',
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
         return;
     }
 
@@ -662,6 +683,17 @@ async function procesarPagoExistente() {
             background: '#252525',
             color: '#fff'
         });
+        Swal.fire({
+            title: 'Monto excedido!',
+            text: `El monto ingresado excede la deuda pendiente.\nDeuda actual: $${restanteUsdGlobal.toFixed(2)}\nIntenta pagar: $${pagoReal.toFixed(2)}`,
+            icon: 'error',
+            background: '#252525',
+            color: '#fff'
+        });
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
         return;
     }
 
@@ -689,6 +721,10 @@ async function procesarPagoExistente() {
             });
             location.reload();
         } else {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
             Swal.fire({
                 title: 'Error!',
                 text: 'Error: ' + data.message,
@@ -699,6 +735,10 @@ async function procesarPagoExistente() {
         }
     } catch (error) {
         console.error(error);
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
         Swal.fire({
             title: 'Pago invalido!',
             text: 'Error al registrar el pago',
@@ -709,7 +749,7 @@ async function procesarPagoExistente() {
     }
 }
 
-async function registrarVenta() {
+async function registrarVenta(btn, originalContent) {
     if (carrito.length === 0) {
         Swal.fire({
             title: 'Carrito vacío!',
@@ -718,6 +758,10 @@ async function registrarVenta() {
             background: '#252525',
             color: '#fff'
         });
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
         return;
     }
 
@@ -729,6 +773,10 @@ async function registrarVenta() {
             background: '#252525',
             color: '#fff'
         });
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
         return;
     }
 
@@ -796,6 +844,7 @@ async function registrarVenta() {
     });
     form.submit();
 }
+
 
 window.copiarMontoPago = function (textoMonto, moneda) {
     // Si el texto es "Error" o "...", ignorar

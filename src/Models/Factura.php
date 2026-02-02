@@ -23,7 +23,7 @@ class Factura extends Conexion {
     }
 
     public function mostrar() {
-        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f LEFT JOIN clientes c ON f.id_cliente = c.id ORDER BY f.id DESC";
+        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f LEFT JOIN clientes c ON f.id_cliente = c.id WHERE f.estado != 'Devuelto completamente' ORDER BY f.id DESC ";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
@@ -127,6 +127,48 @@ class Factura extends Conexion {
         } catch (\Exception $e) {
             error_log("Error al obtener facturas completadas del mes: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function restarTotales($id, $resta_bs, $resta_usd) {
+        $sql = "UPDATE {$this->tabla} SET total_bs = total_bs - :resta_bs, total_usd = total_usd - :resta_usd WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':resta_bs', $resta_bs);
+            $stmt->bindParam(':resta_usd', $resta_usd);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log("Error al restar totales factura: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function obtenerFacturasParaDevolucion() {
+        $sql = "SELECT f.*, c.nombre as cliente 
+                FROM {$this->tabla} f 
+                LEFT JOIN clientes c ON f.id_cliente = c.id 
+                WHERE f.estado != 'Devuelto completamente' 
+                AND f.estado != 'Anulado'
+                ORDER BY f.id DESC";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Factura::class);
+        } catch (\Exception $e) {
+            error_log("Error al obtener facturas para devolucion: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function mostrarDevoluciones() {
+        $sql = "SELECT f.*, c.nombre as cliente FROM {$this->tabla} f LEFT JOIN clientes c ON f.id_cliente = c.id ORDER BY f.id DESC ";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Factura::class);
+        } catch (\Exception $e) {
+            error_log("Error al mostrar facturas: " . $e->getMessage());
+            return false;
         }
     }
 }

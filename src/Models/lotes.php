@@ -124,4 +124,30 @@ class lotes extends Conexion {
             return [];
         }
     }
+
+    public function incrementarStock($id_torta, $cantidad) {
+        // Intenta sumar al último lote activo de esa torta
+        $sql = "UPDATE {$this->tabla} SET cantidad = cantidad + :cantidad 
+                WHERE id = (SELECT id FROM (SELECT id FROM {$this->tabla} WHERE id_torta = :id_torta ORDER BY id DESC LIMIT 1) as t)";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':cantidad', $cantidad);
+            $stmt->bindParam(':id_torta', $id_torta);
+            $resultado = $stmt->execute();
+
+            // Si no se actualizó nada (ej. no había lotes previos), quizás deberíamos crear uno nuevo.
+            // Por simplicidad, asumiremos que si hay ventas hubo lote. Si rowCount es 0, crear nuevo lote.
+            if ($stmt->rowCount() == 0) {
+                $nuevoLote = new lotes();
+                $nuevoLote->id_torta = $id_torta;
+                $nuevoLote->cantidad = $cantidad;
+                return $this->guardarLote($nuevoLote);
+            }
+
+            return $resultado;
+        } catch (\Throwable $e) {
+            error_log("Error al incrementar stock: " . $e->getMessage());
+            return false;
+        }
+    }
 }

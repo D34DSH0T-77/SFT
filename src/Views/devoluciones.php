@@ -132,6 +132,14 @@
                                 <option value="Otro">Otro</option>
                             </select>
                         </div>
+                        <div class="mb-3" id="divRegresarInventario" style="display: none;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="checkRegresarInventario" name="regresar_inventario">
+                                <label class="form-check-label" for="checkRegresarInventario">
+                                    Regresar al inventario
+                                </label>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <h6>Items a Devolver</h6>
                             <div id="itemsDevolucionContainer">
@@ -155,6 +163,8 @@
         const ventasDisponibles = <?= json_encode($ventas ?? []) ?>;
     </script>
     <script src="<?= RUTA_BASE ?>src/Assets/js/devoluciones/devoluciones.js"></script>
+    <?php require('src/Assets/layout/notificaciones.php') ?>
 </body>
+
 
 </html>

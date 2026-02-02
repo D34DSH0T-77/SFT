@@ -91,6 +91,19 @@ class DetallesFacturas extends Conexion {
         }
     }
 
+    public function actualizarCantidad($id, $cantidad) {
+        $sql = "UPDATE {$this->tabla} SET cantidad = cantidad - :cantidad WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':cantidad', $cantidad);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log("Error al actualizar cantidad detalle factura: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function obtenerDetalle($id) {
         $sql = "SELECT d.*, t.nombre as tortas 
             FROM {$this->tabla} d 

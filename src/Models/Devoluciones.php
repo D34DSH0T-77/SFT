@@ -27,6 +27,7 @@ class Devoluciones extends Conexion {
                 JOIN  detalles_factura df ON dv.id_detalle_factura = df.id
                 JOIN factura f ON df.id_factura = f.id
                 JOIN clientes c ON f.id_cliente = c.id
+                GROUP BY d.id, c.nombre, c.apellido
                 ORDER BY d.id DESC";
         try {
             $stmt = $this->conn->prepare($sql);

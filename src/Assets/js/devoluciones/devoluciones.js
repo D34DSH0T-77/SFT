@@ -23,6 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res) res.style.display = 'none';
         }
     });
+
+    const selectMotivo = document.getElementById('selectMotivo');
+    const divRegresarInventario = document.getElementById('divRegresarInventario');
+    const checkRegresarInventario = document.getElementById('checkRegresarInventario');
+
+    if (selectMotivo && divRegresarInventario) {
+        selectMotivo.addEventListener('change', function() {
+            if (this.value === 'Otro') {
+                divRegresarInventario.style.display = 'block';
+            } else {
+                divRegresarInventario.style.display = 'none';
+                if (checkRegresarInventario) checkRegresarInventario.checked = false;
+            }
+        });
+    }
 });
 
 async function fetchTasaBCV() {

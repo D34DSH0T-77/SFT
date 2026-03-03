@@ -23,6 +23,7 @@
             <?php require('src/Assets/layout/notificaciones.php') ?>
             <div class="table-container">
                 <div class="table-responsive">
+                    <?php var_dump($errores); ?>
                     <table class="custom-table" id="myTable">
                         <thead>
                             <tr>

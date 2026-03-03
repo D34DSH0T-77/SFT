@@ -93,6 +93,12 @@
                             <span class="link-text" style="font-size: 0.95rem;">Clientes</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?= RUTA_BASE ?>reportes/devoluciones" class="sidebar-link <?= ($moduloActivo ?? '') === 'reportes/devoluciones' ? 'active' : '' ?>">
+                            <span class="material-symbols-sharp" style="font-size: 1.2rem;">auto_delete</span>
+                            <span class="link-text" style="font-size: 0.95rem;">Devoluciones</span>
+                        </a>
+                    </li>
 
                 </ul>
             </li>

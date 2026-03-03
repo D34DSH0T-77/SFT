@@ -23,18 +23,18 @@
                 <div class="col-md-6">
                     <div class="stats-card">
                         <div class="stats-info">
-                            <h3>$0.00</h3>
-                            <p>Total Devoluciones USD</p>
+                            <h3>$<?= number_format($totalUsd ?? 0, 2) ?></h3>
+                            <p>Total Devuelto (USD)</p>
                         </div>
-                        <div class="stats-icon bg-pastel-red">
-                            <span class="material-symbols-sharp">money_off</span>
+                        <div class="stats-icon bg-pastel-mint">
+                            <span class="material-symbols-sharp">attach_money</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="stats-card">
                         <div class="stats-info">
-                            <h3>Bs 0.00</h3>
+                            <h3>Bs <?= number_format($totalBs ?? 0, 2) ?></h3>
                             <p>Total Devoluciones BS</p>
                         </div>
                         <div class="stats-icon bg-pastel-orange">
@@ -125,7 +125,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Motivo de Devolución</label>
-                            <select class="form-select" id="selectMotivo" name="motivo">
+                            <select class="form-select" id="selectMotivo" name="motivo" required>
                                 <option value="" selected disabled>Seleccione un motivo</option>
                                 <option value="Vencido">Vencido</option>
                                 <option value="Dañado">Dañado</option>

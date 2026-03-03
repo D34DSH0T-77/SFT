@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Conex\Conexion;
 use PDO;
+use App\Traits\Traits;
 
 class Tortas extends Conexion {
+    use Traits;
     public $id;
     public $nombre;
     public $precio;
@@ -113,5 +115,12 @@ class Tortas extends Conexion {
         } catch (\Throwable $th) {
             error_log("Error al actualizar precio global: " . $th->getMessage());
         }
+    }
+    public function validar(): array {
+        $errores = [];
+        if (!$this->textoValidate($this->nombre)) {
+            $errores['nombre'] = "El nombre debe contener solo letras";
+        }
+        return $errores;
     }
 }

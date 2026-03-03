@@ -19,10 +19,13 @@ class TortasController {
             'title' => 'Tortas',
             'moduloActivo' => 'tortas',
             'tortas' => $tortas,
-            'mensaje' => $_SESSION['mensaje'] ?? null
+            'mensaje' => $_SESSION['mensaje'] ?? null,
+            'errores' => $_SESSION['errores'] ?? null
         ];
+
         render_view('tortas', $data);
         unset($_SESSION['mensaje']);
+        unset($_SESSION['errores']);
     }
 
     public function agregar() {
@@ -68,16 +71,18 @@ class TortasController {
             }
         }
 
+        $errores = $torta->validar();
         // --- GUARDADO EN BD ---
         // Validamos que los campos obligatorios no estén vacíos
-        if (!empty($torta->nombre) && !empty($torta->precio)) {
+        if (empty($errores)) {
             if ($this->tortasModelo->agregar($torta)) {
                 $_SESSION['mensaje'] = ['tipo' => 'success', 'texto' => 'Torta agregada correctamente'];
             } else {
                 $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Error al guardar en BD'];
             }
         } else {
-            $_SESSION['mensaje'] = ['tipo' => 'warning', 'texto' => 'Nombre y Precio son obligatorios'];
+            $_SESSION['mensaje'] = ['tipo' => 'error', 'texto' => 'Error al guardar en BD'];
+            $_SESSION['errores'] = $errores;
         }
 
         header('Location: ' . RUTA_BASE . 'tortas');

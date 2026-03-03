@@ -28,13 +28,28 @@ class DevolucionesController {
         $ventas = $this->facturaModel->obtenerFacturasParaDevolucion();
         $devoluciones = $this->devolucionesModel->mostrarDevoluciones();
 
+        $totalDevoluciones = 0;
+        $totalUsd = 0;
+        $totalBs = 0;
+
+        if (!empty($devoluciones)) {
+            $totalDevoluciones = count($devoluciones);
+            foreach ($devoluciones as $devolucion) {
+                $totalUsd += $devolucion->total_devuelto_dolar;
+                $totalBs += $devolucion->total_devuelto_bolivar;
+            }
+        }
+
+
 
         $data = [
             'title' => 'Devoluciones',
             'moduloActivo' => 'devoluciones',
             'mensaje' => $_SESSION['mensaje'] ?? null,
             'ventas' => $ventas,
-            'devoluciones' => $devoluciones
+            'devoluciones' => $devoluciones,
+            'totalUsd' => $totalUsd,
+            'totalBs' => $totalBs
         ];
         render_view('devoluciones', $data);
         unset($_SESSION['mensaje']);

@@ -260,20 +260,6 @@ class VentasController {
             // Recalcular tasa si es BS para guardarla
             $tasaGuardar = 1.00;
             if ($metodo !== 'Divisa' && $metodo !== 'Efectivo USD') {
-                // Si el monto en USD es X y el pago original era Y, Tasa = Y / X
-                // Pero aquí ya recibimos el monto convertido (o no?)
-                // REVISAR: El frontend envia 'monto' ya convertido a USD si es 'agregarPago'?
-                // Mirando ventas.js: procesarPagoExistente envia `monto: pagoReal`. Donde pagoReal = monto / TASA_CAMBIO.
-                // Entonces el backend recibe USD.
-                // Necesitamos 'tasa' del frontend o estimarla.
-                // ventas.js NO envia la tasa en 'agregarPago'.
-                // Debemos asumir la tasa actual del momento para guardar referencia? 
-                // O mejor, modificar ventas.js para enviar la tasa.
-                // Por ahora, usaremos una logica inversa simple si tuvieramos el monto original, pero no lo tenemos.
-                // VAMOS A MODIFICAR ventas.js para enviar la tasa también.
-                // Mientras tanto, usaremos 1.00 si es divisa, o calcularemos si podemos.
-                // Como no tenemos la tasa, asumiremos guardar 1.00 hasta actualizar JS, pero el plan dice actualizar controller. 
-                // Voy a leer de $_POST['tasa'] si existe.
             }
 
             $tasa = floatval($data['tasa'] ?? 1.00);

@@ -8,6 +8,7 @@ use App\Models\Entradas;
 use App\Models\DetallesEntradas;
 use App\Models\Factura;
 use App\Models\Lotes;
+use App\Models\Devoluciones;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -18,6 +19,7 @@ class ReportesController {
     private $lotesModel;
     private $detallesEntradasModel;
     private $detallesFacturasModel;
+    private $devolucionesModel;
 
     public function __construct() {
         $this->clientesModel = new Clientes();
@@ -25,7 +27,9 @@ class ReportesController {
         $this->facturaModel = new Factura();
         $this->lotesModel = new Lotes();
         $this->detallesEntradasModel = new DetallesEntradas();
+
         $this->detallesFacturasModel = new DetallesFacturas();
+        $this->devolucionesModel = new Devoluciones();
     }
 
     public function entradas() {
@@ -60,6 +64,36 @@ class ReportesController {
             'totalBs' => $totalBs
         ];
         render_view('reportesEntradas', $data);
+    }
+
+    public function devoluciones() {
+        verificarLogin();
+        $devoluciones = $this->devolucionesModel->mostrarDevoluciones();
+
+        $totalDevoluciones = 0;
+        $totalUsd = 0;
+        $totalBs = 0;
+
+        if (!empty($devoluciones)) {
+            $totalDevoluciones = count($devoluciones);
+            foreach ($devoluciones as $devolucion) {
+                // Assuming Devoluciones model returns objects with these properties
+                // We might need to check if these fields exist or are named differently
+                // Based on Devoluciones.php: total_devuelto_bolivar, total_devuelto_dolar
+                $totalUsd += $devolucion->total_devuelto_dolar;
+                $totalBs += $devolucion->total_devuelto_bolivar;
+            }
+        }
+
+        $data = [
+            'moduloActivo' => 'reportes/devoluciones',
+            'title' => 'Reporte de Devoluciones',
+            'devoluciones' => $devoluciones,
+            'totalDevoluciones' => $totalDevoluciones,
+            'totalUsd' => $totalUsd,
+            'totalBs' => $totalBs
+        ];
+        render_view('reportesDevoluciones', $data);
     }
 
     public function ventas() {
@@ -207,6 +241,22 @@ class ReportesController {
             $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
             $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
             header('location: ' . RUTA_BASE . 'reportes/generarReporteRankingVentas');
+            exit();
+        } else if (strpos($reportes, 'devoluciones_') === 0) {
+            // Handle all devoluciones types
+            $_SESSION['reporte_devolucion_tipo'] = $reportes;
+
+            // Only capture dates if NOT general
+            if ($reportes != 'devoluciones_general') {
+                $_SESSION['reporte_fecha_inicio'] = $_POST['fecha_inicio'];
+                $_SESSION['reporte_fecha_final'] = $_POST['fecha_final'];
+            } else {
+                // Clear dates for general report to show all time
+                unset($_SESSION['reporte_fecha_inicio']);
+                unset($_SESSION['reporte_fecha_final']);
+            }
+
+            header('location: ' . RUTA_BASE . 'reportes/generarReporteDevoluciones');
             exit();
         }
     }
@@ -711,5 +761,70 @@ class ReportesController {
 
         $dompdf->render();
         $dompdf->stream("reporte_detalle_venta_" . $venta->codigo . ".pdf", array("Attachment" => false));
+    }
+
+    public function generarReporteDevoluciones() {
+        verificarLogin();
+        $tipoReporte = isset($_SESSION['reporte_devolucion_tipo']) ? $_SESSION['reporte_devolucion_tipo'] : 'devoluciones_general';
+        $fechaInicio = (!empty($_SESSION['reporte_fecha_inicio'])) ? $_SESSION['reporte_fecha_inicio'] : '';
+        $fechaFinal = (!empty($_SESSION['reporte_fecha_final'])) ? $_SESSION['reporte_fecha_final'] : '';
+
+        $devoluciones = $this->devolucionesModel->mostrarDevoluciones();
+
+        // 1. Filter by Date (only if dates are set, which depends on type)
+        if (!empty($fechaInicio) || !empty($fechaFinal)) {
+            $devoluciones = array_filter($devoluciones, function ($d) use ($fechaInicio, $fechaFinal) {
+                $fechaDevolucion = date('Y-m-d', strtotime($d->fecha));
+                $validStart = empty($fechaInicio) || $fechaDevolucion >= $fechaInicio;
+                $validEnd = empty($fechaFinal) || $fechaDevolucion <= $fechaFinal;
+                return $validStart && $validEnd;
+            });
+        }
+
+        // 2. Filter by Type (Motive)
+        $tituloReporte = "Reporte de Devoluciones";
+        if ($tipoReporte !== 'devoluciones_general') {
+            $motivoFiltrar = '';
+            switch ($tipoReporte) {
+                case 'devoluciones_vencido':
+                    $motivoFiltrar = 'Vencido';
+                    break;
+                case 'devoluciones_danado':
+                    $motivoFiltrar = 'Dañado';
+                    // Adjust string matching if database uses different case/diacritics
+                    break;
+                case 'devoluciones_otro':
+                    $motivoFiltrar = 'Otro';
+                    break;
+            }
+
+            if (!empty($motivoFiltrar)) {
+                $tituloReporte .= " (" . ucfirst($motivoFiltrar) . ")";
+                $devoluciones = array_filter($devoluciones, function ($d) use ($motivoFiltrar) {
+                    // Check strict or loose comparison depending on DB values
+                    return stripos($d->motivo, $motivoFiltrar) !== false;
+                });
+            }
+        } else {
+            $tituloReporte .= " (General - Histórico)";
+        }
+
+        // Prepare context data
+        // Prepare data for the view
+        foreach ($devoluciones as $dev) {
+            $dev->total_devuelto_dolar = floatval($dev->total_devuelto_dolar);
+            $dev->total_devuelto_bolivar = floatval($dev->total_devuelto_bolivar);
+        }
+
+        ob_start();
+        require 'src/Views/reportegenerardevolucion.php';
+        $html = ob_get_clean();
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+        $dompdf->stream("reporte_devoluciones.pdf", array("Attachment" => false));
     }
 }
